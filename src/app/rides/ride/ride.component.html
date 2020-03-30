@@ -1,0 +1,10 @@
+Name: <input [(ngModel)]="ride.name"> <br>
+Excitement: <input [(ngModel)]="ride.excitement"> <br>
+Intensity: <input [(ngModel)]="ride.intensity"> <br>
+Nausea: <input [(ngModel)]="ride.nausea"> <br>
+<button (click)="onClickIncreaseNausea(-0.01)">-0.01</button>
+<button (click)="onClickIncreaseNausea(-0.1)">-0.1</button>
+<button (click)="onClickIncreaseNausea(-1)">-1</button>
+<button (click)="onClickIncreaseNausea(1)">+1</button>
+<button (click)="onClickIncreaseNausea(0.1)">+0.1</button>
+<button (click)="onClickIncreaseNausea(0.01)">+0.01</button>
