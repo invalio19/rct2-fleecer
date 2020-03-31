@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Ride, AgeBracket } from '../ride';
+import { Component, OnInit, Input } from '@angular/core';
+import { Ride } from '../shared/ride.model';
+import { RideType } from '../shared/ride-type.model';
+import { RideTypeRepositoryService } from '../shared/ride-type-repository.service';
 
 @Component({
   selector: 'app-ride',
@@ -7,22 +9,26 @@ import { Ride, AgeBracket } from '../ride';
   styleUrls: ['./ride.component.scss']
 })
 export class RideComponent implements OnInit {
-  ride: Ride = {
-    name: 'ten',
-    type: undefined,
-    excitement: 0,
-    intensity: 0,
-    nausea: 0,
-    age: AgeBracket.LessThan5Months
-  };
+  @Input() ride: Ride;
+  rideTypes: RideType[] = this.rideTypeRepositoryService.get();
 
-  constructor() { }
+  constructor(private rideTypeRepositoryService: RideTypeRepositoryService) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void {}
+
+  getMaxPriceString(): string {
+    if (this.ride.maxPrice) {
+      return '£' + this.ride.maxPrice.toFixed(2);
+    }
+    return '';
   }
 
-  onClickIncreaseNausea(val: number): void {
-    const newNausea = +(this.ride.nausea + val).toFixed(2); // Get around JS floating point issues
+  onSelectRideType(): void {
+    this.ride.name = this.ride.type.name + ' 1';
+  }
+
+  onIncreaseNausea(val: number): void {
+    const newNausea = +(this.ride.nausea + val).toFixed(2);
     this.ride.nausea = Math.max(0, newNausea);
   }
 }

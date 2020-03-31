@@ -1,1 +1,17 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+input, select {
+  font-size: 100%;
+}
+
+.ride {
+  background-color: #eee;
+  padding: 10px 10px;
+  margin-bottom: 10px;
+}
+
+.ride__rating {
+  width: 45px;
+}

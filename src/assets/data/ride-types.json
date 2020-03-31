@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Spiral Roller Coaster",
+    "excitement": 50,
+    "intensity": 30,
+    "nausea": 10
+  },
+  {
+    "name": "Stand-up Roller Coaster",
+    "excitement": 50,
+    "intensity": 30,
+    "nausea": 10
+  },
+  {
+    "name": "Miniature Railway",
+    "excitement": 70,
+    "intensity": 6,
+    "nausea": -10
+  }
+]

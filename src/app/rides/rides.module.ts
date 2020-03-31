@@ -3,17 +3,19 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { RideComponent } from './ride/ride.component';
+import { RideListComponent } from './ride-list/ride-list.component';
 
 @NgModule({
   declarations: [
-    RideComponent
+    RideComponent,
+    RideListComponent
   ],
   imports: [
     CommonModule,
     FormsModule
   ],
   exports: [
-    RideComponent
+    RideListComponent
   ]
 })
 export class RidesModule { }

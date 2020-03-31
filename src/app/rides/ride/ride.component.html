@@ -1,10 +1,53 @@
-Name: <input [(ngModel)]="ride.name"> <br>
-Excitement: <input [(ngModel)]="ride.excitement"> <br>
-Intensity: <input [(ngModel)]="ride.intensity"> <br>
-Nausea: <input [(ngModel)]="ride.nausea"> <br>
-<button (click)="onClickIncreaseNausea(-0.01)">-0.01</button>
-<button (click)="onClickIncreaseNausea(-0.1)">-0.1</button>
-<button (click)="onClickIncreaseNausea(-1)">-1</button>
-<button (click)="onClickIncreaseNausea(1)">+1</button>
-<button (click)="onClickIncreaseNausea(0.1)">+0.1</button>
-<button (click)="onClickIncreaseNausea(0.01)">+0.01</button>
+<div class="ride">
+    Type:
+    <select [(ngModel)]="ride.type" (change)="onSelectRideType(ride.type)">
+      <option
+        *ngFor="let rideType of rideTypes"
+        [ngValue]="rideType">
+        {{rideType.name}}
+      </option>
+    </select> <br>
+    <input
+      [(ngModel)]="ride.name"
+      [disabled]="ride.type === undefined">
+    <table>
+      <thead>
+        <tr>
+          <td>Excitement:</td>
+          <td>
+            <input
+              class="ride__rating"
+              type="number"
+              min="0"
+              max="255"
+              [(ngModel)]="ride.excitement">
+          </td>
+        </tr>
+        <tr>
+          <td>Intensity:</td>
+          <td>
+            <input
+              class="ride__rating"
+              type="number"
+              min="0"
+              max="255"
+              [(ngModel)]="ride.intensity">
+          </td>
+        </tr>
+        <tr>
+          <td>Nausea:</td>
+          <td>
+            <input
+              class="ride__rating"
+              type="number"
+              min="0"
+              max="255"
+              [(ngModel)]="ride.nausea">
+          </td>
+        </tr>
+      </thead>
+    </table>
+    <button (click)="onIncreaseNausea(-0.01)">-0.01</button>
+    <button (click)="onIncreaseNausea(0.01)">+0.01</button> <br>
+    Maximum ride price: <strong>{{getMaxPriceString()}}</strong>
+  </div>

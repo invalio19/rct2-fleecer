@@ -1,0 +1,5 @@
+<app-ride *ngFor="let ride of rides" [ride]="ride"></app-ride>
+
+<button (click)="onAddNewAttraction()">Add new attraction</button>
+<button (click)="onDeleteAllRides()">Delete all rides</button>
+<button (click)="saveRidesToLocalStorage()">Save all rides (temporary! should happen automatically)</button>
