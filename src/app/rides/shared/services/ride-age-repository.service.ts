@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { RideAge } from './ride-age.model';
+import { RideAge } from '../models/ride-age.model';
 
 @Injectable({
   providedIn: 'root'
@@ -24,12 +24,21 @@ export class RideAgeRepositoryService {
   constructor() {
     const result = [];
     for (const r of this.rideAgeArray) {
-      result.push(new RideAge(r[0], r[1], r[2], r[3]));
+      result.push(new RideAge(this.rideAgeArray.indexOf(r), r[0], r[1], r[2], r[3]));
     }
+    console.log(result);
     this.rideAges = result;
   }
 
-  get(index: number): RideAge {
-    return this.rideAges[index];
+  getAll(): RideAge[] {
+    return this.rideAges;
+  }
+
+  get(id: number): RideAge {
+    return this.rideAges[id];
+  }
+
+  isLastEntry(id: number): boolean {
+    return id === this.rideAges.length - 1;
   }
 }

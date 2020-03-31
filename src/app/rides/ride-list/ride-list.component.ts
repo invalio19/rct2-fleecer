@@ -1,8 +1,9 @@
-import { RideAgeRepositoryService } from './../shared/ride-age-repository.service';
 import { Component, OnInit } from '@angular/core';
-import { Ride } from '../shared/ride.model';
-import { RideType } from '../shared/ride-type.model';
-import { RideTypeRepositoryService } from './../shared/ride-type-repository.service';
+import { Ride } from '../shared/models/ride.model';
+import { RideAgeRepositoryService } from './../shared/services/ride-age-repository.service';
+import { RideFactoryService } from './../shared/services/ride-factory.service';
+import { RideType } from '../shared/models/ride-type.model';
+import { RideTypeRepositoryService } from '../shared/services/ride-type-repository.service';
 
 @Component({
   selector: 'app-ride-list',
@@ -11,11 +12,12 @@ import { RideTypeRepositoryService } from './../shared/ride-type-repository.serv
 })
 export class RideListComponent implements OnInit {
   rides: Ride[] = [];
-  rideTypes: RideType[] = this.rideTypeRepositoryService.get();
+  rideTypes: RideType[] = this.rideTypeRepositoryService.getAll();
 
   constructor(
     private rideTypeRepositoryService: RideTypeRepositoryService,
-    private rideAgeRepositoryService: RideAgeRepositoryService) {}
+    private rideAgeRepositoryService: RideAgeRepositoryService,
+    private rideFactoryService: RideFactoryService) {}
 
   ngOnInit(): void {
     this.loadRidesFromLocalStorage();
@@ -41,7 +43,7 @@ export class RideListComponent implements OnInit {
     const localStorageRides = JSON.parse(localStorage.getItem('rides'));
     if (localStorageRides) {
       for (const localRide of localStorageRides) {
-        const ride = new Ride(localRide);
+        const ride = this.rideFactoryService.create(localRide);
         this.rides.push(ride);
       }
     }

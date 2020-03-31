@@ -10,19 +10,20 @@ export class Ride {
   age: RideAge;
   get maxPrice(): number {
     let ridePrice = this.calculateBaseRidePrice();
-    if (!ridePrice) {
+    if (ridePrice === undefined) {
       return undefined;
     }
 
     ridePrice *= 2;
     ridePrice -= 1; // Minus 10p to get maximum price guests will pay
+    ridePrice = Math.max(0, ridePrice); // Above step could bring this to -10p
     ridePrice /= 10;
 
     return ridePrice;
   };
   get minPrice(): number {
     let ridePrice = this.calculateBaseRidePrice();
-    if (!ridePrice) {
+    if (ridePrice === undefined) {
       return undefined;
     }
 
@@ -32,24 +33,13 @@ export class Ride {
     return ridePrice;
   }
 
-  constructor(
-    ride?: Ride) {
-    if (ride) {
-      this.name = ride.name;
-      this.type = ride.type; // TODO: new RideType(); -- from array so no copies
-      this.excitement = ride.excitement;
-      this.intensity = ride.intensity;
-      this.nausea = ride.nausea;
-      this.age = ride.age;
-    }
-    else {
-      this.name = '';
-      this.type = undefined;
-      this.excitement = 0;
-      this.intensity = 0;
-      this.nausea = 0;
-      this.age = undefined;
-    }
+  constructor() {
+    this.name = undefined;
+    this.type = undefined;
+    this.age = undefined;
+    this.excitement = 0;
+    this.intensity = 0;
+    this.nausea = 0;
   }
 
   private calculateBaseRidePrice(): number {

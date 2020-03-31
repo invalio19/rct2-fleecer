@@ -1,5 +1,5 @@
+import { RideType } from './../models/ride-type.model';
 import { Injectable } from '@angular/core';
-import { RideType } from '../ride';
 
 @Injectable({
   providedIn: 'root'
