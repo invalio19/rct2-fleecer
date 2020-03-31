@@ -1,12 +1,13 @@
 <div class="ride">
     Type:
-    <select [(ngModel)]="ride.type" (change)="onSelectRideType(ride.type)">
+    <select [(ngModel)]="ride.type" (change)="onSelectRideType()">
       <option
         *ngFor="let rideType of rideTypes"
         [ngValue]="rideType">
         {{rideType.name}}
       </option>
     </select> <br>
+    Age: &lt; {{ride.age.months}} months<br>
     <input
       [(ngModel)]="ride.name"
       [disabled]="ride.type === undefined">
@@ -47,7 +48,6 @@
         </tr>
       </thead>
     </table>
-    <button (click)="onIncreaseNausea(-0.01)">-0.01</button>
-    <button (click)="onIncreaseNausea(0.01)">+0.01</button> <br>
-    Maximum ride price: <strong>{{getMaxPriceString()}}</strong>
+    <p *ngIf="getMaxPriceString()">Maximum ride price: <strong>{{getMaxPriceString()}}</strong></p>
+    <p *ngIf="getMinPriceString()">Great value price: <strong>{{getMinPriceString()}}</strong></p>
   </div>

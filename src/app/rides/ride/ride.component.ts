@@ -23,12 +23,14 @@ export class RideComponent implements OnInit {
     return '';
   }
 
-  onSelectRideType(): void {
-    this.ride.name = this.ride.type.name + ' 1';
+  getMinPriceString(): string {
+    if (this.ride.minPrice) {
+      return '£' + this.ride.minPrice.toFixed(2);
+    }
+    return '';
   }
 
-  onIncreaseNausea(val: number): void {
-    const newNausea = +(this.ride.nausea + val).toFixed(2);
-    this.ride.nausea = Math.max(0, newNausea);
+  onSelectRideType(): void {
+    this.ride.name = this.ride.type.name + ' 1';
   }
 }
