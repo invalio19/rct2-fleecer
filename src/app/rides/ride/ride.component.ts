@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+
 import { Ride } from '../shared/models/ride.model';
 import { RideTypeRepositoryService } from '../shared/services/ride-type-repository.service';
 import { RideAgeRepositoryService } from './../shared/services/ride-age-repository.service';
@@ -10,8 +11,13 @@ import { RideAgeRepositoryService } from './../shared/services/ride-age-reposito
 })
 export class RideComponent implements OnInit {
   @Input() ride: Ride;
+  @Input() index: number;
+  @Output() rideIndexDeleted = new EventEmitter<number>();
+
   rideTypeOptions: {}[] = [];
   rideAgeOptions: {}[] = [];
+
+  deleteModalClass = ''; // changes to is-active when clicked
 
   constructor(
     private rideTypeRepositoryService: RideTypeRepositoryService,
@@ -39,13 +45,18 @@ export class RideComponent implements OnInit {
     this.ride.age = this.rideAgeRepositoryService.get(id);
   }
 
-  onDegradeRideAge() {
-    const id = this.ride.age.id;
-    if (this.rideAgeRepositoryService.isLastEntry(id)) {
-      return;
-    }
+  onAttemptDelete() {
+    this.deleteModalClass = 'is-active';
+  }
 
-    this.ride.age = this.rideAgeRepositoryService.get(id + 1);
+  onCloseDeleteModal() {
+    this.deleteModalClass = '';
+  }
+
+  onDelete() {
+    // todo: rideList removeAt(index);
+    this.onCloseDeleteModal();
+    this.rideIndexDeleted.emit(this.index);
   }
 
   private initialiseRideTypeOptions(): void {

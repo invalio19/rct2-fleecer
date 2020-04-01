@@ -1,68 +1,87 @@
-<div class="ride">
-  <div *ngIf="ride.name !== undefined">
-  <input [(ngModel)]="ride.name"> <br>
+<div>
+  <div class="field">
+    <div class="select is-primary is-fullwidth">
+      <select (change)="onSelectRideType($event.target.value)">
+        <option
+          [selected]="ride.type === undefined"
+          disabled hidden>Ride type</option>
+        <option
+          *ngFor="let rideTypeOption of rideTypeOptions"
+          [selected]="ride.type && ride.type.id === rideTypeOption.id"
+          [value]="rideTypeOption.id">
+          {{rideTypeOption.name}}
+        </option>
+      </select>
+    </div>
   </div>
-  <select (change)="onSelectRideType($event.target.value)">
-    <option
-      [selected]="ride.type === undefined"
-      disabled hidden>Choose a ride type</option>
-    <option
-      *ngFor="let rideTypeOption of rideTypeOptions"
-      [selected]="ride.type && ride.type.id === rideTypeOption.id"
-      [value]="rideTypeOption.id">
-      {{rideTypeOption.name}}
-    </option>
-  </select> <br>
-  Age:
-  <select (change)="onSelectRideAge($event.target.value)">
-    <option
-      *ngFor="let rideAgeOption of rideAgeOptions"
-      [selected]="ride.age && ride.age.id === rideAgeOption.id"
-      [value]="rideAgeOption.id">
-      {{rideAgeOption.name}}
-    </option>
-  </select>
-  <button (click)="onDegradeRideAge()">Degrade</button> <br>
-  <table>
-    <thead>
-      <tr>
-        <td>Excitement:</td>
-        <td>
-          <input
-            class="ride__rating"
-            type="number"
-            min="0"
-            max="255"
-            step="0.01"
-            [(ngModel)]="ride.excitement">
-        </td>
-      </tr>
-      <tr>
-        <td>Intensity:</td>
-        <td>
-          <input
-            class="ride__rating"
-            type="number"
-            min="0"
-            max="255"
-            step="0.01"
-            [(ngModel)]="ride.intensity">
-        </td>
-      </tr>
-      <tr>
-        <td>Nausea:</td>
-        <td>
-          <input
-            class="ride__rating"
-            type="number"
-            min="0"
-            max="255"
-            step="0.01"
-            [(ngModel)]="ride.nausea">
-        </td>
-      </tr>
-    </thead>
-  </table>
-  <p *ngIf="getMaxPriceString() !== undefined">Maximum ride price: <strong>{{getMaxPriceString()}}</strong></p>
-  <p *ngIf="getMinPriceString() !== undefined">Great value price: <strong>{{getMinPriceString()}}</strong></p>
+  <div class="field">
+  <div class="select is-primary is-fullwidth">
+      <select (change)="onSelectRideAge($event.target.value)">
+        <option
+          *ngFor="let rideAgeOption of rideAgeOptions"
+          [selected]="ride.age && ride.age.id === rideAgeOption.id"
+          [value]="rideAgeOption.id">
+          {{rideAgeOption.name}}
+        </option>
+      </select>
+    </div>
+  </div>
+  <table class="table is-fullwidth">
+    <tr>
+      <td>Excitement</td>
+      <td>
+        <input
+          class="input is-primary is-small"
+          type="number"
+          min="0"
+          max="255"
+          step="0.01"
+          [(ngModel)]="ride.excitement">        
+      </td>
+    </tr>
+    <tr>
+      <td>Intensity</td>
+      <td>
+        <input
+          class="input is-primary is-small"
+          type="number"
+          min="0"
+          max="255"
+          step="0.01"
+          [(ngModel)]="ride.intensity">
+      </td>
+    </tr>
+    <tr>
+      <td>Nausea</td>
+      <td>
+        <input
+          class="input is-primary is-small"
+          type="number"
+          min="0"
+          max="255"
+          step="0.01"
+          [(ngModel)]="ride.nausea">
+      </td>
+    </tr>
+  </table>  
+  <div [class]="'modal ' + deleteModalClass">
+    <div class="modal-background" (click)="onCloseDeleteModal()"></div>
+    <div class="modal-content">
+      <div class="box">
+        <p class="content">Are you sure you wish to delete <strong>{{ride.name}}</strong>?</p>
+        <div class="buttons is-right">
+          <button class="button" (click)="onCloseDeleteModal()">Cancel</button>
+          <button class="button is-danger" (click)="onDelete()">Delete ride</button>
+        </div>
+      </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close" (click)="onCloseDeleteModal()"></button>
+  </div>
+  <div class="buttons is-right">
+    <button class="button is-danger" (click)="onAttemptDelete()">
+      <span class="icon">
+        <i class="fa fa-trash"></i>
+      </span>
+    </button>
+  </div>
 </div>

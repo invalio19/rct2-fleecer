@@ -1,5 +1,69 @@
-<app-ride *ngFor="let ride of rides" [ride]="ride"></app-ride>
+<div class="ride" *ngFor="let ride of rides; let i = index">
+  <div class="field has-addons">
+    <p class="control is-expanded">
+      <input
+        class="input is-primary"
+        placeholder="New ride"
+        [(ngModel)]="ride.name">
+    </p>
+    <p class="control">
+      <button class="button is-primary">
+        <strong>{{getMaxPriceString(ride)}}</strong>
+      </button>
+    </p>
+  </div>
+  <div class="level is-mobile">
+    <div class="level-left">
+      <div class="field has-addons">
+        <p class="control">
+          <button 
+            class="button"
+            [disabled]="i === 0"
+            (click)="onMoveRideUp(i)">      
+            <span class="icon">
+              <i class="fa fa-chevron-up"></i>
+            </span>      
+          </button>
+        </p>
+        <p class="control">
+          <button
+            class="button"
+            [disabled]="i === rides.length - 1"
+            (click)="onMoveRideDown(i)">      
+            <span class="icon">
+              <i class="fa fa-chevron-down"></i>
+            </span>
+          </button>
+        </p>
+      </div>
+    </div>
+    <div class="level-right">
+      <div class="buttons">
+        <button class="button is-primary" (click)="onDegradeRideAge(ride)">
+          <span><strong>–</strong></span>
+          <span class="icon">
+            <i class="fa fa-database"></i>
+          </span>
+        </button>
+        <button class="button is-info">
+          <span class="icon">
+            <i
+              [class]="expandedIndex === i ? 'fa fa-angle-double-up fa-2x' : 'fa fa-angle-double-down fa-2x'"
+              (click)="onExpandCollapseRide(i)"></i>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <app-ride *ngIf="expandedIndex === i"
+    [ride]="ride"
+    [index]="index"
+    (rideIndexDeleted)="onRideDeleted($event)">
+  </app-ride>
+</div>
 
-<button (click)="onAddNewAttraction()">Add new attraction</button>
-<button (click)="onDeleteAllRides()">Delete all rides</button>
-<button (click)="saveRidesToLocalStorage()">Save all rides (temporary! should happen automatically)</button>
+<div class="buttons">
+  <button class="button is-success" (click)="onAddNewAttraction()">Add new attraction</button>
+  <button class="button is-danger" (click)="onDeleteAllRides()">Delete all rides</button>
+  <button class="button is-info is-small" (click)="saveRidesToLocalStorage()">Save all rides (temporary! should happen automatically)</button>
+</div>

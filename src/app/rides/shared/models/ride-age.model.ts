@@ -5,7 +5,7 @@ export class RideAge {
   divisor: number;
   summand: number;
   get name(): string {
-    return 'Less than ' + this.months + ' months'; // TODO: Greater than 200 months
+    return 'Less than ' + this.months + ' months old'; // TODO: Greater than 200 months
   }
 
   constructor(id: number, months: number, multiplier: number, divisor: number, summand: number) {

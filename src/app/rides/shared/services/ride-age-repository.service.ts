@@ -26,7 +26,6 @@ export class RideAgeRepositoryService {
     for (const r of this.rideAgeArray) {
       result.push(new RideAge(this.rideAgeArray.indexOf(r), r[0], r[1], r[2], r[3]));
     }
-    console.log(result);
     this.rideAges = result;
   }
 

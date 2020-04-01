@@ -17,6 +17,7 @@ export class Ride {
     ridePrice *= 2;
     ridePrice -= 1; // Minus 10p to get maximum price guests will pay
     ridePrice = Math.max(0, ridePrice); // Above step could bring this to -10p
+    ridePrice = Math.min(200, ridePrice); // Cap at £20
     ridePrice /= 10;
 
     return ridePrice;
