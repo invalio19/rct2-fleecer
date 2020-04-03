@@ -8,8 +8,7 @@ import { RideAgeRepositoryService } from './ride-age-repository.service';
 })
 export class RideFactoryService {
   constructor(
-    private rideTypeRepositoryService: RideTypeRepositoryService,
-    private rideAgeRepositoryService: RideAgeRepositoryService) {}
+    private rideTypeRepositoryService: RideTypeRepositoryService) {}
 
   create(rideJson: Ride): Ride {
     // This takes a ride JSON entry and fills out the class references properly
@@ -18,7 +17,7 @@ export class RideFactoryService {
     ride.type = (rideJson.type)
       ? this.rideTypeRepositoryService.get(rideJson.type.id)
       : undefined;
-    ride.age = this.rideAgeRepositoryService.get(rideJson.age.id);
+    ride.age = rideJson.age;
     ride.excitement = rideJson.excitement;
     ride.intensity = rideJson.intensity;
     ride.nausea = rideJson.nausea;

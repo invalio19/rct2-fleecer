@@ -1,8 +1,9 @@
+import { RideAge } from './../shared/models/ride.model';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { Ride } from '../shared/models/ride.model';
-import { RideTypeRepositoryService } from '../shared/services/ride-type-repository.service';
 import { RideAgeRepositoryService } from './../shared/services/ride-age-repository.service';
+import { RideTypeRepositoryService } from '../shared/services/ride-type-repository.service';
 
 @Component({
   selector: 'app-ride',
@@ -14,14 +15,14 @@ export class RideComponent implements OnInit {
   @Input() index: number;
   @Output() rideIndexDeleted = new EventEmitter<number>();
 
-  rideTypeOptions: {}[] = [];
-  rideAgeOptions: {}[] = [];
+  rideTypeOptions: { id: string, name: string }[] = [];
+  rideAgeOptions: { id: number, name: string }[] = [];
 
-  deleteModalClass = ''; // changes to is-active when clicked
+  deleteModalClass = ''; // changes to is-active when clicked todo is this really needed
 
   constructor(
-    private rideTypeRepositoryService: RideTypeRepositoryService,
-    private rideAgeRepositoryService: RideAgeRepositoryService) {
+    private rideAgeRepositoryService: RideAgeRepositoryService,
+    private rideTypeRepositoryService: RideTypeRepositoryService) {
     this.initialiseRideTypeOptions();
     this.initialiseRideAgeOptions();
   }
@@ -33,8 +34,8 @@ export class RideComponent implements OnInit {
     this.updateRideName();
   }
 
-  onSelectRideAge(id: number): void {
-    this.ride.age = this.rideAgeRepositoryService.get(id);
+  onSelectRideAge(rideAge: RideAge): void {
+    this.ride.age = +rideAge; // always comes through as string
   }
 
   onAttemptDelete() {
@@ -55,8 +56,12 @@ export class RideComponent implements OnInit {
   }
 
   private initialiseRideAgeOptions(): void {
-    for (const rideAge of this.rideAgeRepositoryService.getAll()) {
-      this.rideAgeOptions.push({ id: rideAge.id, name: rideAge.name });
+    let i = 0; // todo
+    for (const rideAgeTableEntry of this.rideAgeRepositoryService.getAll(1)) { // todo
+      const rideAgeName = 'Less than ' + rideAgeTableEntry[0] + ' months old' // todo
+      // 200 months old or more
+      this.rideAgeOptions.push({ id: i, name: rideAgeName });
+      i++;
     }
   }
 

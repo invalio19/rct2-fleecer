@@ -19,7 +19,7 @@
       <select (change)="onSelectRideAge($event.target.value)">
         <option
           *ngFor="let rideAgeOption of rideAgeOptions"
-          [selected]="ride.age && ride.age.id === rideAgeOption.id"
+          [selected]="ride.age === rideAgeOption.id"
           [value]="rideAgeOption.id">
           {{rideAgeOption.name}}
         </option>

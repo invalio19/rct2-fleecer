@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 
 import { GameVersion } from './../shared/game-version';
 import { LocalStorageService, SaveData } from './../shared/services/local-storage.service';
-import { Ride } from '../shared/models/ride.model';
-import { RideAgeRepositoryService } from './../shared/services/ride-age-repository.service';
+import { Ride, RideAge } from '../shared/models/ride.model';
+import { RidePriceCalculatorService } from './../shared/services/ride-price-calculator.service';
 
 @Component({
   selector: 'app-ride-list',
@@ -11,7 +11,7 @@ import { RideAgeRepositoryService } from './../shared/services/ride-age-reposito
   styleUrls: ['./ride-list.component.scss']
 })
 export class RideListComponent implements OnInit {
-  GameVersion = GameVersion; // so the component can use the enum
+  GameVersion = GameVersion; // enum for the component to use
   saveData: SaveData;
   rides: Ride[]; // rather than typing this.saveData.rides everywhere
 
@@ -19,7 +19,7 @@ export class RideListComponent implements OnInit {
 
   constructor(
     private localStorageService: LocalStorageService,
-    private rideAgeRepositoryService: RideAgeRepositoryService) {
+    private ridePriceCalculatorService: RidePriceCalculatorService) {
     this.saveData = this.localStorageService.load();
     this.rides = this.saveData.rides;
   }
@@ -27,11 +27,13 @@ export class RideListComponent implements OnInit {
   ngOnInit(): void {}
 
   getMaxPriceString(ride: Ride): string {
-    return this.convertToCurrencyString(ride.maxPrice);
+    const maxPrice = this.ridePriceCalculatorService.calculateMax(ride, this.saveData.gameVersion);
+    return this.convertToCurrencyString(maxPrice);
   }
 
-  getMinPriceString(ride: Ride): string {
-    return this.convertToCurrencyString(ride.minPrice);
+  getMinPriceString(ride: Ride): string { // todo: display
+    const minPrice = this.ridePriceCalculatorService.calculateMin(ride, this.saveData.gameVersion);
+    return this.convertToCurrencyString(minPrice);
   }
 
   onMoveRideUp(index: number) {
@@ -51,22 +53,22 @@ export class RideListComponent implements OnInit {
   }
 
   canUpgradeRideAge(ride: Ride) {
-    return ride.age.id !== 0; // TODO: should be index really
+    return ride.age !== RideAge.LessThan5Months;
   }
 
   onUpgradeRideAge(ride: Ride) {
     if (this.canUpgradeRideAge(ride)) {
-      ride.age = this.rideAgeRepositoryService.get(ride.age.id - 1);
+      ride.age--;
     }
   }
 
   canDegradeRideAge(ride: Ride) {
-    return !this.rideAgeRepositoryService.isLastEntry(ride.age.id);
+    return ride.age !== RideAge.MoreThan200Months; // TODO: mark as last somehow
   }
 
   onDegradeRideAge(ride: Ride) {
     if (this.canDegradeRideAge(ride)) {
-      ride.age = this.rideAgeRepositoryService.get(ride.age.id + 1);
+      ride.age++;
     }
   }
 
@@ -79,8 +81,8 @@ export class RideListComponent implements OnInit {
   }
 
   onAddNewAttraction(): void {
-    const ride = new Ride();
-    ride.age = this.rideAgeRepositoryService.get(0);
+    const ride: Ride = new Ride();
+    ride.age = RideAge.LessThan5Months;
     this.rides.push(ride);
 
     this.localStorageService.save(this.saveData);
