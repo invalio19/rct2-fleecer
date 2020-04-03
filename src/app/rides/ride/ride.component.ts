@@ -28,17 +28,9 @@ export class RideComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  getMaxPriceString(): string {
-    return this.convertToCurrencyString(this.ride.maxPrice);
-  }
-
-  getMinPriceString(): string {
-    return this.convertToCurrencyString(this.ride.minPrice);
-  }
-
-  onSelectRideType(id: number): void {
+  onSelectRideType(id: string): void {
     this.ride.type = this.rideTypeRepositoryService.get(id);
-    this.ride.name = this.ride.type.name + ' 1';
+    this.updateRideName();
   }
 
   onSelectRideAge(id: number): void {
@@ -54,15 +46,12 @@ export class RideComponent implements OnInit {
   }
 
   onDelete() {
-    // todo: rideList removeAt(index);
     this.onCloseDeleteModal();
     this.rideIndexDeleted.emit(this.index);
   }
 
   private initialiseRideTypeOptions(): void {
-    for (const rideType of this.rideTypeRepositoryService.getAll()) {
-      this.rideTypeOptions.push({ id: rideType.id, name: rideType.name });
-    }
+    this.rideTypeOptions = this.rideTypeRepositoryService.getIdNamePairsSortedByName();
   }
 
   private initialiseRideAgeOptions(): void {
@@ -71,10 +60,12 @@ export class RideComponent implements OnInit {
     }
   }
 
-  private convertToCurrencyString(val: number): string {
-    if (val !== undefined) {
-      return '£' + val.toFixed(2);
+  private updateRideName() {
+    // TODO: change name automatically if it's a default name of another ride type
+    // TODO: number increments based on other rides
+    const defaultRideName = this.ride.type.name + ' 1';
+    if (this.ride.name === undefined || this.ride.name === '') {
+      this.ride.name = defaultRideName;
     }
-    return '';
   }
 }

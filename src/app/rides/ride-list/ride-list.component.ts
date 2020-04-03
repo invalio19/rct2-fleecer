@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+
+import { GameVersion } from './../shared/game-version';
+import { LocalStorageService, SaveData } from './../shared/services/local-storage.service';
 import { Ride } from '../shared/models/ride.model';
 import { RideAgeRepositoryService } from './../shared/services/ride-age-repository.service';
-import { RideFactoryService } from './../shared/services/ride-factory.service';
-import { RideType } from '../shared/models/ride-type.model';
-import { RideTypeRepositoryService } from '../shared/services/ride-type-repository.service';
 
 @Component({
   selector: 'app-ride-list',
@@ -11,19 +11,20 @@ import { RideTypeRepositoryService } from '../shared/services/ride-type-reposito
   styleUrls: ['./ride-list.component.scss']
 })
 export class RideListComponent implements OnInit {
-  rides: Ride[] = [];
-  rideTypes: RideType[] = this.rideTypeRepositoryService.getAll();
+  GameVersion = GameVersion; // so the component can use the enum
+  saveData: SaveData;
+  rides: Ride[]; // rather than typing this.saveData.rides everywhere
 
   expandedIndex: number;
 
   constructor(
-    private rideTypeRepositoryService: RideTypeRepositoryService,
-    private rideAgeRepositoryService: RideAgeRepositoryService,
-    private rideFactoryService: RideFactoryService) {}
-
-  ngOnInit(): void {
-    this.loadRidesFromLocalStorage();
+    private localStorageService: LocalStorageService,
+    private rideAgeRepositoryService: RideAgeRepositoryService) {
+    this.saveData = this.localStorageService.load();
+    this.rides = this.saveData.rides;
   }
+
+  ngOnInit(): void {}
 
   getMaxPriceString(ride: Ride): string {
     return this.convertToCurrencyString(ride.maxPrice);
@@ -49,13 +50,24 @@ export class RideListComponent implements OnInit {
     this.arraySwap(this.rides, index, index + 1);
   }
 
-  onDegradeRideAge(ride: Ride) {
-    const id = ride.age.id;
-    if (this.rideAgeRepositoryService.isLastEntry(id)) {
-      return;
-    }
+  canUpgradeRideAge(ride: Ride) {
+    return ride.age.id !== 0; // TODO: should be index really
+  }
 
-    ride.age = this.rideAgeRepositoryService.get(id + 1);
+  onUpgradeRideAge(ride: Ride) {
+    if (this.canUpgradeRideAge(ride)) {
+      ride.age = this.rideAgeRepositoryService.get(ride.age.id - 1);
+    }
+  }
+
+  canDegradeRideAge(ride: Ride) {
+    return !this.rideAgeRepositoryService.isLastEntry(ride.age.id);
+  }
+
+  onDegradeRideAge(ride: Ride) {
+    if (this.canDegradeRideAge(ride)) {
+      ride.age = this.rideAgeRepositoryService.get(ride.age.id + 1);
+    }
   }
 
   onExpandCollapseRide(index: number) {
@@ -70,35 +82,23 @@ export class RideListComponent implements OnInit {
     const ride = new Ride();
     ride.age = this.rideAgeRepositoryService.get(0);
     this.rides.push(ride);
-    this.saveRidesToLocalStorage();
+
+    this.localStorageService.save(this.saveData);
+
     this.onExpandCollapseRide(this.rides.length - 1);
   }
 
   onDeleteAllRides(): void {
     this.rides = [];
-    this.clearLocalStorage();
+    this.localStorageService.clear();
+  }
+
+  onSave(): void { // TODO: temporary!
+    this.localStorageService.save(this.saveData);
   }
 
   onRideDeleted(index: number) { // triggered from child component
     this.rides.splice(index, 1);
-  }
-
-  saveRidesToLocalStorage(): void {
-    localStorage.setItem('rides', JSON.stringify(this.rides));
-  }
-
-  private loadRidesFromLocalStorage(): void {
-    const localStorageRides = JSON.parse(localStorage.getItem('rides'));
-    if (localStorageRides) {
-      for (const localRide of localStorageRides) {
-        const ride = this.rideFactoryService.create(localRide);
-        this.rides.push(ride);
-      }
-    }
-  }
-
-  private clearLocalStorage(): void {
-    localStorage.clear();
   }
 
   private convertToCurrencyString(val: number): string {

@@ -1,5 +1,5 @@
-export class RideType {
-  id: number;
+export interface RideType {
+  id: string;
   name: string;
   excitement: number;
   intensity: number;

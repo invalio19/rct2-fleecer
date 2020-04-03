@@ -22,6 +22,7 @@ export class RideFactoryService {
     ride.excitement = rideJson.excitement;
     ride.intensity = rideJson.intensity;
     ride.nausea = rideJson.nausea;
+    ride.isDuplicate = rideJson.isDuplicate;
 
     return ride;
   }

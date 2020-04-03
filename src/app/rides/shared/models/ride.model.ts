@@ -4,10 +4,11 @@ import { RideAge } from './ride-age.model';
 export class Ride {
   name: string;
   type: RideType;
+  age: RideAge;
   excitement: number;
   intensity: number;
   nausea: number;
-  age: RideAge;
+  isDuplicate: boolean;
   get maxPrice(): number {
     let ridePrice = this.calculateBaseRidePrice();
     if (ridePrice === undefined) {
@@ -34,15 +35,6 @@ export class Ride {
     return ridePrice;
   }
 
-  constructor() {
-    this.name = undefined;
-    this.type = undefined;
-    this.age = undefined;
-    this.excitement = 0;
-    this.intensity = 0;
-    this.nausea = 0;
-  }
-
   private calculateBaseRidePrice(): number {
     if (this.type === undefined) {
       return undefined;
@@ -55,9 +47,13 @@ export class Ride {
       ((this.nausea * 100 * this.type.nausea * 32) >> 15);
     // tslint:enable:no-bitwise
 
-    ridePrice *= this.age.multiplier;
+    ridePrice *= this.age.multiplier; // todo move age to enum in a lookup table
     ridePrice = Math.floor(ridePrice / this.age.divisor);
     ridePrice += this.age.summand;
+
+    if (this.isDuplicate) {
+      ridePrice -= Math.floor(ridePrice / 4);
+    }
 
     return ridePrice;
   }

@@ -1,5 +1,12 @@
-.ride {
+$primary: #09f;
+
+@import "../node_modules/bulma/bulma.sass";
+
+.inv-head, .inv-ride, .inv-footer {
+  padding: 1.5rem;
+}
+
+.inv-ride {
   background-color: #ddd;
-  padding: .75rem .75rem;
   margin-bottom: .75rem;
 }

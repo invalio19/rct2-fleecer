@@ -68,15 +68,19 @@
     <div class="modal-background" (click)="onCloseDeleteModal()"></div>
     <div class="modal-content">
       <div class="box">
-        <p class="content">Are you sure you wish to delete <strong>{{ride.name}}</strong>?</p>
+        <p class="content">Are you sure you want to delete <strong>{{ride.name ? ride.name : 'Unnamed ride'}}</strong>?</p>
         <div class="buttons is-right">
-          <button class="button" (click)="onCloseDeleteModal()">Cancel</button>
           <button class="button is-danger" (click)="onDelete()">Delete ride</button>
+          <button class="button" (click)="onCloseDeleteModal()">Cancel</button>
         </div>
       </div>
     </div>
     <button class="modal-close is-large" aria-label="close" (click)="onCloseDeleteModal()"></button>
   </div>
+  <label class="checkbox">
+    <input type="checkbox" [(ngModel)]="ride.isDuplicate">
+    Mark as duplicate
+  </label>
   <div class="buttons is-right">
     <button class="button is-danger" (click)="onAttemptDelete()">
       <span class="icon">
