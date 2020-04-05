@@ -7,8 +7,7 @@ import { RideTypeRepositoryService } from '../shared/services/ride-type-reposito
 
 @Component({
   selector: 'app-ride',
-  templateUrl: './ride.component.html',
-  styleUrls: ['./ride.component.scss']
+  templateUrl: './ride.component.html'
 })
 export class RideComponent implements OnInit {
   @Input() ride: Ride;

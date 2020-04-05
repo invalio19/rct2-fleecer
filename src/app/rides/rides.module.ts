@@ -1,3 +1,4 @@
+import { FooterComponent } from './../shared/layout/footer/footer.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -8,7 +9,8 @@ import { RideListComponent } from './ride-list/ride-list.component';
 @NgModule({
   declarations: [
     RideComponent,
-    RideListComponent
+    RideListComponent,
+    FooterComponent
   ],
   imports: [
     CommonModule,

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { GameVersion } from './../shared/game-version';
+import { GameVersion } from '../shared/enums/game-version';
 import { LocalStorageService } from './../shared/services/local-storage.service';
 import { Ride, RideAge } from '../shared/models/ride.model';
 import { RideDuplicateFlaggerService } from './../shared/services/ride-duplicate-flagger.service';
@@ -9,8 +9,7 @@ import { SaveData } from '../shared/models/save-data.model';
 
 @Component({
   selector: 'app-ride-list',
-  templateUrl: './ride-list.component.html',
-  styleUrls: ['./ride-list.component.scss']
+  templateUrl: './ride-list.component.html'
 })
 export class RideListComponent implements OnInit {
   GameVersion = GameVersion; // enum for the component to use

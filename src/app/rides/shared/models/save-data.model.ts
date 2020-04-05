@@ -1,4 +1,4 @@
-import { GameVersion } from './../game-version';
+import { GameVersion } from './../enums/game-version';
 import { Ride } from './ride.model';
 
 export interface SaveData {

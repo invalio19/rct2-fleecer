@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { GameVersion } from './../game-version';
+import { GameVersion } from '../enums/game-version';
 import { Ride } from '../models/ride.model';
 import { RideAgeRepositoryService } from './ride-age-repository.service';
 

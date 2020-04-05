@@ -5,7 +5,6 @@ import { AppComponent } from './app.component';
 
 import { RidesModule } from './rides/rides.module';
 
-
 @NgModule({
   declarations: [
     AppComponent
