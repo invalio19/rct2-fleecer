@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
 import { GameVersion } from './../shared/game-version';
-import { LocalStorageService, SaveData } from './../shared/services/local-storage.service';
+import { LocalStorageService } from './../shared/services/local-storage.service';
 import { Ride, RideAge } from '../shared/models/ride.model';
 import { RideDuplicateFlaggerService } from './../shared/services/ride-duplicate-flagger.service';
 import { RidePriceCalculatorService } from './../shared/services/ride-price-calculator.service';
+import { SaveData } from '../shared/models/save-data.model';
 
 @Component({
   selector: 'app-ride-list',
@@ -32,12 +33,12 @@ export class RideListComponent implements OnInit {
   ngOnInit(): void {}
 
   getMaxPriceString(ride: Ride): string {
-    const maxPrice = this.ridePriceCalculatorService.calculateMax(ride, this.saveData.gameVersion);
+    const maxPrice = this.ridePriceCalculatorService.calculateMax(ride, this.saveData.gameVersion, this.saveData.hasEntranceFee);
     return this.convertToCurrencyString(maxPrice);
   }
 
   getMinPriceString(ride: Ride): string { // todo: display
-    const minPrice = this.ridePriceCalculatorService.calculateMin(ride, this.saveData.gameVersion);
+    const minPrice = this.ridePriceCalculatorService.calculateMin(ride, this.saveData.gameVersion, this.saveData.hasEntranceFee);
     return this.convertToCurrencyString(minPrice);
   }
 

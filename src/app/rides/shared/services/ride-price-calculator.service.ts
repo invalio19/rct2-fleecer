@@ -10,23 +10,21 @@ import { RideAgeRepositoryService } from './ride-age-repository.service';
 export class RidePriceCalculatorService {
   constructor (private rideAgeRepositoryService: RideAgeRepositoryService) {}
 
-  calculateMax(ride: Ride, gameVersion: GameVersion): number {
-    let ridePrice = this.calculate(ride, gameVersion);
+  calculateMax(ride: Ride, gameVersion: GameVersion, hasEntranceFee: boolean): number { // todo pass park and ride
+    let ridePrice = this.calculate(ride, gameVersion, hasEntranceFee);
     if (ridePrice === undefined) {
       return undefined;
     }
 
     ridePrice *= 2;
-    ridePrice -= 1; // Minus 10p to get maximum price guests will pay
-    ridePrice = Math.max(0, ridePrice); // Above step could bring this to -10p
     ridePrice = Math.min(200, ridePrice); // Cap at £20
     ridePrice /= 10;
 
     return ridePrice;
   };
 
-  calculateMin(ride: Ride, gameVersion: GameVersion): number {
-    let ridePrice = this.calculate(ride, gameVersion);
+  calculateMin(ride: Ride, gameVersion: GameVersion, hasEntranceFee: boolean): number {
+    let ridePrice = this.calculate(ride, gameVersion, hasEntranceFee);
     if (ridePrice === undefined) {
       return undefined;
     }
@@ -38,7 +36,7 @@ export class RidePriceCalculatorService {
     return ridePrice;
   }
 
-  private calculate(ride: Ride, gameVersion: GameVersion): number {
+  private calculate(ride: Ride, gameVersion: GameVersion, hasEntranceFee: boolean): number {
     if (ride.type === undefined) {
       return undefined;
     }
@@ -52,12 +50,16 @@ export class RidePriceCalculatorService {
 
     const rideAgeData = this.rideAgeRepositoryService.get(ride.age, gameVersion);
 
-    ridePrice *= rideAgeData[1];
+    ridePrice *= rideAgeData[1]; // todo
     ridePrice = Math.floor(ridePrice / rideAgeData[2]);
     ridePrice += rideAgeData[3];
 
     if (ride.isDuplicate) {
       ridePrice -= Math.floor(ridePrice / 4);
+    }
+
+    if (hasEntranceFee) {
+      ridePrice = Math.floor(ridePrice / 4);
     }
 
     return ridePrice;

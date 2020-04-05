@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
+
 import { GameVersion } from './../game-version';
 import { Ride } from '../models/ride.model';
 import { RideFactoryService } from './ride-factory.service';
+import { SaveData } from '../models/save-data.model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +25,12 @@ export class LocalStorageService {
       return loadedData;
     }
 
-    const newData = { gameVersion: GameVersion.VanillaRct2, rides: [] };
+    const newData = {
+      name: '',
+      gameVersion: GameVersion.VanillaRct2,
+      hasEntranceFee: false,
+      rides: []
+    };
     return newData;
   }
 
@@ -41,9 +48,4 @@ export class LocalStorageService {
 
     return rideObjects;
   }
-}
-
-export interface SaveData {
-  gameVersion: GameVersion;
-  rides: Ride[];
 }
