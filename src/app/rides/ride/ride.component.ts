@@ -18,7 +18,7 @@ export class RideComponent implements OnInit {
   rideTypeOptions: { id: string, name: string }[] = [];
   rideAgeOptions: { id: number, name: string }[] = [];
 
-  deleteModalClass = ''; // changes to is-active when clicked todo is this really needed
+  deleteModalClass = ''; // changes to is-active when clicked
 
   constructor(
     private rideAgeRepositoryService: RideAgeRepositoryService,
@@ -75,7 +75,6 @@ export class RideComponent implements OnInit {
   }
 
   private updateRideName(oldName: string, oldTypeName: string) {
-    // TODO: change name automatically if it's a default name of another ride type
     // TODO: number increments based on other rides
     const regex = new RegExp('^' + oldTypeName + ' \\d+$');
     const rideType = this.rideTypeRepositoryService.get(this.ride.type);

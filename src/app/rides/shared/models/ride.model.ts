@@ -11,7 +11,8 @@ export enum RideAge {
   MoreThan200Months = 9
 }
 
-export interface Ride {
+export class Ride {
+  id: number;
   name: string;
   type: string;
   age: RideAge;
@@ -19,4 +20,15 @@ export interface Ride {
   intensity: number;
   nausea: number;
   isDuplicate: boolean;
+
+  constructor() {
+    // Don't initialise id, this is sorted out by IndexedDB
+    this.name = '';
+    this.type = undefined;
+    this.age = RideAge.LessThan5Months;
+    this.excitement = undefined;
+    this.intensity = undefined;
+    this.nausea = undefined;
+    this.isDuplicate = false;
+  }
 }

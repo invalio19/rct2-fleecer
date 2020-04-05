@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
 import { GameVersion } from '../shared/enums/game-version';
-import { PersistenceService } from './../shared/services/persistence.service';
 import { Ride, RideAge } from '../shared/models/ride.model';
 import { RideDuplicateFlaggerService } from './../shared/services/ride-duplicate-flagger.service';
+import { RidePersistenceService } from '../shared/services/ride-persistence.service';
 import { RidePriceCalculatorService } from './../shared/services/ride-price-calculator.service';
 import { SaveData } from '../shared/models/save-data.model';
 
@@ -21,12 +21,16 @@ export class RideListComponent implements OnInit {
   deleteAllRidesModalClass = ''; // changes to is-active when clicked todo is this really needed
 
   constructor(
-    private persistenceService: PersistenceService,
     private rideDuplicateFlaggerService: RideDuplicateFlaggerService,
+    private ridePersistenceService: RidePersistenceService,
     private ridePriceCalculatorService: RidePriceCalculatorService) {
-    this.saveData = this.persistenceService.load();
-    this.rides = this.saveData.rides;
-    this.rideDuplicateFlaggerService.flag(this.rides);
+      this.saveData = { name: '', gameVersion: 0, hasEntranceFee: false, rides: [] }; // todo
+      this.ridePersistenceService.connect().then(() => {
+        this.ridePersistenceService.getAll().then(x => {
+          this.rides = x;
+          this.rideDuplicateFlaggerService.flag(this.rides);
+        });
+      });
   }
 
   ngOnInit(): void {}
@@ -68,7 +72,7 @@ export class RideListComponent implements OnInit {
   }
 
   canDegradeRideAge(ride: Ride) {
-    return ride.age !== RideAge.MoreThan200Months; // TODO: mark as last somehow
+    return ride.age !== RideAge.MoreThan200Months;
   }
 
   onDegradeRideAge(ride: Ride) {
@@ -86,19 +90,10 @@ export class RideListComponent implements OnInit {
   }
 
   onAddNewAttraction(): void {
-    const ride: Ride = {
-      name: '',
-      type: undefined,
-      age: RideAge.LessThan5Months,
-      excitement: undefined,
-      intensity: undefined,
-      nausea: undefined,
-      isDuplicate: false
-    };
+    const ride: Ride = new Ride();
 
+    this.ridePersistenceService.put(ride);
     this.rides.push(ride);
-
-    this.persistenceService.save(this.saveData);
 
     this.onExpandCollapseRide(this.rides.length - 1);
   }
@@ -114,11 +109,13 @@ export class RideListComponent implements OnInit {
   onDeleteAllRides() {
     this.onCloseDeleteAllRidesModal();
     this.rides = [];
-    this.persistenceService.clear();
+    this.ridePersistenceService.clear();
   }
 
   onSave(): void { // TODO: temporary!
-    this.persistenceService.save(this.saveData);
+    for (const ride of this.rides) {
+      this.ridePersistenceService.put(ride);
+    }
   }
 
   // @Outputs

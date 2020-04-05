@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 
+import { openDB } from '../../../../../node_modules/idb';
+
 import { GameVersion } from '../enums/game-version';
 import { SaveData } from '../models/save-data.model';
 
@@ -7,19 +9,20 @@ import { SaveData } from '../models/save-data.model';
   providedIn: 'root'
 })
 export class PersistenceService {
-  private saveDataKey = 'saveData';
+  db;
 
-  save(data: SaveData): void {
-    localStorage.setItem(this.saveDataKey, JSON.stringify(data));
+  private dbName = 'rct2-fleecer';
+  private dbVersion = 1;
+
+  async connect(): Promise<void> {
+    this.db = await openDB(this.dbName, this.dbVersion, {
+      upgrade(db) {
+        db.createObjectStore('ride', { keyPath: 'id', autoIncrement: true });
+      }
+    });
   }
 
   load(): SaveData {
-    const loadedData: SaveData = JSON.parse(localStorage.getItem(this.saveDataKey)); // These don't have the right reference objects
-
-    if (loadedData) {
-      return loadedData;
-    }
-
     const newData = {
       name: '',
       gameVersion: GameVersion.VanillaRct2,
@@ -29,7 +32,7 @@ export class PersistenceService {
     return newData;
   }
 
-  clear(): void {
-    localStorage.clear();
+  async clearRides(): Promise<void> {
+    await this.db.clear('ride');
   }
 }
