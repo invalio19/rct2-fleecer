@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { RideType } from './../models/ride-type.model';
-import { RideTypesData } from './../../../../assets/data/ride-types';
+import { RideTypesData } from '../../../data/ride-types';
 
 @Injectable({
   providedIn: 'root'

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { GameVersion } from '../shared/enums/game-version';
-import { LocalStorageService } from './../shared/services/local-storage.service';
+import { PersistenceService } from './../shared/services/persistence.service';
 import { Ride, RideAge } from '../shared/models/ride.model';
 import { RideDuplicateFlaggerService } from './../shared/services/ride-duplicate-flagger.service';
 import { RidePriceCalculatorService } from './../shared/services/ride-price-calculator.service';
@@ -21,10 +21,10 @@ export class RideListComponent implements OnInit {
   deleteAllRidesModalClass = ''; // changes to is-active when clicked todo is this really needed
 
   constructor(
-    private localStorageService: LocalStorageService,
+    private persistenceService: PersistenceService,
     private rideDuplicateFlaggerService: RideDuplicateFlaggerService,
     private ridePriceCalculatorService: RidePriceCalculatorService) {
-    this.saveData = this.localStorageService.load();
+    this.saveData = this.persistenceService.load();
     this.rides = this.saveData.rides;
     this.rideDuplicateFlaggerService.flag(this.rides);
   }
@@ -86,12 +86,19 @@ export class RideListComponent implements OnInit {
   }
 
   onAddNewAttraction(): void {
-    const ride: Ride = new Ride();
-    ride.age = RideAge.LessThan5Months;
+    const ride: Ride = {
+      name: '',
+      type: undefined,
+      age: RideAge.LessThan5Months,
+      excitement: undefined,
+      intensity: undefined,
+      nausea: undefined,
+      isDuplicate: false
+    };
 
     this.rides.push(ride);
 
-    this.localStorageService.save(this.saveData);
+    this.persistenceService.save(this.saveData);
 
     this.onExpandCollapseRide(this.rides.length - 1);
   }
@@ -107,11 +114,11 @@ export class RideListComponent implements OnInit {
   onDeleteAllRides() {
     this.onCloseDeleteAllRidesModal();
     this.rides = [];
-    this.localStorageService.clear();
+    this.persistenceService.clear();
   }
 
   onSave(): void { // TODO: temporary!
-    this.localStorageService.save(this.saveData);
+    this.persistenceService.save(this.saveData);
   }
 
   // @Outputs

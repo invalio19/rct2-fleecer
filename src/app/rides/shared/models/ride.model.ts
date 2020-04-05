@@ -1,5 +1,3 @@
-import { RideType } from './ride-type.model';
-
 export enum RideAge {
   LessThan5Months = 0,
   LessThan13Months = 1,
@@ -13,10 +11,10 @@ export enum RideAge {
   MoreThan200Months = 9
 }
 
-export class Ride {
+export interface Ride {
   name: string;
-  type: RideType; // TODO enum
-  age: RideAge; // todo enum
+  type: string;
+  age: RideAge;
   excitement: number;
   intensity: number;
   nausea: number;

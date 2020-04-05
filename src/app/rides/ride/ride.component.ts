@@ -33,10 +33,11 @@ export class RideComponent implements OnInit {
     const oldName = this.ride.name;
     let oldTypeName: string;
     if (this.ride.type !== undefined) {
-      oldTypeName = this.ride.type.name;
+      const oldRideType = this.rideTypeRepositoryService.get(this.ride.type);
+      oldTypeName = oldRideType.name;
     }
 
-    this.ride.type = this.rideTypeRepositoryService.get(id);
+    this.ride.type = id;
     this.rideTypeChanged.emit();
 
     this.updateRideName(oldName, oldTypeName);
@@ -77,7 +78,8 @@ export class RideComponent implements OnInit {
     // TODO: change name automatically if it's a default name of another ride type
     // TODO: number increments based on other rides
     const regex = new RegExp('^' + oldTypeName + ' \\d+$');
-    const defaultRideName = this.ride.type.name + ' 1';
+    const rideType = this.rideTypeRepositoryService.get(this.ride.type);
+    const defaultRideName = rideType.name + ' 1';
     if (this.ride.name === undefined || this.ride.name === '' || regex.test(oldName)) {
       this.ride.name = defaultRideName;
     }

@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { RideFactoryService } from './ride-factory.service';
+import { PersistenceService } from './persistence.service';
 
-describe('RideFactoryService', () => {
-  let service: RideFactoryService;
+describe('PersistenceService', () => {
+  let service: PersistenceService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(RideFactoryService);
+    service = TestBed.inject(PersistenceService);
   });
 
   it('should be created', () => {

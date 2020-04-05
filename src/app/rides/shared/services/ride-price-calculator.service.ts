@@ -3,12 +3,15 @@ import { Injectable } from '@angular/core';
 import { GameVersion } from '../enums/game-version';
 import { Ride } from '../models/ride.model';
 import { RideAgeRepositoryService } from './ride-age-repository.service';
+import { RideTypeRepositoryService } from './ride-type-repository.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RidePriceCalculatorService {
-  constructor (private rideAgeRepositoryService: RideAgeRepositoryService) {}
+  constructor (
+    private rideAgeRepositoryService: RideAgeRepositoryService,
+    private rideTypeRepositoryService: RideTypeRepositoryService) {}
 
   calculateMax(ride: Ride, gameVersion: GameVersion, hasEntranceFee: boolean): number { // todo pass park and ride
     let ridePrice = this.calculate(ride, gameVersion, hasEntranceFee);
@@ -41,11 +44,13 @@ export class RidePriceCalculatorService {
       return undefined;
     }
 
+    const rideType = this.rideTypeRepositoryService.get(ride.type);
+
     // tslint:disable:no-bitwise
     let ridePrice =
-      ((ride.excitement * 100 * ride.type.excitement * 32) >> 15) +
-      ((ride.intensity * 100 * ride.type.intensity * 32) >> 15) +
-      ((ride.nausea * 100 * ride.type.nausea * 32) >> 15);
+      ((ride.excitement * 100 * rideType.excitement * 32) >> 15) +
+      ((ride.intensity * 100 * rideType.intensity * 32) >> 15) +
+      ((ride.nausea * 100 * rideType.nausea * 32) >> 15);
     // tslint:enable:no-bitwise
 
     const rideAgeData = this.rideAgeRepositoryService.get(ride.age, gameVersion);

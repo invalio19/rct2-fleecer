@@ -1,4 +1,4 @@
-import { RideType } from './../../app/rides/shared/models/ride-type.model';
+import { RideType } from '../rides/shared/models/ride-type.model';
 
 export const RideTypesData: { [key: string]: RideType } = {
   '3dCinema': {
