@@ -18,7 +18,7 @@ export class RideListComponent implements OnInit {
 
   expandedIndex: number;
 
-  deleteAllRidesModalClass = ''; // changes to is-active when clicked todo is this really needed
+  deleteAllRidesModalClass = ''; // changes to is-active when clicked
 
   constructor(
     private persistenceService: PersistenceService,
@@ -142,7 +142,7 @@ export class RideListComponent implements OnInit {
     return '';
   }
 
-  private arraySwap(arr: any[], fromIndex: number, toIndex: number): void { // TODO: shared util class
+  private arraySwap(arr: any[], fromIndex: number, toIndex: number): void {
     const element = arr[fromIndex];
     arr.splice(fromIndex, 1);
     arr.splice(toIndex, 0, element);

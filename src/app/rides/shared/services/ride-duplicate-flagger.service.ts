@@ -5,7 +5,7 @@ import { Ride } from '../models/ride.model';
   providedIn: 'root'
 })
 export class RideDuplicateFlaggerService {
-  flag(rides: Ride[]) { // todo: make more efficient
+  flag(rides: Ride[]) {
     const dupes: string[] = [];
     const checked: string[] = [];
     for (const ride of rides) {

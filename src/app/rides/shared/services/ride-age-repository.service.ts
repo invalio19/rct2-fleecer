@@ -40,7 +40,7 @@ export class RideAgeRepositoryService {
       case GameVersion.OpenRct2:
         return this.openRct2RideAgeTable;
       default:
-        // todo error log
+        console.log('RideAgeRepository.GetAll called with an invalid argument of "' + gameVersion + '".');
         break;
     }
   }
