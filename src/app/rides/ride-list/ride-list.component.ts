@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { GameVersion } from './../shared/game-version';
 import { LocalStorageService, SaveData } from './../shared/services/local-storage.service';
 import { Ride, RideAge } from '../shared/models/ride.model';
+import { RideDuplicateFlaggerService } from './../shared/services/ride-duplicate-flagger.service';
 import { RidePriceCalculatorService } from './../shared/services/ride-price-calculator.service';
 
 @Component({
@@ -19,9 +20,11 @@ export class RideListComponent implements OnInit {
 
   constructor(
     private localStorageService: LocalStorageService,
+    private rideDuplicateFlaggerService: RideDuplicateFlaggerService,
     private ridePriceCalculatorService: RidePriceCalculatorService) {
     this.saveData = this.localStorageService.load();
     this.rides = this.saveData.rides;
+    this.rideDuplicateFlaggerService.flag(this.rides);
   }
 
   ngOnInit(): void {}
@@ -83,6 +86,7 @@ export class RideListComponent implements OnInit {
   onAddNewAttraction(): void {
     const ride: Ride = new Ride();
     ride.age = RideAge.LessThan5Months;
+
     this.rides.push(ride);
 
     this.localStorageService.save(this.saveData);
@@ -99,10 +103,17 @@ export class RideListComponent implements OnInit {
     this.localStorageService.save(this.saveData);
   }
 
+  // @Outputs
   onRideDeleted(index: number) { // triggered from child component
     this.rides.splice(index, 1);
+    this.rideDuplicateFlaggerService.flag(this.rides);
   }
 
+  onRideTypeChanged() {
+    this.rideDuplicateFlaggerService.flag(this.rides);
+  }
+
+  // Private methods
   private convertToCurrencyString(val: number): string {
     if (val !== undefined) {
       if (val === 0) {

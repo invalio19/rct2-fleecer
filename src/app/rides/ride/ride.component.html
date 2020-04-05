@@ -86,10 +86,7 @@
   </div>
   <button class="modal-close is-large" aria-label="close" (click)="onCloseDeleteModal()"></button>
 </div>
-<label class="checkbox">
-  <input type="checkbox" [(ngModel)]="ride.isDuplicate">
-  Mark as duplicate
-</label>
+<p *ngIf="ride.isDuplicate">Duplicate</p>
 <div class="buttons is-right">
   <button class="button is-danger" (click)="onAttemptDelete()">
     <span class="icon">

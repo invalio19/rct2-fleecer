@@ -1,14 +1,14 @@
 <div class="inv-head">
-  <h1 class="title">Invalio's RCT Fleecer</h1>
+  <h1 class="title">Invalio's RCT2 Fleecer</h1>
   <h2 class="title is-4">Park settings</h2>
   <div class="buttons has-addons">
     <button
-      [class]="(saveData.gameVersion === GameVersion.VanillaRct2) ? 'button is-primary is-selected' : 'button'"
+      [class]="(saveData.gameVersion === GameVersion.VanillaRct2) ? 'button is-primary' : 'button'"
       (click)="saveData.gameVersion = GameVersion.VanillaRct2">
       RCT2 / RCT Classic
     </button>
     <button
-      [class]="(saveData.gameVersion === GameVersion.OpenRct2) ? 'button is-primary is-selected' : 'button'"
+      [class]="(saveData.gameVersion === GameVersion.OpenRct2) ? 'button is-primary' : 'button'"
       (click)="saveData.gameVersion = GameVersion.OpenRct2">
       OpenRCT2
     </button>
@@ -86,7 +86,9 @@
   <app-ride *ngIf="expandedIndex === i"
     [ride]="ride"
     [index]="i"
-    (rideIndexDeleted)="onRideDeleted($event)">
+    (rideIndexDeleted)="onRideDeleted($event)"
+    (rideTypeChanged)="onRideTypeChanged()"
+    >
   </app-ride>
 </div>
 <div class="inv-footer">

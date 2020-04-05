@@ -14,6 +14,7 @@ export class RideComponent implements OnInit {
   @Input() ride: Ride;
   @Input() index: number;
   @Output() rideIndexDeleted = new EventEmitter<number>();
+  @Output() rideTypeChanged = new EventEmitter();
 
   rideTypeOptions: { id: string, name: string }[] = [];
   rideAgeOptions: { id: number, name: string }[] = [];
@@ -31,6 +32,8 @@ export class RideComponent implements OnInit {
 
   onSelectRideType(id: string): void {
     this.ride.type = this.rideTypeRepositoryService.get(id);
+    this.rideTypeChanged.emit();
+
     this.updateRideName();
   }
 
