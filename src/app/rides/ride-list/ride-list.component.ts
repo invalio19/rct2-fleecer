@@ -18,6 +18,8 @@ export class RideListComponent implements OnInit {
 
   expandedIndex: number;
 
+  deleteAllRidesModalClass = ''; // changes to is-active when clicked todo is this really needed
+
   constructor(
     private localStorageService: LocalStorageService,
     private rideDuplicateFlaggerService: RideDuplicateFlaggerService,
@@ -94,7 +96,16 @@ export class RideListComponent implements OnInit {
     this.onExpandCollapseRide(this.rides.length - 1);
   }
 
-  onDeleteAllRides(): void {
+  onAttemptDeleteAllRides() {
+    this.deleteAllRidesModalClass = 'is-active';
+  }
+
+  onCloseDeleteAllRidesModal() {
+    this.deleteAllRidesModalClass = '';
+  }
+
+  onDeleteAllRides() {
+    this.onCloseDeleteAllRidesModal();
     this.rides = [];
     this.localStorageService.clear();
   }

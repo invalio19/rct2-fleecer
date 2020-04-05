@@ -91,10 +91,23 @@
     >
   </app-ride>
 </div>
+<div [class]="'modal ' + deleteAllRidesModalClass">
+  <div class="modal-background" (click)="onCloseDeleteAllRidesModal()"></div>
+  <div class="modal-content">
+    <div class="box">
+      <p class="content">Are you sure you want to delete all rides?</p>
+      <div class="buttons is-right">
+        <button class="button is-danger" (click)="onDeleteAllRides()">Delete all rides</button>
+        <button class="button" (click)="onCloseDeleteAllRidesModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+  <button class="modal-close is-large" aria-label="close" (click)="onCloseDeleteAllRidesModal()"></button>
+</div>
 <div class="inv-footer">
   <div class="buttons">
     <button class="button is-primary" (click)="onAddNewAttraction()">Add new attraction</button>
-    <button class="button is-danger" (click)="onDeleteAllRides()">Delete all rides</button>
+    <button class="button is-danger" (click)="onAttemptDeleteAllRides()">Delete all rides</button>
     <button class="button is-primary is-small" (click)="onSave()">Save all rides (temporary! should happen automatically)</button>
   </div>
 </div>
