@@ -6,7 +6,7 @@
         disabled hidden>Ride type</option>
       <option
         *ngFor="let rideTypeOption of rideTypeOptions"
-        [selected]="ride.type && ride.type.id === rideTypeOption.id"
+        [selected]="ride.type === rideTypeOption.id"
         [value]="rideTypeOption.id">
         {{rideTypeOption.name}}
       </option>
