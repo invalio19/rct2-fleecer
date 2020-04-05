@@ -9,6 +9,10 @@ export class RideDuplicateFlaggerService {
     const dupes: string[] = [];
     const checked: string[] = [];
     for (const ride of rides) {
+      if (ride.type === undefined) {
+        continue;
+      }
+
       const id = ride.type.id;
       if (!checked.includes(id)) {
         checked.push(id);
@@ -19,7 +23,9 @@ export class RideDuplicateFlaggerService {
     }
 
     for (const ride of rides) {
-      ride.isDuplicate = dupes.includes(ride.type.id);
+      if (ride.type !== undefined) {
+        ride.isDuplicate = dupes.includes(ride.type.id);
+      }
     }
   }
 }

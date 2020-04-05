@@ -31,10 +31,16 @@ export class RideComponent implements OnInit {
   ngOnInit(): void {}
 
   onSelectRideType(id: string): void {
+    const oldName = this.ride.name;
+    let oldTypeName: string;
+    if (this.ride.type !== undefined) {
+      oldTypeName = this.ride.type.name;
+    }
+
     this.ride.type = this.rideTypeRepositoryService.get(id);
     this.rideTypeChanged.emit();
 
-    this.updateRideName();
+    this.updateRideName(oldName, oldTypeName);
   }
 
   onSelectRideAge(rideAge: RideAge): void {
@@ -68,11 +74,12 @@ export class RideComponent implements OnInit {
     }
   }
 
-  private updateRideName() {
+  private updateRideName(oldName: string, oldTypeName: string) {
     // TODO: change name automatically if it's a default name of another ride type
     // TODO: number increments based on other rides
+    const regex = new RegExp('^' + oldTypeName + ' \\d+$');
     const defaultRideName = this.ride.type.name + ' 1';
-    if (this.ride.name === undefined || this.ride.name === '') {
+    if (this.ride.name === undefined || this.ride.name === '' || regex.test(oldName)) {
       this.ride.name = defaultRideName;
     }
   }
