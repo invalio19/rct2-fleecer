@@ -79,14 +79,21 @@
     <div class="box">
       <p class="content">Are you sure you want to delete <strong>{{ride.name ? ride.name : 'Unnamed ride'}}</strong>?</p>
       <div class="buttons is-right">
-        <button class="button is-danger" (click)="onDelete()">Delete ride</button>
         <button class="button" (click)="onCloseDeleteModal()">Cancel</button>
+        <button class="button is-danger" (click)="onDelete()">Delete ride</button>
       </div>
     </div>
   </div>
   <button class="modal-close is-large" aria-label="close" (click)="onCloseDeleteModal()"></button>
 </div>
-<p *ngIf="ride.isDuplicate">Duplicate</p>
+<div
+  *ngIf="ride.duplicates !== undefined && ride.duplicates.length > 0"
+  class="box content">
+  <p>This ride is a duplicate of:</p>
+  <ul>
+    <li *ngFor="let duplicate of ride.duplicates">{{duplicate}}</li>
+  </ul>
+</div>
 <div class="buttons is-right">
   <button class="button is-danger" (click)="onAttemptDelete()">
     <span class="icon">

@@ -31,6 +31,10 @@ export class RideComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  getRideDuplicatesString(): string {
+    return this.ride.duplicates.join(', ');
+  }
+
   onSelectRideType(id: string): void {
     const oldName = this.ride.name;
     let oldTypeName: string;

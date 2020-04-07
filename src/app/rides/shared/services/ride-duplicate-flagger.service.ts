@@ -1,6 +1,7 @@
-import { RideTypeRepositoryService } from './ride-type-repository.service';
 import { Injectable } from '@angular/core';
+
 import { Ride } from '../models/ride.model';
+import { RideTypeRepositoryService } from './ride-type-repository.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,28 +10,23 @@ export class RideDuplicateFlaggerService {
   constructor(private rideTypeRepositoryService: RideTypeRepositoryService) {}
 
   flag(rides: Ride[]) {
-    const dupes: string[] = [];
-    const checked: string[] = [];
     for (const ride of rides) {
+      ride.duplicates = [];
+
       if (ride.typeId === undefined) {
         continue;
       }
 
-      const id = this.rideTypeRepositoryService.get(ride.typeId).groupId;
+      const groupId = this.rideTypeRepositoryService.get(ride.typeId).groupId;
 
-      if (!checked.includes(id)) {
-        checked.push(id);
-      }
-      else {
-        dupes.push(id);
-      }
-    }
+      for (const ride2 of rides) {
+        if (ride2.typeId !== undefined) {
+          const groupId2 = this.rideTypeRepositoryService.get(ride2.typeId).groupId;
 
-    for (const ride of rides) {
-      if (ride.typeId !== undefined) {
-        const id = this.rideTypeRepositoryService.get(ride.typeId).groupId;
-
-        ride.isDuplicate = dupes.includes(id);
+          if (ride !== ride2 && groupId === groupId2) { // all matching groups from rides that aren't itself
+            ride.duplicates.push(ride2.name);
+          }
+        }
       }
     }
   }

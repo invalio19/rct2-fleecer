@@ -100,7 +100,7 @@ export class RideListComponent implements OnInit {
       excitement: undefined,
       intensity: undefined,
       nausea: undefined,
-      isDuplicate: false
+      duplicates: []
     };
 
     this.rides.push(ride);

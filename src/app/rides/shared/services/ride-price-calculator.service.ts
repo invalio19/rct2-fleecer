@@ -62,7 +62,7 @@ export class RidePriceCalculatorService {
     ridePrice = Math.floor(ridePrice / rideAgeData[2]);
     ridePrice += rideAgeData[3];
 
-    if (ride.isDuplicate) {
+    if (ride.duplicates !== undefined && ride.duplicates.length > 0) {
       ridePrice -= Math.floor(ridePrice / 4);
     }
 

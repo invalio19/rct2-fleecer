@@ -7,5 +7,5 @@ export interface Ride {
   excitement: number;
   intensity: number;
   nausea: number;
-  isDuplicate: boolean;
+  duplicates: string[];
 }
