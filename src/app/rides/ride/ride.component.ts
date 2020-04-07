@@ -69,7 +69,10 @@ export class RideComponent implements OnInit {
   private initialiseRideAgeOptions(): void {
     let i = 0; // todo
     for (const rideAgeTableEntry of this.rideAgeRepositoryService.getAll(1)) { // todo
-      const rideAgeName = 'Less than ' + rideAgeTableEntry[0] + ' months old' // todo
+      let rideAgeName = 'Less than ' + rideAgeTableEntry[0] + ' months old'
+      if (rideAgeTableEntry[0] === 200 && rideAgeTableEntry[1] === 9) { // todo eww
+        rideAgeName = 'More than (or equal to) ' + rideAgeTableEntry[0] + ' months old'
+      }
       // 200 months old or more
       this.rideAgeOptions.push({ id: i, name: rideAgeName });
       i++;
