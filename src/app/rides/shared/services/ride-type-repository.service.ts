@@ -1,42 +1,28 @@
 import { Injectable } from '@angular/core';
+
 import { RideType } from './../models/ride-type.model';
-import { RideTypesData } from '../../../data/ride-types';
+import { RideTypeData } from '../../../data/ride-type-data';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RideTypeRepositoryService {
-  rideTypeIdNamePairs: { id: string, name: string }[] = [];
+  private rideTypeArray: RideType[] = [];
 
   constructor() {
-    for (const key in RideTypesData) {
-      if (RideTypesData.hasOwnProperty(key)) {
-        const el = RideTypesData[key];
-        this.rideTypeIdNamePairs.push({ id: key, name: el.name });
+    for (const key in RideTypeData) {
+      if (RideTypeData.hasOwnProperty(key)) {
+        const el = RideTypeData[key];
+        this.rideTypeArray.push(el);
       }
     }
-    this.sortByName(this.rideTypeIdNamePairs);
   }
 
-  getIdNamePairsSortedByName() {
-    return this.rideTypeIdNamePairs;
+  getAll(): RideType[] {
+    return this.rideTypeArray;
   }
 
   get(id: string): RideType {
-    return RideTypesData[id];
-  }
-
-  private sortByName(idNamePairs: { id: string, name: string }[]): void {
-    idNamePairs.sort((a, b) => {
-      if (a.name < b.name) {
-        return -1;
-      }
-      else if (a.name > b.name) {
-        return 1;
-      }
-      else {
-        return 0;
-      }
-    });
+    return RideTypeData[id];
   }
 }

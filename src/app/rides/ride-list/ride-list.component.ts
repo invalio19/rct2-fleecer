@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 
 import { GameVersion } from '../shared/enums/game-version';
 import { PersistenceService } from './../shared/services/persistence.service';
-import { Ride, RideAge } from '../shared/models/ride.model';
+import { Ride } from '../shared/models/ride.model';
+import { RideAge } from '../shared/enums/ride-age';
 import { RideDuplicateFlaggerService } from './../shared/services/ride-duplicate-flagger.service';
 import { RidePriceCalculatorService } from './../shared/services/ride-price-calculator.service';
 import { SaveData } from '../shared/models/save-data.model';
@@ -24,9 +25,9 @@ export class RideListComponent implements OnInit {
     private persistenceService: PersistenceService,
     private rideDuplicateFlaggerService: RideDuplicateFlaggerService,
     private ridePriceCalculatorService: RidePriceCalculatorService) {
-    this.saveData = this.persistenceService.load();
-    this.rides = this.saveData.rides;
-    this.rideDuplicateFlaggerService.flag(this.rides);
+      this.saveData = this.persistenceService.load();
+      this.rides = this.saveData.rides;
+      this.rideDuplicateFlaggerService.flag(this.rides);
   }
 
   ngOnInit(): void {}
@@ -94,7 +95,7 @@ export class RideListComponent implements OnInit {
   onAddNewAttraction(): void {
     const ride: Ride = {
       name: '',
-      type: undefined,
+      typeId: undefined,
       age: RideAge.LessThan5Months,
       excitement: undefined,
       intensity: undefined,

@@ -1,6 +1,6 @@
-import { RideType } from '../rides/shared/models/ride-type.model';
+import { RideGroup } from './../rides/shared/models/ride-group.model';
 
-export const RideTypesData: { [key: string]: RideType } = {
+export const RideGroupData: { [key: string]: RideGroup } = {
   '3dCinema': {
     id: '3dCinema',
     name: '3D Cinema',
@@ -49,13 +49,6 @@ export const RideTypesData: { [key: string]: RideType } = {
     excitement: 20,
     intensity: 10,
     nausea: 0
-  },
-  classicMiniRollerCoaster: {
-    id: 'classicMiniRollerCoaster',
-    name: 'Classic Mini Roller Coaster',
-    excitement: 50,
-    intensity: 30,
-    nausea: 10
   },
   compactInvertedCoaster: {
     id: 'compactInvertedCoaster',
@@ -151,20 +144,6 @@ export const RideTypesData: { [key: string]: RideType } = {
   heartlineTwisterCoaster: {
     id: 'heartlineTwisterCoaster',
     name: 'Heartline Twister Coaster',
-    excitement: 50,
-    intensity: 30,
-    nausea: 10
-  },
-  hyperTwister: {
-    id: 'hyperTwister',
-    name: 'Hyper-Twister',
-    excitement: 52,
-    intensity: 36,
-    nausea: 10
-  },
-  hypercoaster: {
-    id: 'hypercoaster',
-    name: 'Hypercoaster',
     excitement: 50,
     intensity: 30,
     nausea: 10
@@ -323,13 +302,6 @@ export const RideTypesData: { [key: string]: RideType } = {
     intensity: 10,
     nausea: 10
   },
-  monsterTrucks: {
-    id: 'monsterTrucks',
-    name: 'Monster Trucks',
-    excitement: 50,
-    intensity: 10,
-    nausea: 10
-  },
   motionSimulator: {
     id: 'motionSimulator',
     name: 'Motion Simulator',
@@ -400,13 +372,6 @@ export const RideTypesData: { [key: string]: RideType } = {
     intensity: 4,
     nausea: 4
   },
-  spinningWildMouse: {
-    id: 'spinningWildMouse',
-    name: 'Spinning Wild Mouse',
-    excitement: 50,
-    intensity: 30,
-    nausea: 30
-  },
   spiralRollerCoaster: {
     id: 'spiralRollerCoaster',
     name: 'Spiral Roller Coaster',
@@ -433,13 +398,6 @@ export const RideTypesData: { [key: string]: RideType } = {
     name: 'Stand-up Roller Coaster',
     excitement: 50,
     intensity: 30,
-    nausea: 10
-  },
-  steelTwister: {
-    id: 'steelTwister',
-    name: 'Steel Twister',
-    excitement: 52,
-    intensity: 36,
     nausea: 10
   },
   steelWildMouse: {
@@ -505,6 +463,13 @@ export const RideTypesData: { [key: string]: RideType } = {
     intensity: 20,
     nausea: 10
   },
+  twisterRollerCoaster: {
+    id: 'twisterRollerCoaster',
+    name: 'Twister Roller Coaster',
+    excitement: 52,
+    intensity: 36,
+    nausea: 10
+  },
   verticalDropRollerCoaster: {
     id: 'verticalDropRollerCoaster',
     name: 'Vertical Drop Roller Coaster',
@@ -539,5 +504,5 @@ export const RideTypesData: { [key: string]: RideType } = {
     excitement: 50,
     intensity: 30,
     nausea: 30
-  },
+  }
 };

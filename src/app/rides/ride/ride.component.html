@@ -2,11 +2,11 @@
   <div class="select is-primary is-fullwidth">
     <select (change)="onSelectRideType($event.target.value)">
       <option
-        [selected]="ride.type === undefined"
+        [selected]="ride.typeId === undefined"
         disabled hidden>Ride type</option>
       <option
         *ngFor="let rideTypeOption of rideTypeOptions"
-        [selected]="ride.type === rideTypeOption.id"
+        [selected]="ride.typeId === rideTypeOption.id"
         [value]="rideTypeOption.id">
         {{rideTypeOption.name}}
       </option>
@@ -36,7 +36,7 @@
       class="input is-primary"
       type="number"
       min="0"
-      max="255"
+      [max]="this.maxRideRatingValue"
       step="0.01"
       [(ngModel)]="ride.excitement">
   </p>
@@ -52,7 +52,7 @@
       class="input is-primary"
       type="number"
       min="0"
-      max="255"
+      [max]="this.maxRideRatingValue"
       step="0.01"
       [(ngModel)]="ride.intensity">
   </p>
@@ -68,7 +68,7 @@
       class="input is-primary"
       type="number"
       min="0"
-      max="255"
+      [max]="this.maxRideRatingValue"
       step="0.01"
       [(ngModel)]="ride.nausea">
   </p>

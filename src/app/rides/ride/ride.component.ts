@@ -1,8 +1,9 @@
-import { RideAge } from './../shared/models/ride.model';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { Ride } from '../shared/models/ride.model';
+import { RideAge } from '../shared/enums/ride-age';
 import { RideAgeRepositoryService } from './../shared/services/ride-age-repository.service';
+import { RideType } from '../shared/models/ride-type.model';
 import { RideTypeRepositoryService } from '../shared/services/ride-type-repository.service';
 
 @Component({
@@ -15,16 +16,17 @@ export class RideComponent implements OnInit {
   @Output() rideIndexDeleted = new EventEmitter<number>();
   @Output() rideTypeChanged = new EventEmitter();
 
-  rideTypeOptions: { id: string, name: string }[] = [];
+  rideTypeOptions: RideType[];
   rideAgeOptions: { id: number, name: string }[] = [];
 
   deleteModalClass = ''; // changes to is-active when clicked todo is this really needed
+  maxRideRatingValue = 327.67;
 
   constructor(
     private rideAgeRepositoryService: RideAgeRepositoryService,
     private rideTypeRepositoryService: RideTypeRepositoryService) {
-    this.initialiseRideTypeOptions();
-    this.initialiseRideAgeOptions();
+      this.rideTypeOptions = this.rideTypeRepositoryService.getAll();
+      this.initialiseRideAgeOptions();
   }
 
   ngOnInit(): void {}
@@ -32,12 +34,12 @@ export class RideComponent implements OnInit {
   onSelectRideType(id: string): void {
     const oldName = this.ride.name;
     let oldTypeName: string;
-    if (this.ride.type !== undefined) {
-      const oldRideType = this.rideTypeRepositoryService.get(this.ride.type);
+    if (this.ride.typeId !== undefined) {
+      const oldRideType = this.rideTypeRepositoryService.get(this.ride.typeId);
       oldTypeName = oldRideType.name;
     }
 
-    this.ride.type = id;
+    this.ride.typeId = id;
     this.rideTypeChanged.emit();
 
     this.updateRideName(oldName, oldTypeName);
@@ -60,10 +62,6 @@ export class RideComponent implements OnInit {
     this.rideIndexDeleted.emit(this.index);
   }
 
-  private initialiseRideTypeOptions(): void {
-    this.rideTypeOptions = this.rideTypeRepositoryService.getIdNamePairsSortedByName();
-  }
-
   private initialiseRideAgeOptions(): void {
     let i = 0; // todo
     for (const rideAgeTableEntry of this.rideAgeRepositoryService.getAll(1)) { // todo
@@ -78,7 +76,7 @@ export class RideComponent implements OnInit {
     // TODO: change name automatically if it's a default name of another ride type
     // TODO: number increments based on other rides
     const regex = new RegExp('^' + oldTypeName + ' \\d+$');
-    const rideType = this.rideTypeRepositoryService.get(this.ride.type);
+    const rideType = this.rideTypeRepositoryService.get(this.ride.typeId);
     const defaultRideName = rideType.name + ' 1';
     if (this.ride.name === undefined || this.ride.name === '' || regex.test(oldName)) {
       this.ride.name = defaultRideName;
