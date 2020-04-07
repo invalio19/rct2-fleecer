@@ -1,120 +1,141 @@
-<div class="container">
-  <div class="inv-head">
-    <h1 class="title">Invalio's RCT2 Fleecer</h1>
-    <h2 class="title is-4">Park settings</h2>
-    <div class="buttons has-addons">
-      <button
-        [class]="(saveData.gameVersion === GameVersion.VanillaRct2) ? 'button is-primary' : 'button'"
-        (click)="saveData.gameVersion = GameVersion.VanillaRct2">
-        RCT2 / RCT Classic
-      </button>
-      <button
-        [class]="(saveData.gameVersion === GameVersion.OpenRct2) ? 'button is-primary' : 'button'"
-        (click)="saveData.gameVersion = GameVersion.OpenRct2">
-        OpenRCT2
-      </button>
+<div class="container inv-container">
+  <section class="hero is-dark is-bold">
+    <div class="hero-body">
+      <div class="container">
+        <h1 class="title">
+          Invalio's RCT2 Fleecer
+        </h1>
+      </div>
     </div>
-    <label class="checkbox">
-      <input type="checkbox" [(ngModel)]="saveData.hasEntranceFee">
-      Park has entrance fee
-    </label>
-  </div>
-  <div class="has-background-light inv-ride" *ngFor="let ride of rides; let i = index">
-    <div class="field has-addons">
-      <p class="control is-expanded">
+  </section>
+  <main class="inv-main">
+    <div class="inv-head">
+      <h2 class="subtitle">Park settings</h2>
+      <div class="buttons has-addons">
+        <button
+          [class]="(saveData.gameVersion === GameVersion.VanillaRct2) ? 'button is-primary' : 'button'"
+          (click)="saveData.gameVersion = GameVersion.VanillaRct2">
+          RCT2 / RCT Classic
+        </button>
+        <button
+          [class]="(saveData.gameVersion === GameVersion.OpenRct2) ? 'button is-primary' : 'button'"
+          (click)="saveData.gameVersion = GameVersion.OpenRct2">
+          OpenRCT2
+        </button>
+      </div>
+      <label class="checkbox">
         <input
-          class="input is-primary"
-          placeholder="New ride"
-          [(ngModel)]="ride.name">
-      </p>
-      <p class="control">
-        <a class="button is-primary">
-          <strong>{{getMaxPriceString(ride)}}</strong>
-        </a>
-      </p>
+          type="checkbox"
+          [(ngModel)]="saveData.hasEntranceFee"
+          (change)="onChangeHasEntranceFee()">
+        Park has entrance fee
+      </label>
+      <br>
+      <label class="checkbox">
+        <input
+          type="checkbox"
+          [(ngModel)]="saveData.showGoodValuePrice"
+          [disabled]="saveData.hasEntranceFee">
+        Show 'good value' prices <span *ngIf="saveData.hasEntranceFee">(disabled; rides can never be 'good value' if a park entrance fee is charged)</span>
+      </label>
     </div>
-    <div class="level is-mobile">
-      <div class="level-left">
-        <div class="field has-addons">
-          <p class="control">
-            <button 
-              class="button"
-              [disabled]="i === 0"
-              (click)="onMoveRideUp(i)">      
-              <span class="icon">
-                <i class="fa fa-chevron-up"></i>
-              </span>      
-            </button>
-          </p>
-          <p class="control">
+    <div class="has-background-light inv-ride" *ngFor="let ride of rides; let i = index">
+      <div class="field has-addons">
+        <p class="control is-expanded">
+          <input
+            class="input is-primary"
+            placeholder="New ride"
+            [(ngModel)]="ride.name">
+        </p>
+        <p class="control">
+          <a class="button is-primary">
+            <strong *ngIf="!saveData.showGoodValuePrice">{{getMaxPriceString(ride)}}</strong>
+            <strong *ngIf="saveData.showGoodValuePrice">{{getMinPriceString(ride)}}</strong>
+          </a>
+        </p>
+      </div>
+      <div class="level is-mobile">
+        <div class="level-left">
+          <div class="field has-addons">
+            <p class="control">
+              <button 
+                class="button"
+                [disabled]="i === 0"
+                (click)="onMoveRideUp(i)">      
+                <span class="icon">
+                  <i class="fa fa-chevron-up"></i>
+                </span>      
+              </button>
+            </p>
+            <p class="control">
+              <button
+                class="button"
+                [disabled]="i === rides.length - 1"
+                (click)="onMoveRideDown(i)">      
+                <span class="icon">
+                  <i class="fa fa-chevron-down"></i>
+                </span>
+              </button>
+            </p>
+          </div>
+        </div>
+        <div class="level-right">
+          <div class="buttons">
             <button
-              class="button"
-              [disabled]="i === rides.length - 1"
-              (click)="onMoveRideDown(i)">      
+              class="button is-primary"
+              [disabled]="!canUpgradeRideAge(ride)"
+              (click)="onUpgradeRideAge(ride)">
+              <span><strong>+</strong></span>
               <span class="icon">
-                <i class="fa fa-chevron-down"></i>
+                <i class="fa fa-database"></i>
               </span>
             </button>
-          </p>
+            <button
+              class="button is-primary"
+              [disabled]="!canDegradeRideAge(ride)"
+              (click)="onDegradeRideAge(ride)">
+              <span><strong>–</strong></span>
+              <span class="icon">
+                <i class="fa fa-database"></i>
+              </span>
+            </button>
+            <button class="button" (click)="onExpandCollapseRide(i)">
+              <span class="icon">
+                <i
+                  [class]="expandedIndex === i ? 'fa fa-angle-double-up fa-2x' : 'fa fa-angle-double-down fa-2x'">
+                </i>
+              </span>
+            </button>
+          </div>
         </div>
       </div>
-      <div class="level-right">
-        <div class="buttons">
-          <button
-            class="button is-primary"
-            [disabled]="!canUpgradeRideAge(ride)"
-            (click)="onUpgradeRideAge(ride)">
-            <span><strong>+</strong></span>
-            <span class="icon">
-              <i class="fa fa-database"></i>
-            </span>
-          </button>
-          <button
-            class="button is-primary"
-            [disabled]="!canDegradeRideAge(ride)"
-            (click)="onDegradeRideAge(ride)">
-            <span><strong>–</strong></span>
-            <span class="icon">
-              <i class="fa fa-database"></i>
-            </span>
-          </button>
-          <button class="button" (click)="onExpandCollapseRide(i)">
-            <span class="icon">
-              <i
-                [class]="expandedIndex === i ? 'fa fa-angle-double-up fa-2x' : 'fa fa-angle-double-down fa-2x'">
-              </i>
-            </span>
-          </button>
+      <app-ride *ngIf="expandedIndex === i"
+        [ride]="ride"
+        [index]="i"
+        (rideIndexDeleted)="onRideDeleted($event)"
+        (rideTypeChanged)="onRideTypeChanged()">
+      </app-ride>
+    </div>
+    <div [class]="'modal ' + deleteAllRidesModalClass">
+      <div class="modal-background" (click)="onCloseDeleteAllRidesModal()"></div>
+      <div class="modal-content">
+        <div class="box">
+          <p class="content">Are you sure you want to delete all rides?</p>
+          <div class="buttons is-right">
+            <button class="button is-danger" (click)="onDeleteAllRides()">Delete all rides</button>
+            <button class="button" (click)="onCloseDeleteAllRidesModal()">Cancel</button>
+          </div>
         </div>
       </div>
+      <button class="modal-close is-large" aria-label="close" (click)="onCloseDeleteAllRidesModal()"></button>
     </div>
-    <app-ride *ngIf="expandedIndex === i"
-      [ride]="ride"
-      [index]="i"
-      (rideIndexDeleted)="onRideDeleted($event)"
-      (rideTypeChanged)="onRideTypeChanged()"
-      >
-    </app-ride>
-  </div>
-  <div [class]="'modal ' + deleteAllRidesModalClass">
-    <div class="modal-background" (click)="onCloseDeleteAllRidesModal()"></div>
-    <div class="modal-content">
-      <div class="box">
-        <p class="content">Are you sure you want to delete all rides?</p>
-        <div class="buttons is-right">
-          <button class="button is-danger" (click)="onDeleteAllRides()">Delete all rides</button>
-          <button class="button" (click)="onCloseDeleteAllRidesModal()">Cancel</button>
-        </div>
+    <div class="inv-actions">
+      <div class="buttons">
+        <button class="button is-primary" (click)="onAddNewAttraction()">Add new attraction</button>
+        <button class="button is-danger" (click)="onAttemptDeleteAllRides()">Delete all rides</button>
+        <button class="button is-primary is-small" (click)="onSave()">Save all rides (temporary! should happen automatically)</button>
       </div>
     </div>
-    <button class="modal-close is-large" aria-label="close" (click)="onCloseDeleteAllRidesModal()"></button>
-  </div>
-  <div class="inv-actions">
-    <div class="buttons">
-      <button class="button is-primary" (click)="onAddNewAttraction()">Add new attraction</button>
-      <button class="button is-danger" (click)="onAttemptDeleteAllRides()">Delete all rides</button>
-      <button class="button is-primary is-small" (click)="onSave()">Save all rides (temporary! should happen automatically)</button>
-    </div>
-  </div>
+  </main>
   <app-footer></app-footer>
 </div>

@@ -24,6 +24,7 @@ export class PersistenceService {
       name: '',
       gameVersion: GameVersion.VanillaRct2,
       hasEntranceFee: false,
+      showGoodValuePrice: false,
       rides: []
     };
     return newData;

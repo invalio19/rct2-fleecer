@@ -41,6 +41,12 @@ export class RideListComponent implements OnInit {
     return this.convertToCurrencyString(minPrice);
   }
 
+  onChangeHasEntranceFee() {
+    if (this.saveData.hasEntranceFee) {
+      this.saveData.showGoodValuePrice = false;
+    }
+  }
+
   onMoveRideUp(index: number) {
     if (index === 0) {
       return;

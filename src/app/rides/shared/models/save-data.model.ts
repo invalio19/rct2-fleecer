@@ -5,5 +5,6 @@ export interface SaveData {
   name: string;
   gameVersion: GameVersion;
   hasEntranceFee: boolean;
+  showGoodValuePrice: boolean;
   rides: Ride[];
 }

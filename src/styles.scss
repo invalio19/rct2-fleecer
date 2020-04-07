@@ -4,6 +4,16 @@ $danger: #f33;
 
 @import "../node_modules/bulma/bulma.sass";
 
+.inv-container {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.inv-main {
+  flex: 1;
+}
+
 .inv-head, .inv-ride, .inv-actions {
   padding: 1.5rem;
 }

@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "rct-fleece": {
+    "rct2-fleecer": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -18,7 +18,7 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "aot": true,
-            "outputPath": "dist/rct-fleece",
+            "outputPath": "dist/rct2-fleecer",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -68,18 +68,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "rct-fleece:build"
+            "browserTarget": "rct2-fleecer:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "rct-fleece:build:production"
+              "browserTarget": "rct2-fleecer:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "rct-fleece:build"
+            "browserTarget": "rct2-fleecer:build"
           }
         },
         "test": {
@@ -117,7 +117,7 @@
         }
       }
     },
-    "rct-fleece-e2e": {
+    "rct2-fleecer-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "prefix": "",
@@ -126,11 +126,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "rct-fleece:serve"
+            "devServerTarget": "rct2-fleecer:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "rct-fleece:serve:production"
+              "devServerTarget": "rct2-fleecer:serve:production"
             }
           }
         },
@@ -146,5 +146,5 @@
       }
     }
   },
-  "defaultProject": "rct-fleece"
+  "defaultProject": "rct2-fleecer"
 }
