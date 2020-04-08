@@ -66,7 +66,7 @@ RCT2 Fleecer uses LocalStorage to save data about the current page to your brows
 
 **7. This app doesn't work on my browser. Why not?**
 
-RCT2 Fleecer was largely built and tested using Google Chrome. Modern browsers like Firefox should also have no issues handling it, but older browsers like Internet Explorer cannot.
+RCT2 Fleecer was largely built and tested using Google Chrome. Modern browsers like Firefox should also have no issues handling it, but older browsers such as Internet Explorer cannot.
 
 ## Changelog
 
