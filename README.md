@@ -1,22 +1,24 @@
 # RCT2 Fleecer
 
-
-
-The RCT2 Fleecer app is a small web app to help manage the ride ticket prices in pay-per-ride scenarios for the games RollerCoaster Tycoon 2, RollerCoaster Tycoon Classic and OpenRCT2.
+RCT2 Fleecer is a small web app to help manage the ride ticket prices in pay-per-ride scenarios for the games RollerCoaster Tycoon 2, RollerCoaster Tycoon Classic and OpenRCT2.
 
 ## Features
 
-- Build up a list of rides and get the maximum price you can charge for them, or the 'good value' price.
-- Designed to work well on mobile.
-- Manually sort the order of your rides.
-- Automatic duplicate ride type detection that informs you which rides are duplicate types of each other (having more than one ride of the same type decreases its value by about 25%).
+- Build up a list of rides and get the maximum price you can charge for them—or the 'good value' price—based on its ratings.
+- Automatic duplicate ride type detection (having more than one ride of the same type decreases its value by about 25%).
 - Compatible with RCT2, RCT Classic and OpenRCT2.
-- Data can be saved and persists even when you close the page (for the more web savvy, this is currently using LocalStorage, though that may change).
+- Data can be saved and persists even when the page is closed.
+- Manually sort the order of rides.
+- Designed to work well on mobile.
+
+## Planned features
+
+See the [issue tracker](https://github.com/invalio19/rct2-fleecer/issues).
 
 ## Built with
 
-- [Angular CLI](https://github.com/angular/angular-cli) v9.1.0.
-- [Bulma](https://bulma.io/) v0.8.0
+- [Angular](https://angular.io/) v9.1.0.
+- [Bulma](https://bulma.io/) v0.8.0.
 
 ## Contributing
 
@@ -35,6 +37,10 @@ Some ride types in RCT2 are considered the same for some game mechanics, includi
 - The **Corkscrew Roller Coaster** and **Hypercoaster**.
 - The **Hyper-Twister** and **Steel Twister**.
 - The **Spinning Wild Mouse** and **Steel Wild Mouse**.
+
+## Changelog
+
+See the [CHANGELOG](../CHANGELOG.md) file.
 
 ## Authors
 
