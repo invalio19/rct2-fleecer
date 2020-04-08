@@ -6,6 +6,7 @@ import { Ride } from '../shared/models/ride.model';
 import { RideAge } from '../shared/enums/ride-age';
 import { RideDuplicateFlaggerService } from './../shared/services/ride-duplicate-flagger.service';
 import { RidePriceCalculatorService } from './../shared/services/ride-price-calculator.service';
+import { Park } from '../shared/models/park.model';
 import { SaveData } from '../shared/models/save-data.model';
 
 @Component({
@@ -15,7 +16,8 @@ import { SaveData } from '../shared/models/save-data.model';
 export class RideListComponent implements OnInit {
   GameVersion = GameVersion; // enum for the component to use
   saveData: SaveData;
-  rides: Ride[]; // rather than typing this.saveData.rides everywhere
+  park: Park;
+  rides: Ride[];
 
   expandedIndex: number;
 
@@ -26,26 +28,50 @@ export class RideListComponent implements OnInit {
     private rideDuplicateFlaggerService: RideDuplicateFlaggerService,
     private ridePriceCalculatorService: RidePriceCalculatorService) {
       this.saveData = this.persistenceService.load();
-      this.rides = this.saveData.rides;
+      this.park = this.saveData.parks[0];
+      this.rides = this.park.rides;
       this.rideDuplicateFlaggerService.flag(this.rides);
   }
 
   ngOnInit(): void {}
 
   getMaxPriceString(ride: Ride): string {
-    const maxPrice = this.ridePriceCalculatorService.calculateMax(ride, this.saveData.gameVersion, this.saveData.hasEntranceFee);
+    const gameVersion = this.saveData.options.gameVersion;
+    const hasEntranceFee = this.park.hasEntranceFee;
+
+    const maxPrice = this.ridePriceCalculatorService.calculateMax(ride, gameVersion, hasEntranceFee);
     return this.convertToCurrencyString(maxPrice);
   }
 
-  getMinPriceString(ride: Ride): string { // todo: display
-    const minPrice = this.ridePriceCalculatorService.calculateMin(ride, this.saveData.gameVersion, this.saveData.hasEntranceFee);
+  getMinPriceString(ride: Ride): string {
+    const gameVersion = this.saveData.options.gameVersion;
+    const hasEntranceFee = this.park.hasEntranceFee;
+
+    const minPrice = this.ridePriceCalculatorService.calculateMin(ride, gameVersion, hasEntranceFee);
     return this.convertToCurrencyString(minPrice);
   }
 
+  onClickGameVersion(gameVersion: GameVersion) {
+    this.saveData.options.gameVersion = gameVersion;
+
+    this.saveAll();
+  }
+
   onChangeHasEntranceFee() {
-    if (this.saveData.hasEntranceFee) {
-      this.saveData.showGoodValuePrice = false;
+    if (this.park.hasEntranceFee) {
+      this.park.showGoodValuePrice = false;
     }
+
+    this.saveAll();
+  }
+
+  onChangeShowGoodValuePrices() {
+    this.saveAll();
+  }
+
+  onChangeRideName() {
+    this.rideDuplicateFlaggerService.flag(this.rides); // TODO: overkill
+    this.saveAll();
   }
 
   onMoveRideUp(index: number) {
@@ -54,6 +80,8 @@ export class RideListComponent implements OnInit {
     }
 
     this.arraySwap(this.rides, index, index -1);
+
+    this.saveAll();
   }
 
   onMoveRideDown(index: number) {
@@ -62,6 +90,8 @@ export class RideListComponent implements OnInit {
     }
 
     this.arraySwap(this.rides, index, index + 1);
+
+    this.saveAll();
   }
 
   canUpgradeRideAge(ride: Ride) {
@@ -71,16 +101,18 @@ export class RideListComponent implements OnInit {
   onUpgradeRideAge(ride: Ride) {
     if (this.canUpgradeRideAge(ride)) {
       ride.age--;
+      this.saveAll();
     }
   }
 
   canDegradeRideAge(ride: Ride) {
-    return ride.age !== RideAge.MoreThan200Months; // TODO: mark as last somehow
+    return ride.age !== RideAge.MoreThan200Months;
   }
 
   onDegradeRideAge(ride: Ride) {
     if (this.canDegradeRideAge(ride)) {
       ride.age++;
+      this.saveAll();
     }
   }
 
@@ -105,7 +137,7 @@ export class RideListComponent implements OnInit {
 
     this.rides.push(ride);
 
-    this.persistenceService.save(this.saveData);
+    this.saveAll();
 
     this.onExpandCollapseRide(this.rides.length - 1);
   }
@@ -124,18 +156,27 @@ export class RideListComponent implements OnInit {
     this.persistenceService.clear();
   }
 
-  onSave(): void { // TODO: temporary!
-    this.persistenceService.save(this.saveData);
+  onSaveAll() {
+    this.saveAll();
   }
 
   // @Outputs
   onRideDeleted(index: number) { // triggered from child component
     this.rides.splice(index, 1);
     this.rideDuplicateFlaggerService.flag(this.rides);
+    this.saveAll();
   }
 
   onRideTypeChanged() {
     this.rideDuplicateFlaggerService.flag(this.rides);
+  }
+
+  onRideUpdated() {
+    this.saveAll();
+  }
+
+  private saveAll() {
+    this.persistenceService.save(this.saveData);
   }
 
   // Private methods

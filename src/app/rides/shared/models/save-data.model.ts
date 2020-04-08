@@ -1,10 +1,7 @@
-import { GameVersion } from './../enums/game-version';
-import { Ride } from './ride.model';
+import { Options } from './options.model';
+import { Park } from './park.model';
 
 export interface SaveData {
-  name: string;
-  gameVersion: GameVersion;
-  hasEntranceFee: boolean;
-  showGoodValuePrice: boolean;
-  rides: Ride[];
+  options: Options;
+  parks: Park[];
 }

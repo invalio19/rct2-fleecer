@@ -49,8 +49,4 @@ export class RideAgeRepositoryService {
     const all = this.getAll(gameVersion);
     return all[index];
   }
-
-  isLastEntry(id: number): boolean {
-    return id === this.vanillaRct2RideAgeTable.length - 1; // TODO
-  }
 }

@@ -38,6 +38,7 @@
       min="0"
       [max]="this.maxRideRatingValue"
       step="0.01"
+      (input)="onChangeRideRating()"
       [(ngModel)]="ride.excitement">
   </p>
 </div>
@@ -54,6 +55,7 @@
       min="0"
       [max]="this.maxRideRatingValue"
       step="0.01"
+      (input)="onChangeRideRating()"
       [(ngModel)]="ride.intensity">
   </p>
 </div>
@@ -70,6 +72,7 @@
       min="0"
       [max]="this.maxRideRatingValue"
       step="0.01"
+      (input)="onChangeRideRating()"
       [(ngModel)]="ride.nausea">
   </p>
 </div>
@@ -91,7 +94,7 @@
   class="box content">
   <p>This ride is a duplicate of:</p>
   <ul>
-    <li *ngFor="let duplicate of ride.duplicates">{{duplicate}}</li>
+    <li *ngFor="let duplicate of ride.duplicates">{{duplicate === undefined || duplicate === '' ? 'Unnamed ride' : duplicate}}</li>
   </ul>
 </div>
 <div class="buttons is-right">

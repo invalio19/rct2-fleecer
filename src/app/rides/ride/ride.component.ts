@@ -15,11 +15,12 @@ export class RideComponent implements OnInit {
   @Input() index: number;
   @Output() rideIndexDeleted = new EventEmitter<number>();
   @Output() rideTypeChanged = new EventEmitter();
+  @Output() rideUpdated = new EventEmitter();
 
   rideTypeOptions: RideType[];
   rideAgeOptions: { id: number, name: string }[] = [];
 
-  deleteModalClass = ''; // changes to is-active when clicked todo is this really needed
+  deleteModalClass = ''; // changes to is-active when clicked
   maxRideRatingValue = 327.67;
 
   constructor(
@@ -44,13 +45,21 @@ export class RideComponent implements OnInit {
     }
 
     this.ride.typeId = id;
-    this.rideTypeChanged.emit();
 
     this.updateRideName(oldName, oldTypeName);
+
+    this.rideTypeChanged.emit();
+    this.rideUpdated.emit();
   }
 
   onSelectRideAge(rideAge: RideAge): void {
     this.ride.age = +rideAge; // always comes through as string
+
+    this.rideUpdated.emit();
+  }
+
+  onChangeRideRating() {
+    this.rideUpdated.emit();
   }
 
   onAttemptDelete() {
@@ -67,10 +76,11 @@ export class RideComponent implements OnInit {
   }
 
   private initialiseRideAgeOptions(): void {
-    let i = 0; // todo
-    for (const rideAgeTableEntry of this.rideAgeRepositoryService.getAll(1)) { // todo
+    // TODO: this entire method is gross and hacky
+    let i = 0;
+    for (const rideAgeTableEntry of this.rideAgeRepositoryService.getAll(1)) {
       let rideAgeName = 'Less than ' + rideAgeTableEntry[0] + ' months old'
-      if (rideAgeTableEntry[0] === 200 && rideAgeTableEntry[1] === 9) { // todo eww
+      if (rideAgeTableEntry[0] === 200 && rideAgeTableEntry[1] === 9) { // EWWW
         rideAgeName = 'More than (or equal to) ' + rideAgeTableEntry[0] + ' months old'
       }
       // 200 months old or more
@@ -80,7 +90,6 @@ export class RideComponent implements OnInit {
   }
 
   private updateRideName(oldName: string, oldTypeName: string) {
-    // TODO: change name automatically if it's a default name of another ride type
     // TODO: number increments based on other rides
     const regex = new RegExp('^' + oldTypeName + ' \\d+$');
     const rideType = this.rideTypeRepositoryService.get(this.ride.typeId);

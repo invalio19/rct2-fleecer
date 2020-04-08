@@ -13,20 +13,20 @@
       <h2 class="subtitle">Park settings</h2>
       <div class="buttons has-addons">
         <button
-          [class]="(saveData.gameVersion === GameVersion.VanillaRct2) ? 'button is-primary' : 'button'"
-          (click)="saveData.gameVersion = GameVersion.VanillaRct2">
+          [class]="(saveData.options.gameVersion === GameVersion.VanillaRct2) ? 'button is-primary' : 'button'"
+          (click)="onClickGameVersion(GameVersion.VanillaRct2)">
           RCT2 / RCT Classic
         </button>
         <button
-          [class]="(saveData.gameVersion === GameVersion.OpenRct2) ? 'button is-primary' : 'button'"
-          (click)="saveData.gameVersion = GameVersion.OpenRct2">
+          [class]="(saveData.options.gameVersion === GameVersion.OpenRct2) ? 'button is-primary' : 'button'"
+          (click)="onClickGameVersion(GameVersion.OpenRct2)">
           OpenRCT2
         </button>
       </div>
       <label class="checkbox">
         <input
           type="checkbox"
-          [(ngModel)]="saveData.hasEntranceFee"
+          [(ngModel)]="park.hasEntranceFee"
           (change)="onChangeHasEntranceFee()">
         Park has entrance fee
       </label>
@@ -34,9 +34,10 @@
       <label class="checkbox">
         <input
           type="checkbox"
-          [(ngModel)]="saveData.showGoodValuePrice"
-          [disabled]="saveData.hasEntranceFee">
-        Show 'good value' prices <span *ngIf="saveData.hasEntranceFee">(disabled; rides can never be 'good value' if a park entrance fee is charged)</span>
+          [(ngModel)]="park.showGoodValuePrice"
+          [disabled]="park.hasEntranceFee"
+          (change)="onChangeShowGoodValuePrices()">
+        Show 'good value' prices <span *ngIf="park.hasEntranceFee">(disabled; rides can never be 'good value' if a park entrance fee is charged)</span>
       </label>
     </div>
     <div class="has-background-light inv-ride" *ngFor="let ride of rides; let i = index">
@@ -45,12 +46,13 @@
           <input
             class="input is-primary"
             placeholder="New ride"
+            (change)="onChangeRideName()"
             [(ngModel)]="ride.name">
         </p>
         <p class="control">
           <a class="button is-primary">
-            <strong *ngIf="!saveData.showGoodValuePrice">{{getMaxPriceString(ride)}}</strong>
-            <strong *ngIf="saveData.showGoodValuePrice">{{getMinPriceString(ride)}}</strong>
+            <strong *ngIf="!park.showGoodValuePrice">{{getMaxPriceString(ride)}}</strong>
+            <strong *ngIf="park.showGoodValuePrice">{{getMinPriceString(ride)}}</strong>
           </a>
         </p>
       </div>
@@ -113,7 +115,8 @@
         [ride]="ride"
         [index]="i"
         (rideIndexDeleted)="onRideDeleted($event)"
-        (rideTypeChanged)="onRideTypeChanged()">
+        (rideTypeChanged)="onRideTypeChanged()"
+        (rideUpdated)="onRideUpdated()">
       </app-ride>
     </div>
     <div [class]="'modal ' + deleteAllRidesModalClass">
@@ -133,7 +136,6 @@
       <div class="buttons">
         <button class="button is-primary" (click)="onAddNewAttraction()">Add new attraction</button>
         <button class="button is-danger" (click)="onAttemptDeleteAllRides()">Delete all rides</button>
-        <button class="button is-primary is-small" (click)="onSave()">Save all rides (temporary! should happen automatically)</button>
       </div>
     </div>
   </main>

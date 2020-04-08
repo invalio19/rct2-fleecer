@@ -15,7 +15,7 @@ export class RidePriceCalculatorService {
     private rideGroupRepositoryService: RideGroupRepositoryService,
     private rideTypeRepositoryService: RideTypeRepositoryService) {}
 
-  calculateMax(ride: Ride, gameVersion: GameVersion, hasEntranceFee: boolean): number { // todo pass park and ride
+  calculateMax(ride: Ride, gameVersion: GameVersion, hasEntranceFee: boolean): number {
     let ridePrice = this.calculate(ride, gameVersion, hasEntranceFee);
     if (ridePrice === undefined) {
       return undefined;
@@ -58,7 +58,7 @@ export class RidePriceCalculatorService {
 
     const rideAgeData = this.rideAgeRepositoryService.get(ride.age, gameVersion);
 
-    ridePrice *= rideAgeData[1]; // todo
+    ridePrice *= rideAgeData[1];
     ridePrice = Math.floor(ridePrice / rideAgeData[2]);
     ridePrice += rideAgeData[3];
 
