@@ -40,7 +40,7 @@ Some ride types in RCT2 are considered the same for some game mechanics, includi
 
 ## Changelog
 
-See the [CHANGELOG](../CHANGELOG.md) file.
+See the [CHANGELOG](https://github.com/invalio19/rct2-fleecer/blob/master/CHANGELOG.md) file.
 
 ## Authors
 
@@ -48,7 +48,7 @@ See the [CHANGELOG](../CHANGELOG.md) file.
 
 ## License
 
-- [MIT](http://opensource.org/licenses/mit-license.php). See the [LICENSE](https://raw.githubusercontent.com/invalio19/rct2-fleecer/master/LICENSE) file for details.
+- [MIT](http://opensource.org/licenses/mit-license.php). See the [LICENSE](https://github.com/invalio19/rct2-fleecer/blob/master/LICENSE) file for details.
 - Copyright 2020 &copy; Invalio.
 
 ## Acknowledgements
