@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.0 - 2019-04-08
+## [1.0.0](https://github.com/invalio19/rct2-fleecer/releases/tag/v1.0.0) - 2019-04-09
 
 ### Added
 
