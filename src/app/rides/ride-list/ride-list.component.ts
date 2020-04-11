@@ -152,8 +152,8 @@ export class RideListComponent implements OnInit {
 
   onDeleteAllRides() {
     this.onCloseDeleteAllRidesModal();
-    this.rides = [];
-    this.persistenceService.clear();
+    this.rides.length = 0;
+    this.saveAll();
   }
 
   onSaveAll() {

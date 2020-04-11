@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.0.1](https://github.com/invalio19/rct2-fleecer/compare/v1.0.0...v1.0.1) - 2019-04-11
+
+### Added
+
+- Made a start on getting unit tests up and running.
+
+### Fixed
+
+- 'Delete all rides' no longer prevents auto-saving from working until the page is refreshed.
+- 'Delete all rides' no longer resets options such as game version to their default value.
+
 ## [1.0.0](https://github.com/invalio19/rct2-fleecer/releases/tag/v1.0.0) - 2019-04-09
 
 ### Added

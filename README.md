@@ -1,6 +1,6 @@
 # RCT2 Fleecer
 
-RCT2 Fleecer is a small web app to help manage the ride ticket prices in pay-per-ride scenarios for the games RollerCoaster Tycoon 2, RollerCoaster Tycoon Classic and OpenRCT2. Given a ride's type and ratings, it will calculate the maximum price that guests will pay for that ride. Build up a list of rides and see at a glance how much the rides in your park are worth.
+RCT2 Fleecer is a small web app to help manage the ride ticket prices in pay-per-ride scenarios for the games RollerCoaster Tycoon 2, RollerCoaster Tycoon Classic and OpenRCT2. Given a ride's type and ratings, it will calculate the maximum price that guests will pay for that ride. Build up a list of rides and see at a glance how much the rides in your park are worth!
 
 ## Features
 

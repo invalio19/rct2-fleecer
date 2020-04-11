@@ -33,8 +33,4 @@ export class PersistenceService {
     };
     return newData;
   }
-
-  clear(): void {
-    localStorage.clear();
-  }
 }
