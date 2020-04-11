@@ -40,7 +40,10 @@
         Show 'good value' prices <span *ngIf="park.hasEntranceFee">(disabled; rides can never be 'good value' if a park entrance fee is charged)</span>
       </label>
     </div>
-    <div class="has-background-light inv-ride" *ngFor="let ride of rides; let i = index">
+    <div
+      class="has-background-light inv-ride"
+      [attr.data-test-id]="'ride-' + i"
+      *ngFor="let ride of rides; let i = index">
       <div class="field has-addons">
         <p class="control is-expanded">
           <input
@@ -101,11 +104,12 @@
                 <i class="fa fa-database"></i>
               </span>
             </button>
-            <button class="button" (click)="onExpandCollapseRide(i)">
+            <button
+              class="button"
+              data-test-id="expand-ride"
+              (click)="onExpandCollapseRide(i)">
               <span class="icon">
-                <i
-                  [class]="expandedIndex === i ? 'fa fa-angle-double-up fa-2x' : 'fa fa-angle-double-down fa-2x'">
-                </i>
+                <i [class]="expandedIndex === i ? 'fa fa-angle-double-up fa-2x' : 'fa fa-angle-double-down fa-2x'"></i>
               </span>
             </button>
           </div>
@@ -126,7 +130,10 @@
           <p class="content">Are you sure you want to delete all rides?</p>
           <div class="buttons is-right">
             <button class="button" (click)="onCloseDeleteAllRidesModal()">Cancel</button>
-            <button class="button is-danger" (click)="onDeleteAllRides()">Delete all rides</button>
+            <button
+              class="button is-danger"
+              data-test-id="delete-all-rides-confirm"
+              (click)="onDeleteAllRides()">Delete all rides</button>
           </div>
         </div>
       </div>
@@ -134,8 +141,14 @@
     </div>
     <div class="inv-actions">
       <div class="buttons">
-        <button class="button is-primary" (click)="onAddNewAttraction()">Add new attraction</button>
-        <button class="button is-danger" (click)="onAttemptDeleteAllRides()">Delete all rides</button>
+        <button
+          class="button is-primary"
+          data-test-id="add-new-attraction"
+          (click)="onAddNewAttraction()">Add new attraction</button>
+        <button
+          class="button is-danger"
+          data-test-id="delete-all-rides"
+          (click)="onAttemptDeleteAllRides()">Delete all rides</button>
       </div>
     </div>
   </main>

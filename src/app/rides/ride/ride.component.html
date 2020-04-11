@@ -1,6 +1,8 @@
 <div class="field">
   <div class="select is-primary is-fullwidth">
-    <select (change)="onSelectRideType($event.target.value)">
+    <select
+      data-test-id="ride-type"
+      (change)="onSelectRideType($event.target.value)">
       <option
         [selected]="ride.typeId === undefined"
         disabled hidden>Ride type</option>
