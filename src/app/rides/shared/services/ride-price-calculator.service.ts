@@ -1,9 +1,8 @@
-import { RideGroupRepositoryService } from './ride-group-repository.service';
 import { Injectable } from '@angular/core';
 
-import { GameVersion } from '../enums/game-version';
-import { Ride } from '../models/ride.model';
 import { RideAgeRepositoryService } from './ride-age-repository.service';
+import { RideCalculationParameters } from './../models/ride-calculation-parameters.model';
+import { RideGroupRepositoryService } from './ride-group-repository.service';
 import { RideTypeRepositoryService } from './ride-type-repository.service';
 
 @Injectable({
@@ -15,8 +14,8 @@ export class RidePriceCalculatorService {
     private rideGroupRepositoryService: RideGroupRepositoryService,
     private rideTypeRepositoryService: RideTypeRepositoryService) {}
 
-  calculateMax(ride: Ride, gameVersion: GameVersion, hasEntranceFee: boolean): number {
-    let ridePrice = this.calculate(ride, gameVersion, hasEntranceFee);
+  calculateMax(rideCalculationParameters: RideCalculationParameters): number {
+    let ridePrice = this.calculate(rideCalculationParameters);
     if (ridePrice === undefined) {
       return undefined;
     }
@@ -28,8 +27,8 @@ export class RidePriceCalculatorService {
     return ridePrice;
   };
 
-  calculateMin(ride: Ride, gameVersion: GameVersion, hasEntranceFee: boolean): number {
-    let ridePrice = this.calculate(ride, gameVersion, hasEntranceFee);
+  calculateMin(rideCalculationParameters: RideCalculationParameters): number {
+    let ridePrice = this.calculate(rideCalculationParameters);
     if (ridePrice === undefined) {
       return undefined;
     }
@@ -41,7 +40,9 @@ export class RidePriceCalculatorService {
     return ridePrice;
   }
 
-  private calculate(ride: Ride, gameVersion: GameVersion, hasEntranceFee: boolean): number {
+  private calculate(rideCalculationParameters: RideCalculationParameters): number {
+    const ride = rideCalculationParameters.ride;
+
     if (ride.typeId === undefined) {
       return undefined;
     }
@@ -56,7 +57,7 @@ export class RidePriceCalculatorService {
       ((ride.nausea * 100 * rideGroup.nausea * 32) >> 15);
     // tslint:enable:no-bitwise
 
-    const rideAgeData = this.rideAgeRepositoryService.get(ride.age, gameVersion);
+    const rideAgeData = this.rideAgeRepositoryService.get(ride.age, rideCalculationParameters.gameVersion);
 
     ridePrice *= rideAgeData[1];
     ridePrice = Math.floor(ridePrice / rideAgeData[2]);
@@ -66,7 +67,7 @@ export class RidePriceCalculatorService {
       ridePrice -= Math.floor(ridePrice / 4);
     }
 
-    if (hasEntranceFee) {
+    if (rideCalculationParameters.parkHasEntranceFee) {
       ridePrice = Math.floor(ridePrice / 4);
     }
 

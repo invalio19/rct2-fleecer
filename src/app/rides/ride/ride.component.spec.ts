@@ -12,9 +12,11 @@ describe('RideComponent', () => {
   let fixture: ComponentFixture<RideComponent>;
 
   const rideAgeRepositoryServiceSpy = jasmine.createSpyObj('RideAgeRepositoryService', ['getAll']);
+  const rideGroupRepositoryServiceSpy = jasmine.createSpyObj('RideGroupRepositoryService', ['get']);
+  const rideTypeRepositoryServiceSpy = jasmine.createSpyObj('RideTypeRepositoryService', ['get', 'getAll']);
+
   rideAgeRepositoryServiceSpy.getAll.and.returnValue([[1,2,3,4]]);
 
-  const rideGroupRepositoryServiceSpy = jasmine.createSpyObj('RideGroupRepositoryService', ['get']);
   rideGroupRepositoryServiceSpy.get.and.returnValue({
     id: '3dCinema',
     name: '3D Cinema',
@@ -23,7 +25,6 @@ describe('RideComponent', () => {
     nausea: 0
   });
 
-  const rideTypeRepositoryServiceSpy = jasmine.createSpyObj('RideTypeRepositoryService', ['get', 'getAll']);
   rideTypeRepositoryServiceSpy.get.and.returnValue({
     id: '3dCinema',
     name: '3D Cinema',

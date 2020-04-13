@@ -123,7 +123,9 @@
         (rideUpdated)="onRideUpdated()">
       </app-ride>
     </div>
-    <div [class]="'modal ' + deleteAllRidesModalClass">
+    <div class="modal"
+      [class.is-active]="isDeleteAllRidesModalActive"
+      data-test-id="delete-all-rides-modal">
       <div class="modal-background" (click)="onCloseDeleteAllRidesModal()"></div>
       <div class="modal-content">
         <div class="box">

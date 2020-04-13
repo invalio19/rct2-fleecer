@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 
 import { RideListComponent } from './ride-list.component';
 
@@ -361,5 +362,97 @@ describe('RideListComponent', () => {
     // Assert
     expect(ride.age).toBe(RideAge.MoreThan200Months);
     expect(persistenceServiceSpy.save).not.toHaveBeenCalled();
+  });
+
+  it('#onExpandCollapseRide should set expandedIndex for ride component if ride isn\'t already expanded', () => {
+    // Arrange
+    component.expandedIndex = 1;
+
+    // Act
+    component.onExpandCollapseRide(2);
+
+    // TODO DOM check
+
+    // Assert
+    expect(component.expandedIndex).toBe(2);
+  });
+
+  it('#onExpandCollapseRide should set expandedIndex to undefined if ride is already expanded', () => {
+    // Arrange
+    component.expandedIndex = 2;
+
+    // Act
+    component.onExpandCollapseRide(2);
+
+    // Assert
+    expect(component.expandedIndex).toBeUndefined();
+  });
+
+  it('#onAddNewAttraction should add new default ride to list, trigger auto-save and expand the new ride', () => {
+    // Act
+    component.onAddNewAttraction();
+
+    // Assert
+    const newDefaultRide: Ride = {
+      name: '',
+      typeId: undefined,
+      age: RideAge.LessThan5Months,
+      excitement: undefined,
+      intensity: undefined,
+      nausea: undefined,
+      duplicates: []
+    };
+
+    expect(component.rides[3]).toEqual(newDefaultRide);
+    expect(persistenceServiceSpy.save).toHaveBeenCalled();
+    expect(component.expandedIndex).toBe(3);
+  });
+
+  it('#onAttemptDeleteAllRides should show the delete all rides modal asking for confirmation', () => {
+    // Act
+    component.onAttemptDeleteAllRides();
+    fixture.detectChanges();
+
+    // Assert
+    const deleteAllRidesModal = fixture.debugElement.query(By.css('div[data-test-id="delete-all-rides-modal"]')).nativeElement;
+    expect(deleteAllRidesModal.getAttribute('class')).toContain('is-active');
+  });
+
+  it('#onCloseDeleteAllRidesModal should hide the delete all rides modal asking for confirmation', () => {
+    // Arrange
+    component.isDeleteAllRidesModalActive = true;
+    fixture.detectChanges();
+
+    // Act
+    component.onCloseDeleteAllRidesModal();
+    fixture.detectChanges();
+
+    // Assert
+    const deleteAllRidesModal = fixture.debugElement.query(By.css('div[data-test-id="delete-all-rides-modal"]')).nativeElement;
+    expect(deleteAllRidesModal.getAttribute('class')).not.toContain('is-active');
+  });
+
+  it('#onDeleteAllRides should close the delete all rides modal, delete all rides and trigger auto-save', () => {
+    // Arrange
+    component.isDeleteAllRidesModalActive = true;
+    fixture.detectChanges();
+
+    // Act
+    component.onDeleteAllRides();
+    fixture.detectChanges();
+
+    // Assert
+    const deleteAllRidesModal = fixture.debugElement.query(By.css('div[data-test-id="delete-all-rides-modal"]')).nativeElement;
+    expect(deleteAllRidesModal.getAttribute('class')).not.toContain('is-active');
+    expect(component.rides).toEqual([]);
+    expect(persistenceServiceSpy.save).toHaveBeenCalled();
+  });
+
+  it('#onSaveAll should trigger auto-save', () => {
+    // Act
+    component.onSaveAll();
+
+    // Assert
+    expect(persistenceServiceSpy.save).toHaveBeenCalled();
   });
 });

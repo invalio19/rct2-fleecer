@@ -1,3 +1,4 @@
+import { RideCalculationParameters } from './../shared/models/ride-calculation-parameters.model';
 import { Component, OnInit } from '@angular/core';
 
 import { GameVersion } from '../shared/enums/game-version';
@@ -21,7 +22,7 @@ export class RideListComponent implements OnInit {
 
   expandedIndex: number;
 
-  deleteAllRidesModalClass = ''; // changes to is-active when clicked
+  isDeleteAllRidesModalActive = false;
 
   constructor(
     private persistenceService: PersistenceService,
@@ -36,18 +37,24 @@ export class RideListComponent implements OnInit {
   ngOnInit(): void {}
 
   getMaxPriceString(ride: Ride): string {
-    const gameVersion = this.saveData.options.gameVersion;
-    const hasEntranceFee = this.park.hasEntranceFee;
+    const rideCalculationParameters: RideCalculationParameters = {
+      gameVersion: this.saveData.options.gameVersion,
+      parkHasEntranceFee: this.park.hasEntranceFee,
+      ride
+    };
 
-    const maxPrice = this.ridePriceCalculatorService.calculateMax(ride, gameVersion, hasEntranceFee);
+    const maxPrice = this.ridePriceCalculatorService.calculateMax(rideCalculationParameters);
     return this.convertToCurrencyString(maxPrice);
   }
 
   getMinPriceString(ride: Ride): string {
-    const gameVersion = this.saveData.options.gameVersion;
-    const hasEntranceFee = this.park.hasEntranceFee;
+    const rideCalculationParameters: RideCalculationParameters = {
+      gameVersion: this.saveData.options.gameVersion,
+      parkHasEntranceFee: this.park.hasEntranceFee,
+      ride
+    };
 
-    const minPrice = this.ridePriceCalculatorService.calculateMin(ride, gameVersion, hasEntranceFee);
+    const minPrice = this.ridePriceCalculatorService.calculateMin(rideCalculationParameters);
     return this.convertToCurrencyString(minPrice);
   }
 
@@ -143,11 +150,11 @@ export class RideListComponent implements OnInit {
   }
 
   onAttemptDeleteAllRides() {
-    this.deleteAllRidesModalClass = 'is-active';
+    this.isDeleteAllRidesModalActive = true;
   }
 
   onCloseDeleteAllRidesModal() {
-    this.deleteAllRidesModalClass = '';
+    this.isDeleteAllRidesModalActive = false;
   }
 
   onDeleteAllRides() {
