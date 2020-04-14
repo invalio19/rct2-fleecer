@@ -16,7 +16,7 @@ describe('RideListComponent', () => {
   let fixture: ComponentFixture<RideListComponent>;
 
   const persistenceServiceSpy = jasmine.createSpyObj('PersistenceService', ['save', 'load']);
-  const ridePriceCalculatorServiceSpy = jasmine.createSpyObj('RidePriceCalculatorService', ['calculateMax', 'calculateMin']);
+  const ridePriceCalculatorServiceSpy = jasmine.createSpyObj('RidePriceCalculatorService', ['calculateMax', 'calculateMin', 'calculateRecommendedParkEntranceFee']);
   const rideDuplicateFlaggerServiceSpy = jasmine.createSpyObj('RideDuplicateFlaggerService', ['flag']);
 
   const dummyRide: Ride = {
@@ -139,6 +139,17 @@ describe('RideListComponent', () => {
     expect(val).toBe('Free');
   });
 
+  it('#getRecommendedParkEntranceFeeString should show currency symbol and be to 2dp', () => {
+    // Arrange
+    ridePriceCalculatorServiceSpy.calculateRecommendedParkEntranceFee.and.returnValue(35);
+
+    // Act
+    const val = component.getRecommendedParkEntranceFeeString();
+
+    // Assert
+    expect(val).toBe('£35.00');
+  });
+
   it('#onClickGameVersion should set the appropriate game version and trigger auto-save', () => {
     // Act
     component.onClickGameVersion(GameVersion.OpenRct2);
@@ -159,6 +170,30 @@ describe('RideListComponent', () => {
     // Assert
     expect(component.park.showGoodValuePrice).toBe(false);
     expect(persistenceServiceSpy.save).toHaveBeenCalled();
+  });
+
+  it('#onClickRecommendedParkEntranceFeeWhy should show park entrance fee explanation modal', () => {
+    // Act
+    component.onClickRecommendedParkEntranceFeeWhy();
+    fixture.detectChanges();
+
+    // Assert
+    const onClickRecommendedParkEntranceFeeModal = fixture.debugElement.query(By.css('div[data-test-id="recommended-park-entrance-fee-modal"]')).nativeElement;
+    expect(onClickRecommendedParkEntranceFeeModal.getAttribute('class')).toContain('is-active');
+  });
+
+  it('#onCloseRecommendedParkEntranceFeeModal should close park entrance fee explanation modal', () => {
+    // Arrange
+    component.isRecommendedParkEntranceFeeModalActive = true;
+    fixture.detectChanges();
+
+    // Act
+    component.onCloseRecommendedParkEntranceFeeModal();
+    fixture.detectChanges();
+
+    // Assert
+    const onClickRecommendedParkEntranceFeeModal = fixture.debugElement.query(By.css('div[data-test-id="recommended-park-entrance-fee-modal"]')).nativeElement;
+    expect(onClickRecommendedParkEntranceFeeModal.getAttribute('class')).not.toContain('is-active');
   });
 
   it('#onChangeShowGoodValuePrices should trigger auto-save', () => {

@@ -2,6 +2,8 @@
 
 RCT2 Fleecer is a small web app to help manage the ride ticket prices in pay-per-ride scenarios for the games RollerCoaster Tycoon 2, RollerCoaster Tycoon Classic and OpenRCT2. Given a ride's type and ratings, it will calculate the maximum price that guests will pay for that ride. Build up a list of rides and see at a glance how much the rides in your park are worth!
 
+[https://invalio19.github.io/rct2-fleecer/](https://invalio19.github.io/rct2-fleecer/)
+
 ## Features
 
 - Build up a list of rides and get the maximum price you can charge for them—or the 'good value' price—based on its ratings.
@@ -85,5 +87,5 @@ See the [CHANGELOG](https://github.com/invalio19/rct2-fleecer/blob/master/CHANGE
 
 - [Deurklink](https://www.youtube.com/channel/UCcU9si2fIVJ-KoIDX9xYpdw), for his [work](https://forums.openrct2.org/topic/2737-guide-how-much-can-you-charge-for-your-rides/) in uncovering how the ride pricing is determined.
 - [Marcel Vos](https://www.youtube.com/channel/UCBlXovStrlQkVA2xJEROUNg), for [explaining](https://www.youtube.com/watch?v=rUGUwZIr4n0) how this and many other RCT2 mechanics work, as well as some very entertaining RCT2 videos.
-- [Shottysteve](https://www.youtube.com/shottysteve), for designing the [calculator](https://rct2calc.shottysteve.com/) that helped inspire this one.
+- [shottysteve](https://www.youtube.com/shottysteve), for designing the [calculator](https://rct2calc.shottysteve.com/) that helped inspire this one.
 - [Ted 'IntelOrca' John](http://intelorca.co.uk/) and the various contributors to the [OpenRCT2](https://openrct2.org/) project.

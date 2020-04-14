@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 
+import { GameVersion } from './../enums/game-version';
+import { Ride } from '../models/ride.model';
 import { RideAgeRepositoryService } from './ride-age-repository.service';
 import { RideCalculationParameters } from './../models/ride-calculation-parameters.model';
 import { RideGroupRepositoryService } from './ride-group-repository.service';
@@ -15,9 +17,13 @@ export class RidePriceCalculatorService {
     private rideTypeRepositoryService: RideTypeRepositoryService) {}
 
   calculateMax(rideCalculationParameters: RideCalculationParameters): number {
-    let ridePrice = this.calculate(rideCalculationParameters);
+    let ridePrice = this.calculateRideValue(rideCalculationParameters.gameVersion, rideCalculationParameters.ride);
     if (ridePrice === undefined) {
       return undefined;
+    }
+
+    if (rideCalculationParameters.parkHasEntranceFee) {
+      ridePrice = Math.floor(ridePrice / 4);
     }
 
     ridePrice *= 2;
@@ -28,9 +34,13 @@ export class RidePriceCalculatorService {
   };
 
   calculateMin(rideCalculationParameters: RideCalculationParameters): number {
-    let ridePrice = this.calculate(rideCalculationParameters);
+    let ridePrice = this.calculateRideValue(rideCalculationParameters.gameVersion, rideCalculationParameters.ride);
     if (ridePrice === undefined) {
       return undefined;
+    }
+
+    if (rideCalculationParameters.parkHasEntranceFee) {
+      ridePrice = Math.floor(ridePrice / 4);
     }
 
     ridePrice = Math.floor(ridePrice / 2);
@@ -40,9 +50,15 @@ export class RidePriceCalculatorService {
     return ridePrice;
   }
 
-  private calculate(rideCalculationParameters: RideCalculationParameters): number {
-    const ride = rideCalculationParameters.ride;
+  calculateRecommendedParkEntranceFee(gameVersion: GameVersion, rides: Ride[]): number {
+    let totalRideValueForMoney = this.calculateTotalRideValueForMoney(gameVersion, rides);
 
+    totalRideValueForMoney = Math.floor(totalRideValueForMoney / 10);
+
+    return totalRideValueForMoney;
+  }
+
+  private calculateRideValue(gameVersion: GameVersion, ride: Ride): number {
     if (ride.typeId === undefined) {
       return undefined;
     }
@@ -57,7 +73,7 @@ export class RidePriceCalculatorService {
       ((ride.nausea * 100 * rideGroup.nausea * 32) >> 15);
     // tslint:enable:no-bitwise
 
-    const rideAgeData = this.rideAgeRepositoryService.get(ride.age, rideCalculationParameters.gameVersion);
+    const rideAgeData = this.rideAgeRepositoryService.get(ride.age, gameVersion);
 
     ridePrice *= rideAgeData[1];
     ridePrice = Math.floor(ridePrice / rideAgeData[2]);
@@ -67,10 +83,18 @@ export class RidePriceCalculatorService {
       ridePrice -= Math.floor(ridePrice / 4);
     }
 
-    if (rideCalculationParameters.parkHasEntranceFee) {
-      ridePrice = Math.floor(ridePrice / 4);
-    }
-
     return ridePrice;
+  }
+
+  private calculateTotalRideValueForMoney(gameVersion: GameVersion, rides: Ride[]): number {
+    let totalValue = 0;
+
+    for (const ride of rides) {
+      if (ride.typeId !== undefined) {
+        totalValue += this.calculateRideValue(gameVersion, ride) * 2;
+      }
+    };
+
+    return totalValue;
   }
 }

@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { RidePriceCalculatorService } from './ride-price-calculator.service';
 
 import { GameVersion } from './../enums/game-version';
+import { Ride } from '../models/ride.model';
 import { RideAge } from './../enums/ride-age';
 import { RideAgeRepositoryService } from './ride-age-repository.service';
 import { RideCalculationParameters } from '../models/ride-calculation-parameters.model';
@@ -18,42 +19,76 @@ describe('RidePriceCalculatorService', () => {
   const rideGroupRepositoryServiceSpy = jasmine.createSpyObj('RideGroupRepositoryService', ['get']);
   const rideTypeRepositoryServiceSpy = jasmine.createSpyObj('RideTypeRepositoryService', ['get']);
 
-  const woodenCoasterTestGroup: RideGroup = {
-    id: 'woodenCoasterTestGroup',
+  const woodenRollerCoasterTestGroup: RideGroup = {
+    id: 'woodenRollerCoasterTestGroup',
     name: 'Wooden Roller Coaster',
     excitement: 52,
     intensity: 33,
     nausea: 8
   };
 
-  const woodenCoasterTestType: RideType = {
-    id: 'woodenCoasterTestType',
+  const woodenRollerCoasterTestType: RideType = {
+    id: 'woodenRollerCoasterTestType',
     name: 'Wooden Roller Coaster',
-    groupId: 'woodenCoasterTestGroup'
+    groupId: 'woodenRollerCoasterTestGroup'
   };
 
-  const juniorCoasterTestGroup: RideGroup = {
-    id: 'juniorCoasterTestGroup',
+  const juniorRollerCoasterTestGroup: RideGroup = {
+    id: 'juniorRollerCoasterTestGroup',
     name: 'Junior Roller Coaster',
     excitement: 50,
     intensity: 30,
     nausea: 10
   };
 
-  const juniorCoasterTestType: RideType = {
-    id: 'juniorCoasterTestType',
+  const juniorRollerCoasterTestType: RideType = {
+    id: 'juniorRollerCoasterTestType',
     name: 'Junior Roller Coaster',
-    groupId: 'juniorCoasterTestGroup'
+    groupId: 'juniorRollerCoasterTestGroup'
+  };
+
+  const logFlumeTestGroup: RideGroup = {
+    id: 'logFlumeTestGroup',
+    name: 'Log Flume',
+    excitement: 80,
+    intensity: 34,
+    nausea: 6
+  };
+
+  const logFlumeTestType: RideType = {
+    id: 'logFlumeTestType',
+    name: 'Log Flume',
+    groupId: 'logFlumeTestGroup'
+  };
+
+  const mineTrainCoasterTestGroup: RideGroup = {
+    id: 'mineTrainCoasterTestGroup',
+    name: 'Mine Train Coaster',
+    excitement: 50,
+    intensity: 30,
+    nausea: 10
+  };
+
+  const mineTrainCoasterTestType: RideType = {
+    id: 'mineTrainCoasterTestType',
+    name: 'Mine Train Coaster',
+    groupId: 'mineTrainCoasterTestGroup'
   };
 
   rideAgeRepositoryServiceSpy.get.withArgs(RideAge.LessThan5Months, GameVersion.OpenRct2).and.returnValue([5, 3, 2, 0]);
   rideAgeRepositoryServiceSpy.get.withArgs(RideAge.LessThan13Months, GameVersion.OpenRct2).and.returnValue([5, 6, 5, 0]);
 
-  rideGroupRepositoryServiceSpy.get.withArgs('woodenCoasterTestGroup').and.returnValue(woodenCoasterTestGroup);
-  rideTypeRepositoryServiceSpy.get.withArgs('woodenCoasterTestType').and.returnValue(woodenCoasterTestType);
+  rideGroupRepositoryServiceSpy.get.withArgs('woodenRollerCoasterTestGroup').and.returnValue(woodenRollerCoasterTestGroup);
+  rideTypeRepositoryServiceSpy.get.withArgs('woodenRollerCoasterTestType').and.returnValue(woodenRollerCoasterTestType);
 
-  rideGroupRepositoryServiceSpy.get.withArgs('juniorCoasterTestGroup').and.returnValue(juniorCoasterTestGroup);
-  rideTypeRepositoryServiceSpy.get.withArgs('juniorCoasterTestType').and.returnValue(juniorCoasterTestType);
+  rideGroupRepositoryServiceSpy.get.withArgs('juniorRollerCoasterTestGroup').and.returnValue(juniorRollerCoasterTestGroup);
+  rideTypeRepositoryServiceSpy.get.withArgs('juniorRollerCoasterTestType').and.returnValue(juniorRollerCoasterTestType);
+
+  rideGroupRepositoryServiceSpy.get.withArgs('logFlumeTestGroup').and.returnValue(logFlumeTestGroup);
+  rideTypeRepositoryServiceSpy.get.withArgs('logFlumeTestType').and.returnValue(logFlumeTestType);
+
+  rideGroupRepositoryServiceSpy.get.withArgs('mineTrainCoasterTestGroup').and.returnValue(mineTrainCoasterTestGroup);
+  rideTypeRepositoryServiceSpy.get.withArgs('mineTrainCoasterTestType').and.returnValue(mineTrainCoasterTestType);
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -71,10 +106,10 @@ describe('RidePriceCalculatorService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('#calculateMax should calculate the correct calculation value', () => {
+  it('#calculateMax should calculate the correct value', () => {
     [
-      [GameVersion.OpenRct2, false, 'woodenCoasterTestType', RideAge.LessThan5Months, 6.48, 7.62, 4.48, true, 13.20],
-      [GameVersion.OpenRct2, false, 'woodenCoasterTestType', RideAge.LessThan13Months, 6.48, 7.62, 4.48, true, 10.60]
+      [GameVersion.OpenRct2, false, 'woodenRollerCoasterTestType', RideAge.LessThan5Months, 6.48, 7.62, 4.48, true, 13.20],
+      [GameVersion.OpenRct2, false, 'woodenRollerCoasterTestType', RideAge.LessThan13Months, 6.48, 7.62, 4.48, true, 10.60]
     ].forEach(([gameVersion, hasEntranceFee, rideTypeId, rideAge, excitement, intensity, nausea, hasDuplicate, expectedValue]) => {
       // Arrange
       const rideCalculationParameters: RideCalculationParameters = {
@@ -99,9 +134,9 @@ describe('RidePriceCalculatorService', () => {
     });
   });
 
-  it('#calculateMin should calculate the correct calculation value', () => {
+  it('#calculateMin should calculate the correct value', () => {
     [
-      [GameVersion.OpenRct2, false, 'juniorCoasterTestType', RideAge.LessThan5Months, 4.77, 5.60, 3.62, false, 3.10],
+      [GameVersion.OpenRct2, false, 'juniorRollerCoasterTestType', RideAge.LessThan5Months, 4.77, 5.60, 3.62, false, 3.10],
     ].forEach(([gameVersion, hasEntranceFee, rideTypeId, rideAge, excitement, intensity, nausea, hasDuplicate, expectedValue]) => {
       // Arrange
       const rideCalculationParameters: RideCalculationParameters = {
@@ -124,6 +159,77 @@ describe('RidePriceCalculatorService', () => {
       // Assert
       expect(calculatedValue).toBe(expectedValue as number);
     });
+  });
+
+  it('#calculateRecommendedParkEntranceFee should calculate the correct value', () => {
+    // Arrange
+    const gameVersion: GameVersion = GameVersion.OpenRct2;
+    const rides: Ride[] = [
+      {
+        name: 'test 1',
+        typeId: 'woodenRollerCoasterTestType',
+        age: RideAge.LessThan5Months,
+        excitement: 3.02,
+        intensity: 3.25,
+        nausea: 1.96,
+        duplicates: []
+      },
+      {
+        name: 'test 2',
+        typeId: 'logFlumeTestType',
+        age: RideAge.LessThan5Months,
+        excitement: 3.87,
+        intensity: 2.34,
+        nausea: 1.12,
+        duplicates: []
+      },
+      {
+        name: 'test 3',
+        typeId: 'mineTrainCoasterTestType',
+        age: RideAge.LessThan5Months,
+        excitement: 6.65,
+        intensity: 8.18,
+        nausea: 5.18,
+        duplicates: []
+      }
+    ];
+
+    // Act
+    const calculatedValue = service.calculateRecommendedParkEntranceFee(gameVersion, rides);
+
+    // Assert
+    expect(calculatedValue).toBe(36.00); // £7.80 + £11 + £18 = £36.80, rounded down to nearest whole £1
+  });
+
+  it('#calculateRecommendedParkEntranceFee should ignore incomplete rides instead of returning NaN', () => {
+    // Arrange
+    const gameVersion: GameVersion = GameVersion.OpenRct2;
+    const rides: Ride[] = [
+      {
+        name: 'test 1',
+        typeId: 'woodenRollerCoasterTestType',
+        age: RideAge.LessThan5Months,
+        excitement: 3.02,
+        intensity: 3.25,
+        nausea: 1.96,
+        duplicates: []
+      },
+      {
+        name: '',
+        typeId: undefined,
+        age: RideAge.LessThan5Months,
+        excitement: 0,
+        intensity: 0,
+        nausea: 0,
+        duplicates: []
+      }
+    ];
+
+    // Act
+    const calculatedValue = service.calculateRecommendedParkEntranceFee(gameVersion, rides);
+
+    // Assert
+    expect(calculatedValue).toBe(7.00); // £7.80 + £11 + £18 = £36.80, rounded down to nearest whole £1
   });
 });
 

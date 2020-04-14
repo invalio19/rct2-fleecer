@@ -23,6 +23,7 @@ export class RideListComponent implements OnInit {
   expandedIndex: number;
 
   isDeleteAllRidesModalActive = false;
+  isRecommendedParkEntranceFeeModalActive = false;
 
   constructor(
     private persistenceService: PersistenceService,
@@ -58,6 +59,12 @@ export class RideListComponent implements OnInit {
     return this.convertToCurrencyString(minPrice);
   }
 
+  getRecommendedParkEntranceFeeString(): string {
+    const recommendedPrice = this.ridePriceCalculatorService.calculateRecommendedParkEntranceFee(this.saveData.options.gameVersion, this.park.rides);
+
+    return this.convertToCurrencyString(recommendedPrice);
+  }
+
   onClickGameVersion(gameVersion: GameVersion) {
     this.saveData.options.gameVersion = gameVersion;
 
@@ -74,6 +81,14 @@ export class RideListComponent implements OnInit {
 
   onChangeShowGoodValuePrices() {
     this.saveAll();
+  }
+
+  onClickRecommendedParkEntranceFeeWhy() {
+    this.isRecommendedParkEntranceFeeModalActive = true;
+  }
+
+  onCloseRecommendedParkEntranceFeeModal() {
+    this.isRecommendedParkEntranceFeeModalActive = false;
   }
 
   onChangeRideName() {
