@@ -173,6 +173,10 @@ describe('RideListComponent', () => {
   });
 
   it('#onClickRecommendedParkEntranceFeeWhy should show park entrance fee explanation modal', () => {
+    // Arrange
+    component.park.hasEntranceFee = true;
+    fixture.detectChanges(); // show the park entrance fee section
+
     // Act
     component.onClickRecommendedParkEntranceFeeWhy();
     fixture.detectChanges();
@@ -184,6 +188,7 @@ describe('RideListComponent', () => {
 
   it('#onCloseRecommendedParkEntranceFeeModal should close park entrance fee explanation modal', () => {
     // Arrange
+    component.park.hasEntranceFee = true;
     component.isRecommendedParkEntranceFeeModalActive = true;
     fixture.detectChanges();
 

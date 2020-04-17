@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.1.0](https://github.com/invalio19/rct2-fleecer/compare/v1.0.1...v1.1.0) - 2019-04-17
+
+### Added
+
+- The recommended park entrance fee field is now calculated and displayed, along with a modal explaining its logic.
+- Added a lot more tests.
+
+### Changed
+
+- Did a little refactoring in some places.
+
 ## [1.0.1](https://github.com/invalio19/rct2-fleecer/compare/v1.0.0...v1.0.1) - 2019-04-11
 
 ### Added
