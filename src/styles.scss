@@ -17,6 +17,11 @@ $danger: #f33;
   padding: 1.5rem;
 }
 
+.inv-disabled[disabled] {
+  opacity: 1;
+  cursor: default;
+}
+
 .inv-ride {
   margin-bottom: .75rem;
 }

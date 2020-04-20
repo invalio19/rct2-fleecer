@@ -29,7 +29,7 @@
 </div>
 <div class="field has-addons">  
   <p class="control inv-rating">
-    <a class="button is-primary inv-rating-inner">
+    <a class="button is-primary inv-rating-inner inv-disabled" disabled>
       Excitement
     </a>
   </p>
@@ -46,7 +46,7 @@
 </div>
 <div class="field has-addons">  
   <p class="control inv-rating">
-    <a class="button is-primary inv-rating-inner">
+    <a class="button is-primary inv-rating-inner inv-disabled" disabled>
       Intensity
     </a>
   </p>
@@ -63,7 +63,7 @@
 </div>
 <div class="field has-addons">  
   <p class="control inv-rating">
-    <a class="button is-primary inv-rating-inner">
+    <a class="button is-primary inv-rating-inner inv-disabled" disabled>
       Nausea
     </a>
   </p>
@@ -78,19 +78,6 @@
       [(ngModel)]="ride.nausea">
   </p>
 </div>
-<div [class]="'modal ' + deleteModalClass">
-  <div class="modal-background" (click)="onCloseDeleteModal()"></div>
-  <div class="modal-content">
-    <div class="box">
-      <p class="content">Are you sure you want to delete <strong>{{ride.name ? ride.name : 'Unnamed ride'}}</strong>?</p>
-      <div class="buttons is-right">
-        <button class="button" (click)="onCloseDeleteModal()">Cancel</button>
-        <button class="button is-danger" (click)="onDelete()">Delete ride</button>
-      </div>
-    </div>
-  </div>
-  <button class="modal-close is-large" aria-label="close" (click)="onCloseDeleteModal()"></button>
-</div>
 <div
   *ngIf="ride.duplicates !== undefined && ride.duplicates.length > 0"
   class="box content">
@@ -99,10 +86,84 @@
     <li *ngFor="let duplicate of ride.duplicates">{{duplicate === undefined || duplicate === '' ? 'Unnamed ride' : duplicate}}</li>
   </ul>
 </div>
-<div class="buttons is-right">
-  <button class="button is-danger" (click)="onAttemptDelete()">
-    <span class="icon">
-      <i class="fa fa-trash"></i>
-    </span>
-  </button>
+<div
+  class="modal"
+  [class.is-active]="isRideDataModalActive"
+  data-test-id="ride-data-modal">
+  <div class="modal-background" (click)="onClickCloseRideDataModal()"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title is-size-5">Ride data</p>
+      <button
+        class="delete"
+        aria-label="close"
+        (click)="onClickCloseRideDataModal()">
+      </button>
+    </header>
+    <section class="modal-card-body">
+      <div class="content">
+        <div
+          *ngIf="getRideHasStatRequirements()"
+          data-test-id="minimum-stat-requirements">
+          <h3 class="is-size-6">Minimum stat requirements</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Requirement</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Highest drop height</td>
+                <td>{{getHighestDropHeightString()}}</td>
+              </tr>
+              <tr>
+                <td colspan="2" class="is-size-7">Penalty: All ratings divided by 2</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>          
+    <footer class="modal-card-foot inv-flex-end">
+      <button
+        class="button is-primary"
+        (click)="onClickCloseRideDataModal()">
+        OK
+      </button>
+    </footer>
+  </div>
+</div>
+<div
+  class="modal"
+  [class.is-active]="isDeleteModalActive"
+  data-test-id="delete-ride-modal">
+  <div class="modal-background" (click)="onClickCloseDeleteModal()"></div>
+  <div class="modal-content">
+    <div class="box">
+      <p class="content">Are you sure you want to delete <strong>{{ride.name ? ride.name : 'Unnamed ride'}}</strong>?</p>
+      <div class="buttons is-right">
+        <button class="button" (click)="onClickCloseDeleteModal()">Cancel</button>
+        <button class="button is-danger" (click)="onDelete()">Delete ride</button>
+      </div>
+    </div>
+  </div>
+  <button class="modal-close is-large" aria-label="close" (click)="onClickCloseDeleteModal()"></button>
+</div>
+<div class="level is-mobile">
+  <div class="level-left">
+    <button class="button is-primary" (click)="onClickShowRideData()">
+      <span class="icon">
+        <i class="fa fa-info"></i>
+      </span>
+    </button>
+  </div>
+  <div class="level-right">
+    <button class="button" (click)="onClickAttemptDelete()">
+      <span class="icon">
+        <i class="fa fa-trash"></i>
+      </span>
+    </button>
+  </div>
 </div>

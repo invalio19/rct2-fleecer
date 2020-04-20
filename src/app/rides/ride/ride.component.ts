@@ -3,6 +3,9 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Ride } from '../shared/models/ride.model';
 import { RideAge } from '../shared/enums/ride-age';
 import { RideAgeRepositoryService } from './../shared/services/ride-age-repository.service';
+import { RideGroup } from '../shared/models/ride-group.model';
+import { RideGroupRepositoryService } from '../shared/services/ride-group-repository.service';
+import { RidePenaltyConverterService } from './../shared/services/ride-penalty-converter.service';
 import { RideType } from '../shared/models/ride-type.model';
 import { RideTypeRepositoryService } from '../shared/services/ride-type-repository.service';
 
@@ -20,11 +23,14 @@ export class RideComponent implements OnInit {
   rideTypeOptions: RideType[];
   rideAgeOptions: { id: number, name: string }[] = [];
 
-  deleteModalClass = ''; // changes to is-active when clicked
+  isRideDataModalActive = false;
+  isDeleteModalActive = false;
   maxRideRatingValue = 327.67;
 
   constructor(
     private rideAgeRepositoryService: RideAgeRepositoryService,
+    private rideGroupRepositoryService: RideGroupRepositoryService,
+    private ridePenaltyConverterService: RidePenaltyConverterService,
     private rideTypeRepositoryService: RideTypeRepositoryService) {
       this.rideTypeOptions = this.rideTypeRepositoryService.getAll();
       this.initialiseRideAgeOptions();
@@ -62,17 +68,51 @@ export class RideComponent implements OnInit {
     this.rideUpdated.emit();
   }
 
-  onAttemptDelete() {
-    this.deleteModalClass = 'is-active';
+  onClickShowRideData() {
+    this.isRideDataModalActive = true;
   }
 
-  onCloseDeleteModal() {
-    this.deleteModalClass = '';
+  onClickCloseRideDataModal() {
+    this.isRideDataModalActive = false;
+  }
+
+  getRideHasStatRequirements(): boolean {
+    const rideGroup = this.getRideGroup();
+    return rideGroup?.statRequirements !== undefined;
+  }
+
+  getHighestDropHeightString(): string {
+    const rideGroup = this.getRideGroup();
+    const highestDropHeightBase = rideGroup?.statRequirements?.highestDropHeight?.value;
+    if (highestDropHeightBase !== undefined) {
+      const highestDropHeight = this.ridePenaltyConverterService.highestDropHeight(highestDropHeightBase);
+      return highestDropHeight + 'm';
+    }
+    return '0m'; // should never show
+  }
+
+  onClickAttemptDelete() {
+    this.isDeleteModalActive = true;
+  }
+
+  onClickCloseDeleteModal() {
+    this.isDeleteModalActive = false;
   }
 
   onDelete() {
-    this.onCloseDeleteModal();
+    this.onClickCloseDeleteModal();
     this.rideIndexDeleted.emit(this.index);
+  }
+
+  private getRideGroup(): RideGroup {
+    if (this.ride.typeId !== undefined) {
+      const rideType = this.rideTypeRepositoryService.get(this.ride.typeId);
+      if (rideType !== undefined) {
+        const rideGroup = this.rideGroupRepositoryService.get(rideType.groupId);
+        return rideGroup;
+      }
+    }
+    return undefined;
   }
 
   private initialiseRideAgeOptions(): void {

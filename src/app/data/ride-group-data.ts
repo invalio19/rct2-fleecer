@@ -13,7 +13,15 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     name: 'Air Powered Vertical Coaster',
     excitement: 44,
     intensity: 66,
-    nausea: 10
+    nausea: 10,
+    statRequirements: {
+      highestDropHeight: {
+        value: 34,
+        excitement: 2,
+        intensity: 1,
+        nausea: 1
+      }
+    }
   },
   boatHire: {
     id: 'boatHire',
@@ -27,7 +35,27 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     name: 'Bobsleigh Coaster',
     excitement: 50,
     intensity: 30,
-    nausea: 10
+    nausea: 10,
+    statRequirements: {
+      maxSpeed: {
+        value: 0xC0000,
+        excitement: 2,
+        intensity: 2,
+        nausea: 2
+      },
+      maxLateralG: {
+        value: 1.2,
+        excitement: 2,
+        intensity: 2,
+        nausea: 2
+      },
+      firstLength: {
+        value: 0x1720000,
+        excitement: 2,
+        intensity: 2,
+        nausea: 2
+      }
+    }
   },
   carRide: {
     id: 'carRide',

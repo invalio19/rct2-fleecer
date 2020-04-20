@@ -146,7 +146,7 @@ export class RideListComponent implements OnInit {
     }
   }
 
-  onAddNewAttraction(): void {
+  onClickAddNewRide(): void {
     const ride: Ride = {
       name: '',
       typeId: undefined,
@@ -164,7 +164,7 @@ export class RideListComponent implements OnInit {
     this.onExpandCollapseRide(this.rides.length - 1);
   }
 
-  onAttemptDeleteAllRides() {
+  onClickAttemptDeleteAllRides() {
     this.isDeleteAllRidesModalActive = true;
   }
 

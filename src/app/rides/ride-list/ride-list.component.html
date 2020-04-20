@@ -104,7 +104,7 @@
             [(ngModel)]="ride.name">
         </p>
         <p class="control">
-          <a class="button is-primary">
+          <a class="button is-primary inv-disabled" disabled>
             <strong *ngIf="!park.showGoodValuePrice">{{getMaxPriceString(ride)}}</strong>
             <strong *ngIf="park.showGoodValuePrice">{{getMinPriceString(ride)}}</strong>
           </a>
@@ -198,12 +198,12 @@
       <div class="buttons">
         <button
           class="button is-primary"
-          data-test-id="add-new-attraction"
-          (click)="onAddNewAttraction()">Add new attraction</button>
+          data-test-id="add-new-ride"
+          (click)="onClickAddNewRide()">Add new ride</button>
         <button
           class="button is-danger"
           data-test-id="delete-all-rides"
-          (click)="onAttemptDeleteAllRides()">Delete all rides</button>
+          (click)="onClickAttemptDeleteAllRides()">Delete all rides</button>
       </div>
     </div>
   </main>

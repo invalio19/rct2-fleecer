@@ -428,9 +428,9 @@ describe('RideListComponent', () => {
     expect(component.expandedIndex).toBeUndefined();
   });
 
-  it('#onAddNewAttraction should add new default ride to list, trigger auto-save and expand the new ride', () => {
+  it('#onClickAddNewRide should add new default ride to list, trigger auto-save and expand the new ride', () => {
     // Act
-    component.onAddNewAttraction();
+    component.onClickAddNewRide();
 
     // Assert
     const newDefaultRide: Ride = {
@@ -448,9 +448,9 @@ describe('RideListComponent', () => {
     expect(component.expandedIndex).toBe(3);
   });
 
-  it('#onAttemptDeleteAllRides should show the delete all rides modal asking for confirmation', () => {
+  it('#onClickAttemptDeleteAllRides should show the delete all rides modal asking for confirmation', () => {
     // Act
-    component.onAttemptDeleteAllRides();
+    component.onClickAttemptDeleteAllRides();
     fixture.detectChanges();
 
     // Assert

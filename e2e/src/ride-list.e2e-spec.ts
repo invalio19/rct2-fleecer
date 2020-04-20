@@ -16,17 +16,17 @@ describe('RideList', () => {
   it('should show newly added rides when "delete all rides" is clicked and new rides are added and the page is refreshed', () => {
     // Arrange
     page.navigateTo();
-    page.getAddNewAttractionElement().click();
+    page.getAddNewRideElement().click();
     page.getRideTypeOptionElement(0, 'Air Powered Vertical Coaster').click();
-    page.getAddNewAttractionElement().click();
+    page.getAddNewRideElement().click();
     page.getRideTypeOptionElement(1, 'Bobsleigh Coaster').click();
 
     // Act
     page.getDeleteAllRidesElement().click();
     page.getDeleteAllRidesConfirmElement().click();
-    page.getAddNewAttractionElement().click();
+    page.getAddNewRideElement().click();
     page.getRideTypeOptionElement(0, 'Chairlift').click();
-    page.getAddNewAttractionElement().click();
+    page.getAddNewRideElement().click();
     page.getRideTypeOptionElement(1, 'Dinghy Slide').click();
     browser.refresh();
 

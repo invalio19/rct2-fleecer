@@ -5,8 +5,8 @@ export class RideListPage {
     return browser.get('/');
   }
 
-  getAddNewAttractionElement() {
-    return element(by.css('button[data-test-id="add-new-attraction"]'));
+  getAddNewRideElement() {
+    return element(by.css('button[data-test-id="add-new-ride"]'));
   }
 
   getRideTypeOptionElement(rideIndex: number, text: string) {
