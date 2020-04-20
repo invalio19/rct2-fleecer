@@ -18,30 +18,16 @@ describe('RideComponent', () => {
 
   const rideAgeRepositoryServiceSpy = jasmine.createSpyObj('RideAgeRepositoryService', ['getAll']);
   const rideGroupRepositoryServiceSpy = jasmine.createSpyObj('RideGroupRepositoryService', ['get']);
-  const ridePenaltyConverterServiceSpy = jasmine.createSpyObj('RidePenaltyConverterService', ['highestDropHeight']);
+  const ridePenaltyConverterServiceSpy = jasmine.createSpyObj('RidePenaltyConverterService', ['highestDropHeight', 'maxSpeed', 'firstLength']);
   const rideTypeRepositoryServiceSpy = jasmine.createSpyObj('RideTypeRepositoryService', ['get', 'getAll']);
 
-  rideAgeRepositoryServiceSpy.getAll.and.returnValue([[1,2,3,4]]);
-  rideGroupRepositoryServiceSpy.get.and.returnValue({
-    id: '3dCinema',
-    name: '3D Cinema',
-    excitement: 20,
-    intensity: 10,
-    nausea: 0
-  });
-  ridePenaltyConverterServiceSpy.highestDropHeight.withArgs(34).and.returnValue(25);
-  rideTypeRepositoryServiceSpy.get.and.returnValue({
-    id: '3dCinema',
-    name: '3D Cinema',
-    groupId: '3dCinema'
-  });
-  rideTypeRepositoryServiceSpy.getAll.and.returnValue([
-    {
-      id: '3dCinema',
-      name: '3D Cinema',
-      groupId: '3dCinema'
-    }
-  ]);
+  rideAgeRepositoryServiceSpy.getAll.and.returnValue([]);
+
+  ridePenaltyConverterServiceSpy.highestDropHeight.and.returnValue(25);
+  ridePenaltyConverterServiceSpy.maxSpeed.and.returnValue(27);
+  ridePenaltyConverterServiceSpy.firstLength.and.returnValue(170);
+
+  rideTypeRepositoryServiceSpy.get.and.returnValue({});
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -69,7 +55,37 @@ describe('RideComponent', () => {
           excitement: 2,
           intensity: 1,
           nausea: 1
-        }
+        },
+        maxSpeed: {
+          value: 0xC0000,
+          excitement: 1,
+          intensity: 2,
+          nausea: 1
+        },
+        maxNegativeGs: {
+          value: 0.1,
+          excitement: 1,
+          intensity: 1,
+          nausea: 2
+        },
+        maxLateralGs: {
+          value: 1.5,
+          excitement: 2,
+          intensity: 2,
+          nausea: 1
+        },
+        firstLength: {
+          value: 0xAA0000,
+          excitement: 2,
+          intensity: 2,
+          nausea: 2
+        },
+        numberOfDrops: {
+          value: 3,
+          excitement: 1,
+          intensity: 2,
+          nausea: 2
+        },
       }
     };
     rideGroupRepositoryServiceSpy.get.and.returnValue(rideGroup);
@@ -78,12 +94,12 @@ describe('RideComponent', () => {
     component = fixture.componentInstance;
 
     component.ride = {
-      name: 'Mango Muncher',
-      age: RideAge.LessThan13Months,
-      typeId: 'juniorRollerCoaster',
-      excitement: 4.33,
-      intensity: 4.01,
-      nausea: 3.75,
+      name: '',
+      age: RideAge.LessThan5Months,
+      typeId: 'dummy',
+      excitement: 0,
+      intensity: 0,
+      nausea: 0,
       duplicates: []
     };
     component.index = 0;
@@ -91,8 +107,24 @@ describe('RideComponent', () => {
     fixture.detectChanges();
   });
 
+  afterAll(() => {
+    component.isRideDataModalActive = false;
+    component.isDeleteModalActive = false;
+    fixture.detectChanges();
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should not show ride data button if ride has no minimum stat requirements', () => {
+    // Arrange
+    rideGroup.statRequirements = undefined;
+    fixture.detectChanges();
+
+    // Assert
+    const rideDataButton = fixture.debugElement.query(By.css('button[data-test-id="ride-data-button"]'));
+    expect(rideDataButton).toBeFalsy();
   });
 
   it('#onClickShowRideData should display a ride data modal', () => {
@@ -128,49 +160,6 @@ describe('RideComponent', () => {
     expect(minimumStatRequirements).toBeFalsy();
   });
 
-  it('#onClickShowRideData should display a ride data modal with the correct stat requirement shown', () => {
-    // Act
-    component.onClickShowRideData();
-    fixture.detectChanges();
-
-    // Assert
-    expect(component.getHighestDropHeightString()).toBe('25m');
-  });
-
-  it('#onClickShowRideData should display a ride data modal with the correct rating penalty shown if the penalty divides by anything but 1', () => {
-    // Act
-    component.onClickShowRideData();
-    fixture.detectChanges();
-
-    // Assert
-    const highestDropHeightPenaltyNotice = fixture.debugElement.query(By.css('ul[data-test-id="ride-rating-penalties"]:first-child li')).nativeElement;
-    expect(highestDropHeightPenaltyNotice).toBe('Excitement is divided by 2');
-  });
-
-  it('#onClickShowRideData should display a ride data modal with no rating penalty shown if the penalty divides by 1', () => {
-    // Act
-    component.onClickShowRideData();
-    fixture.detectChanges();
-
-    // Assert
-    const nonExistentPenaltyNotice = fixture.debugElement.query(By.css('ul[data-test-id="ride-rating-penalties"]:nth-child(2) li')).nativeElement;
-    expect(nonExistentPenaltyNotice).toBeFalsy();
-  });
-
-  it('#onClickShowRideData should display a ride data modal with a single entry for penalties if all penalties divide by the same number', () => {
-    // Arrange
-    rideGroup.statRequirements.highestDropHeight.intensity = 2;
-    rideGroup.statRequirements.highestDropHeight.nausea = 2;
-
-    // Act
-    component.onClickShowRideData();
-    fixture.detectChanges();
-
-    // Assert
-    const highestDropHeightPenaltyNotice = fixture.debugElement.query(By.css('ul[data-test-id="ride-rating-penalties"]:first-child li')).nativeElement;
-    expect(highestDropHeightPenaltyNotice).toBe('All ratings are divided by 2');
-  });
-
   it('#onClickCloseRideDataModal should close the ride data modal', () => {
     // Arrange
     component.isRideDataModalActive = true;
@@ -185,6 +174,82 @@ describe('RideComponent', () => {
     expect(rideDataModal.getAttribute('class')).not.toContain('is-active');
   });
 
+  it('#hasAnyStatRequirements should return true if any stat requirement property exists', () => {
+    // Assert
+    const result = component.hasAnyStatRequirements();
+    expect(result).toBeTrue();
+
+    // todo false
+  });
+
+  it('#hasStatRequirement should return true if the stat requirement property exists', () => {
+    // Assert
+    const result = component.hasStatRequirement('highestDropHeight');
+    expect(result).toBeTrue();
+
+    // todo false
+  });
+
+  it('#getStatRequirement should show the correct stat requirement in metres for highest drop height', () => {
+    // Assert
+    const requiredValue = component.getStatRequirement('highestDropHeight');
+    expect(requiredValue).toBe('25m');
+  });
+
+  it('#getStatRequirement should show the correct stat requirement in km/h for max speed', () => {
+    // Assert
+    const requiredValue = component.getStatRequirement('maxSpeed');
+    expect(requiredValue).toBe('27km/h');
+  });
+
+  it('#getStatRequirement should show the correct stat requirement in G\'s for max negative G\'s', () => {
+    // Assert
+    const requiredValue = component.getStatRequirement('maxNegativeGs');
+    expect(requiredValue).toBe('0.10g');
+  });
+
+  it('#getStatRequirement should show the correct stat requirement in G\'s for max lateral G\'s', () => {
+    // Assert
+    const requiredValue = component.getStatRequirement('maxLateralGs');
+    expect(requiredValue).toBe('1.50g');
+  });
+
+  it('#getStatRequirement should show the correct stat requirement in m for first length', () => {
+    // Assert
+    const requiredValue = component.getStatRequirement('firstLength');
+    expect(requiredValue).toBe('170m');
+  });
+
+  it('#getStatRequirement should show the correct stat requirement for number of drops', () => {
+    // Assert
+    const requiredValue = component.getStatRequirement('numberOfDrops');
+    expect(requiredValue).toBe('3');
+  });
+
+  it('#getPenaltyMessage should show the correct error message if only excitement is divided by 2 for highest drop height', () => {
+    // Assert
+    const message = component.getPenaltyMessage('highestDropHeight');
+    expect(message).toBe('Penalty: Excitement divided by 2');
+  });
+
+  it('#getPenaltyMessage should show the correct error message if all ratings are divided by 4 for highest drop height', () => {
+    // Arrange
+    rideGroup.statRequirements.highestDropHeight.excitement = 4;
+    rideGroup.statRequirements.highestDropHeight.intensity = 4;
+    rideGroup.statRequirements.highestDropHeight.nausea = 4;
+    fixture.detectChanges();
+
+    // Assert
+    const message = component.getPenaltyMessage('highestDropHeight');
+    expect(message).toBe('Penalty: All ratings divided by 4');
+  });
+
+  it('#getPenaltyMessage should show the correct error message if only intensity is divided by 2 for max speed', () => {
+    // Assert
+    const message = component.getPenaltyMessage('maxSpeed');
+    expect(message).toBe('Penalty: Intensity divided by 2');
+  });
+
   it('#onClickAttemptDelete should show \'delete ride\' modal', () => {
     // Act
     component.onClickAttemptDelete();
@@ -193,5 +258,5 @@ describe('RideComponent', () => {
     // Assert
     const deleteModal = fixture.debugElement.query(By.css('div[data-test-id="delete-ride-modal"]')).nativeElement;
     expect(deleteModal.getAttribute('class')).toContain('is-active');
-  })
+  });
 });

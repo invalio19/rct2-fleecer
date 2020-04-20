@@ -76,19 +76,58 @@ export class RideComponent implements OnInit {
     this.isRideDataModalActive = false;
   }
 
-  getRideHasStatRequirements(): boolean {
+  hasAnyStatRequirements(): boolean {
     const rideGroup = this.getRideGroup();
     return rideGroup?.statRequirements !== undefined;
   }
 
-  getHighestDropHeightString(): string {
+  hasStatRequirement(property: string): boolean {
     const rideGroup = this.getRideGroup();
-    const highestDropHeightBase = rideGroup?.statRequirements?.highestDropHeight?.value;
-    if (highestDropHeightBase !== undefined) {
-      const highestDropHeight = this.ridePenaltyConverterService.highestDropHeight(highestDropHeightBase);
-      return highestDropHeight + 'm';
+    return rideGroup?.statRequirements[property] !== undefined;
+  }
+
+  getStatRequirement(property: string): string {
+    const showInGs = ['maxNegativeGs', 'maxLateralGs'].includes(property);
+    const showInMetres = ['highestDropHeight', 'firstLength'].includes(property);
+    const showInKmph = ['maxSpeed'].includes(property);
+
+    const rideGroup = this.getRideGroup();
+    const baseValue = rideGroup?.statRequirements[property]?.value;
+    if (baseValue !== undefined) {
+      let value: number;
+
+      if (showInMetres || showInKmph) {
+        value = this.ridePenaltyConverterService[property](baseValue);
+      }
+      else {
+        value = baseValue;
+      }
+
+      // TODO This is smelly
+      if (showInMetres) return value + 'm';
+      if (showInKmph) return value + 'km/h';
+      if (showInGs) return value.toFixed(2) + 'g';
+      return value.toString();
     }
-    return '0m'; // should never show
+    return undefined;
+  }
+
+  getPenaltyMessage(property: string) {
+    const rideGroup = this.getRideGroup();
+    const excitement = rideGroup.statRequirements[property].excitement;
+    const intensity = rideGroup.statRequirements[property].intensity;
+    const nausea = rideGroup.statRequirements[property].nausea;
+
+    if ((excitement === intensity) &&
+        (excitement === nausea)) {
+          return 'Penalty: All ratings divided by ' + excitement;
+    }
+    if (excitement > 1) {
+      return 'Penalty: Excitement divided by ' + excitement;
+    }
+    if (intensity > 1) {
+      return 'Penalty: Intensity divided by ' + intensity;
+    }
   }
 
   onClickAttemptDelete() {

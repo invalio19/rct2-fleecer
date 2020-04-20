@@ -44,7 +44,7 @@ export class RideListComponent implements OnInit {
       ride
     };
 
-    const maxPrice = this.ridePriceCalculatorService.calculateMax(rideCalculationParameters);
+    const maxPrice = this.ridePriceCalculatorService.max(rideCalculationParameters);
     return this.convertToCurrencyString(maxPrice);
   }
 
@@ -55,12 +55,12 @@ export class RideListComponent implements OnInit {
       ride
     };
 
-    const minPrice = this.ridePriceCalculatorService.calculateMin(rideCalculationParameters);
+    const minPrice = this.ridePriceCalculatorService.min(rideCalculationParameters);
     return this.convertToCurrencyString(minPrice);
   }
 
   getRecommendedParkEntranceFeeString(): string {
-    const recommendedPrice = this.ridePriceCalculatorService.calculateRecommendedParkEntranceFee(this.saveData.options.gameVersion, this.park.rides);
+    const recommendedPrice = this.ridePriceCalculatorService.recommendedParkEntranceFee(this.saveData.options.gameVersion, this.park.rides);
 
     return this.convertToCurrencyString(recommendedPrice);
   }

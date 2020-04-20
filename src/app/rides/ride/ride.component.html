@@ -103,7 +103,7 @@
     <section class="modal-card-body">
       <div class="content">
         <div
-          *ngIf="getRideHasStatRequirements()"
+          *ngIf="hasAnyStatRequirements()"
           data-test-id="minimum-stat-requirements">
           <h3 class="is-size-6">Minimum stat requirements</h3>
           <table class="table">
@@ -114,20 +114,55 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Highest drop height</td>
-                <td>{{getHighestDropHeightString()}}</td>
+              <tr *ngIf="hasStatRequirement('maxSpeed')">
+                <td>Max. speed</td>
+                <td>{{getStatRequirement('maxSpeed')}}</td>
               </tr>
-              <tr>
-                <td colspan="2" class="is-size-7">Penalty: All ratings divided by 2</td>
+              <tr *ngIf="hasStatRequirement('maxSpeed')">
+                <td colspan="2" class="is-size-7">{{getPenaltyMessage('maxSpeed')}}</td>
+              </tr>
+              <tr *ngIf="hasStatRequirement('firstLength')">
+                <td>Ride length</td>
+                <td>{{getStatRequirement('firstLength')}}</td>
+              </tr>
+              <tr *ngIf="hasStatRequirement('firstLength')">
+                <td colspan="2" class="is-size-7">{{getPenaltyMessage('firstLength')}}</td>
+              </tr>
+              <tr *ngIf="hasStatRequirement('maxNegativeGs')">
+                <td>Max. negative vertical G's</td>
+                <td>{{getStatRequirement('maxNegativeGs')}}</td>
+              </tr>
+              <tr *ngIf="hasStatRequirement('maxNegativeGs')">
+                <td colspan="2" class="is-size-7">{{getPenaltyMessage('maxNegativeGs')}}</td>
+              </tr>
+              <tr *ngIf="hasStatRequirement('maxLateralGs')">
+                <td>Max. lateral G's</td>
+                <td>{{getStatRequirement('maxLateralGs')}}</td>
+              </tr>
+              <tr *ngIf="hasStatRequirement('maxLateralGs')">
+                <td colspan="2" class="is-size-7">{{getPenaltyMessage('maxLateralGs')}}</td>
+              </tr>
+              <tr *ngIf="hasStatRequirement('numberOfDrops')">
+                <td>Drops</td>
+                <td>{{getStatRequirement('numberOfDrops')}}</td>
+              </tr>
+              <tr *ngIf="hasStatRequirement('numberOfDrops')">
+                <td colspan="2" class="is-size-7">{{getPenaltyMessage('numberOfDrops')}}</td>
+              </tr>
+              <tr *ngIf="hasStatRequirement('highestDropHeight')">
+                <td>Highest drop height</td>
+                <td>{{getStatRequirement('highestDropHeight')}}</td>
+              </tr>
+              <tr *ngIf="hasStatRequirement('highestDropHeight')">
+                <td colspan="2" class="is-size-7">{{getPenaltyMessage('highestDropHeight')}}</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-    </section>          
+    </section>
     <footer class="modal-card-foot inv-flex-end">
-      <button
+      <button        
         class="button is-primary"
         (click)="onClickCloseRideDataModal()">
         OK
@@ -153,7 +188,11 @@
 </div>
 <div class="level is-mobile">
   <div class="level-left">
-    <button class="button is-primary" (click)="onClickShowRideData()">
+    <button
+      *ngIf="hasAnyStatRequirements()"
+      class="button is-primary"
+      (click)="onClickShowRideData()"      
+      data-test-id="ride-data-button">
       <span class="icon">
         <i class="fa fa-info"></i>
       </span>

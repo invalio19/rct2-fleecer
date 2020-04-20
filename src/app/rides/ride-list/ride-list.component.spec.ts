@@ -16,7 +16,7 @@ describe('RideListComponent', () => {
   let fixture: ComponentFixture<RideListComponent>;
 
   const persistenceServiceSpy = jasmine.createSpyObj('PersistenceService', ['save', 'load']);
-  const ridePriceCalculatorServiceSpy = jasmine.createSpyObj('RidePriceCalculatorService', ['calculateMax', 'calculateMin', 'calculateRecommendedParkEntranceFee']);
+  const ridePriceCalculatorServiceSpy = jasmine.createSpyObj('RidePriceCalculatorService', ['max', 'min', 'recommendedParkEntranceFee']);
   const rideDuplicateFlaggerServiceSpy = jasmine.createSpyObj('RideDuplicateFlaggerService', ['flag']);
 
   const dummyRide: Ride = {
@@ -91,13 +91,19 @@ describe('RideListComponent', () => {
     fixture.detectChanges();
   });
 
+  afterAll(() => {
+    component.isRecommendedParkEntranceFeeModalActive = false;
+    component.isDeleteAllRidesModalActive = false;
+    fixture.detectChanges();
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
   it('#getMaxPriceString should show currency symbol and be to 2dp', () => {
     // Arrange
-    ridePriceCalculatorServiceSpy.calculateMax.and.returnValue(10);
+    ridePriceCalculatorServiceSpy.max.and.returnValue(10);
 
     // Act
     const val = component.getMaxPriceString(dummyRide);
@@ -108,7 +114,7 @@ describe('RideListComponent', () => {
 
   it('#getMaxPriceString should show \'Free\' if ride has zero value', () => {
     // Arrange
-    ridePriceCalculatorServiceSpy.calculateMax.and.returnValue(0);
+    ridePriceCalculatorServiceSpy.max.and.returnValue(0);
 
     // Act
     const val = component.getMaxPriceString(dummyRide);
@@ -119,7 +125,7 @@ describe('RideListComponent', () => {
 
   it('#getMinPriceString should show currency symbol and be to 2dp', () => {
     // Arrange
-    ridePriceCalculatorServiceSpy.calculateMin.and.returnValue(10);
+    ridePriceCalculatorServiceSpy.min.and.returnValue(10);
 
     // Act
     const val = component.getMinPriceString(dummyRide);
@@ -130,7 +136,7 @@ describe('RideListComponent', () => {
 
   it('#getMaxPriceString should show \'Free\' if ride has zero value', () => {
     // Arrange
-    ridePriceCalculatorServiceSpy.calculateMin.and.returnValue(0);
+    ridePriceCalculatorServiceSpy.min.and.returnValue(0);
 
     // Act
     const val = component.getMinPriceString(dummyRide);
@@ -141,7 +147,7 @@ describe('RideListComponent', () => {
 
   it('#getRecommendedParkEntranceFeeString should show currency symbol and be to 2dp', () => {
     // Arrange
-    ridePriceCalculatorServiceSpy.calculateRecommendedParkEntranceFee.and.returnValue(35);
+    ridePriceCalculatorServiceSpy.recommendedParkEntranceFee.and.returnValue(35);
 
     // Act
     const val = component.getRecommendedParkEntranceFeeString();

@@ -531,6 +531,44 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     name: 'Wooden Wild Mouse',
     excitement: 50,
     intensity: 30,
-    nausea: 30
+    nausea: 30,
+    statRequirements: {
+      highestDropHeight: {
+        value: 8,
+        excitement: 2,
+        intensity: 2,
+        nausea: 2
+      },
+      maxSpeed: {
+        value: 0x70000,
+        excitement: 2,
+        intensity: 2,
+        nausea: 2
+      },
+      maxNegativeGs: {
+        value: 0.1,
+        excitement: 2,
+        intensity: 2,
+        nausea: 2
+      },
+      maxLateralGs: {
+        value: 1.5,
+        excitement: 2,
+        intensity: 2,
+        nausea: 2
+      },
+      firstLength: {
+        value: 0xAA0000,
+        excitement: 2,
+        intensity: 2,
+        nausea: 2
+      },
+      numberOfDrops: {
+        value: 3,
+        excitement: 2,
+        intensity: 2,
+        nausea: 2
+      },
+    }
   }
 };

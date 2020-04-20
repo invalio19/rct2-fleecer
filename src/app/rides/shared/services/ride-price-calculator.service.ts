@@ -16,7 +16,7 @@ export class RidePriceCalculatorService {
     private rideGroupRepositoryService: RideGroupRepositoryService,
     private rideTypeRepositoryService: RideTypeRepositoryService) {}
 
-  calculateMax(rideCalculationParameters: RideCalculationParameters): number {
+  max(rideCalculationParameters: RideCalculationParameters): number {
     let ridePrice = this.calculateRideValue(rideCalculationParameters.gameVersion, rideCalculationParameters.ride);
     if (ridePrice === undefined) {
       return undefined;
@@ -33,7 +33,7 @@ export class RidePriceCalculatorService {
     return ridePrice;
   };
 
-  calculateMin(rideCalculationParameters: RideCalculationParameters): number {
+  min(rideCalculationParameters: RideCalculationParameters): number {
     let ridePrice = this.calculateRideValue(rideCalculationParameters.gameVersion, rideCalculationParameters.ride);
     if (ridePrice === undefined) {
       return undefined;
@@ -50,7 +50,7 @@ export class RidePriceCalculatorService {
     return ridePrice;
   }
 
-  calculateRecommendedParkEntranceFee(gameVersion: GameVersion, rides: Ride[]): number {
+  recommendedParkEntranceFee(gameVersion: GameVersion, rides: Ride[]): number {
     let totalRideValueForMoney = this.calculateTotalRideValueForMoney(gameVersion, rides);
 
     totalRideValueForMoney = Math.floor(totalRideValueForMoney / 10);

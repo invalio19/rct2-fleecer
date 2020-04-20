@@ -106,7 +106,7 @@ describe('RidePriceCalculatorService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('#calculateMax should calculate the correct value', () => {
+  it('#max should calculate the correct value', () => {
     [
       [GameVersion.OpenRct2, false, 'woodenRollerCoasterTestType', RideAge.LessThan5Months, 6.48, 7.62, 4.48, true, 13.20],
       [GameVersion.OpenRct2, false, 'woodenRollerCoasterTestType', RideAge.LessThan13Months, 6.48, 7.62, 4.48, true, 10.60]
@@ -127,14 +127,14 @@ describe('RidePriceCalculatorService', () => {
       };
 
       // Act
-      const calculatedValue = service.calculateMax(rideCalculationParameters);
+      const calculatedValue = service.max(rideCalculationParameters);
 
       // Assert
       expect(calculatedValue).toBe(expectedValue as number);
     });
   });
 
-  it('#calculateMin should calculate the correct value', () => {
+  it('#min should calculate the correct value', () => {
     [
       [GameVersion.OpenRct2, false, 'juniorRollerCoasterTestType', RideAge.LessThan5Months, 4.77, 5.60, 3.62, false, 3.10],
     ].forEach(([gameVersion, hasEntranceFee, rideTypeId, rideAge, excitement, intensity, nausea, hasDuplicate, expectedValue]) => {
@@ -154,14 +154,14 @@ describe('RidePriceCalculatorService', () => {
       };
 
       // Act
-      const calculatedValue = service.calculateMin(rideCalculationParameters);
+      const calculatedValue = service.min(rideCalculationParameters);
 
       // Assert
       expect(calculatedValue).toBe(expectedValue as number);
     });
   });
 
-  it('#calculateRecommendedParkEntranceFee should calculate the correct value', () => {
+  it('#recommendedParkEntranceFee should calculate the correct value', () => {
     // Arrange
     const gameVersion: GameVersion = GameVersion.OpenRct2;
     const rides: Ride[] = [
@@ -195,13 +195,13 @@ describe('RidePriceCalculatorService', () => {
     ];
 
     // Act
-    const calculatedValue = service.calculateRecommendedParkEntranceFee(gameVersion, rides);
+    const calculatedValue = service.recommendedParkEntranceFee(gameVersion, rides);
 
     // Assert
     expect(calculatedValue).toBe(36.00); // £7.80 + £11 + £18 = £36.80, rounded down to nearest whole £1
   });
 
-  it('#calculateRecommendedParkEntranceFee should ignore incomplete rides instead of returning NaN', () => {
+  it('#recommendedParkEntranceFee should ignore incomplete rides instead of returning NaN', () => {
     // Arrange
     const gameVersion: GameVersion = GameVersion.OpenRct2;
     const rides: Ride[] = [
@@ -226,7 +226,7 @@ describe('RidePriceCalculatorService', () => {
     ];
 
     // Act
-    const calculatedValue = service.calculateRecommendedParkEntranceFee(gameVersion, rides);
+    const calculatedValue = service.recommendedParkEntranceFee(gameVersion, rides);
 
     // Assert
     expect(calculatedValue).toBe(7.00); // £7.80 + £11 + £18 = £36.80, rounded down to nearest whole £1
