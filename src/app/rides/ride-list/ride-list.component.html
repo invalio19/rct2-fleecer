@@ -119,7 +119,7 @@
                 [disabled]="i === 0"
                 (click)="onMoveRideUp(i)">      
                 <span class="icon">
-                  <i class="fa fa-chevron-up"></i>
+                  <i class="fa fa-arrow-up"></i>
                 </span>      
               </button>
             </p>
@@ -129,7 +129,7 @@
                 [disabled]="i === rides.length - 1"
                 (click)="onMoveRideDown(i)">      
                 <span class="icon">
-                  <i class="fa fa-chevron-down"></i>
+                  <i class="fa fa-arrow-down"></i>
                 </span>
               </button>
             </p>
@@ -139,20 +139,19 @@
           <div class="buttons">
             <button
               class="button is-primary"
-              [disabled]="!canUpgradeRideAge(ride)"
-              (click)="onUpgradeRideAge(ride)">
-              <span><strong>+</strong></span>
+              [disabled]="!canRefurbishRide(ride)"
+              (click)="onClickRefurbishRide(ride)">
               <span class="icon">
-                <i class="fa fa-database"></i>
+                <i class="fa fa-tools"></i>
               </span>
             </button>
             <button
               class="button is-primary"
               [disabled]="!canDegradeRideAge(ride)"
-              (click)="onDegradeRideAge(ride)">
+              (click)="onClickDegradeRideAge(ride)">
               <span><strong>–</strong></span>
               <span class="icon">
-                <i class="fa fa-database"></i>
+                <i class="fa fa-coins"></i>
               </span>
             </button>
             <button
@@ -160,7 +159,11 @@
               data-test-id="expand-ride"
               (click)="onExpandCollapseRide(i)">
               <span class="icon">
-                <i [class]="expandedIndex === i ? 'fa fa-angle-double-up fa-2x' : 'fa fa-angle-double-down fa-2x'"></i>
+                <i
+                  class="fa"
+                  [class.fa-chevron-up]="expandedIndex === i"
+                  [class.fa-chevron-down]="expandedIndex !== i">
+                </i>
               </span>
             </button>
           </div>

@@ -268,7 +268,7 @@ describe('RideListComponent', () => {
     expect(persistenceServiceSpy.save).not.toHaveBeenCalled();
   });
 
-  it('#canUpgradeRideAge should return true if it is more than 5 months old and false otherwise', () => {
+  it('#canRefurbishRide should return true if it is more than 5 months old and false otherwise', () => {
     // Arrange
     const youngRide: Ride = {
       name: '',
@@ -291,20 +291,20 @@ describe('RideListComponent', () => {
     };
 
     // Act
-    const youngResult = component.canUpgradeRideAge(youngRide);
-    const oldResult = component.canUpgradeRideAge(oldRide);
+    const youngResult = component.canRefurbishRide(youngRide);
+    const oldResult = component.canRefurbishRide(oldRide);
 
     // Assert
     expect(youngResult).toBe(false);
     expect(oldResult).toBe(true);
   });
 
-  it('#onUpgradeRideAge should increase the ride\'s age by one bracket and trigger auto-save', () => {
+  it('#onClickRefurbishRide should reset the ride\'s age to less than 5 months old and trigger auto-save', () => {
     // Arrange
     const ride: Ride = {
       name: '',
       typeId: 'rideTypeId',
-      age: RideAge.LessThan40Months,
+      age: RideAge.LessThan88Months,
       excitement: 0,
       intensity: 0,
       nausea: 0,
@@ -312,14 +312,14 @@ describe('RideListComponent', () => {
     };
 
     // Act
-    component.onUpgradeRideAge(ride);
+    component.onClickRefurbishRide(ride);
 
     // Assert
-    expect(ride.age).toBe(RideAge.LessThan13Months);
+    expect(ride.age).toBe(RideAge.LessThan5Months);
     expect(persistenceServiceSpy.save).toHaveBeenCalled();
   });
 
-  it('#onUpgradeRideAge should do nothing if the ride is already in the youngest age bracket', () => {
+  it('#onClickRefurbishRide should do nothing if the ride is already in the youngest age bracket', () => {
     // Arrange
     const ride: Ride = {
       name: '',
@@ -332,7 +332,7 @@ describe('RideListComponent', () => {
     };
 
     // Act
-    component.onUpgradeRideAge(ride);
+    component.onClickRefurbishRide(ride);
 
     // Assert
     expect(ride.age).toBe(RideAge.LessThan5Months);
@@ -370,7 +370,7 @@ describe('RideListComponent', () => {
     expect(oldResult).toBe(false);
   });
 
-  it('#onDegradeRideAge should decrease the ride\'s age by one bracket and trigger auto-save', () => {
+  it('#onClickDegradeRideAge should decrease the ride\'s age by one bracket and trigger auto-save', () => {
     // Arrange
     const ride: Ride = {
       name: '',
@@ -383,14 +383,14 @@ describe('RideListComponent', () => {
     };
 
     // Act
-    component.onDegradeRideAge(ride);
+    component.onClickDegradeRideAge(ride);
 
     // Assert
     expect(ride.age).toBe(RideAge.LessThan64Months);
     expect(persistenceServiceSpy.save).toHaveBeenCalled();
   });
 
-  it('#onDegradeRideAge should do nothing if the ride is already in the oldest age bracket', () => {
+  it('#onClickDegradeRideAge should do nothing if the ride is already in the oldest age bracket', () => {
     // Arrange
     const ride: Ride = {
       name: '',
@@ -403,7 +403,7 @@ describe('RideListComponent', () => {
     };
 
     // Act
-    component.onDegradeRideAge(ride);
+    component.onClickDegradeRideAge(ride);
 
     // Assert
     expect(ride.age).toBe(RideAge.MoreThan200Months);

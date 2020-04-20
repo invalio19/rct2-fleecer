@@ -116,13 +116,13 @@ export class RideListComponent implements OnInit {
     this.saveAll();
   }
 
-  canUpgradeRideAge(ride: Ride) {
+  canRefurbishRide(ride: Ride) {
     return ride.age !== RideAge.LessThan5Months;
   }
 
-  onUpgradeRideAge(ride: Ride) {
-    if (this.canUpgradeRideAge(ride)) {
-      ride.age--;
+  onClickRefurbishRide(ride: Ride) {
+    if (this.canRefurbishRide(ride)) {
+      ride.age = RideAge.LessThan5Months;
       this.saveAll();
     }
   }
@@ -131,7 +131,7 @@ export class RideListComponent implements OnInit {
     return ride.age !== RideAge.MoreThan200Months;
   }
 
-  onDegradeRideAge(ride: Ride) {
+  onClickDegradeRideAge(ride: Ride) {
     if (this.canDegradeRideAge(ride)) {
       ride.age++;
       this.saveAll();

@@ -1,21 +1,27 @@
 # Changelog
 
+## [1.2.0](https://github.com/invalio19/rct2-fleecer/compare/v1.1.0...v1.2.0) - 2019-04-21 TODO
+
+### Added
+
+- Minimum stat requirements for rides can now be viewed for rides that have them.
+
+### Changed
+
+- The 'upgrade ride age' button has been changed to a 'refurbish' button which resets the ride age to less than 5 months.
+- Updated the icons to Font Awesome 5.
+
+### Fixed
+
+- The ride price field and ride rating labels no longer act like clickable buttons.
+
 ## [1.1.0](https://github.com/invalio19/rct2-fleecer/compare/v1.0.1...v1.1.0) - 2019-04-17
 
 ### Added
 
 - The recommended park entrance fee field is now calculated and displayed, along with a modal explaining its logic.
-- Added a lot more tests.
-
-### Changed
-
-- Did a little refactoring in some places.
 
 ## [1.0.1](https://github.com/invalio19/rct2-fleecer/compare/v1.0.0...v1.0.1) - 2019-04-11
-
-### Added
-
-- Made a start on getting unit tests up and running.
 
 ### Fixed
 
