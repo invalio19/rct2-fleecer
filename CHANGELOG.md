@@ -9,6 +9,8 @@
 ### Changed
 
 - The 'upgrade ride age' button has been changed to a 'refurbish' button which resets the ride age to less than 5 months.
+- When the park has an entrance fee, the 'show good value prices' checkbox is hidden rather than disabled.
+- Updated the checkbox styles.
 - Updated the icons to Font Awesome 5.
 
 ### Fixed

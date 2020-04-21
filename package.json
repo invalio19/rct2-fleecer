@@ -21,8 +21,8 @@
     "@angular/router": "~9.1.0",
     "@fortawesome/fontawesome-free": "^5.13.0",
     "bulma": "^0.8.1",
+    "bulma-checkradio": "^1.1.1",
     "core-js": "^3.6.4",
-    "font-awesome": "^4.7.0",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"

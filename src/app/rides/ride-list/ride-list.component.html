@@ -25,26 +25,31 @@
           OpenRCT2
         </button>
       </div>
-      <label class="checkbox">
+      <div class="field">
         <input
+          id="parkHasEntranceFeeCheckbox"
+          class="is-checkradio"
           type="checkbox"
+          name="parkHasEntranceFeeCheckbox"
           [(ngModel)]="park.hasEntranceFee"
           (change)="onChangeHasEntranceFee()">
-        Park has entrance fee
-      </label>
-      <br>
-      <label class="checkbox">
+        <label for="parkHasEntranceFeeCheckbox">Park has entrance fee</label>
+      </div>
+      <div
+        *ngIf="!park.hasEntranceFee"
+        class="field">
         <input
+          id="parkShowGoodValuePriceCheckbox"
+          class="is-checkradio"
           type="checkbox"
+          name="parkShowGoodValuePriceCheckbox"
           [(ngModel)]="park.showGoodValuePrice"
-          [disabled]="park.hasEntranceFee"
           (change)="onChangeShowGoodValuePrices()">
-        Show 'good value' prices <span *ngIf="park.hasEntranceFee">(disabled; rides can never be 'good value' if a park entrance fee is charged)</span>
-      </label>
+        <label for="parkShowGoodValuePriceCheckbox">Show 'good value' prices</label>
+      </div>
       <div
         *ngIf="park.hasEntranceFee"
         data-test-id="recommended-park-entrance-fee-section">
-        <br>
         <p>Recommended park entrance fee:</p>
         <p>
           <strong class="is-size-4 has-text-primary">{{getRecommendedParkEntranceFeeString()}}</strong>

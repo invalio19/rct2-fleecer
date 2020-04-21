@@ -23,6 +23,7 @@ See the [issue tracker](https://github.com/invalio19/rct2-fleecer/issues).
 
 - [Angular](https://angular.io/) v9.1.0.
 - [Bulma](https://bulma.io/) v0.8.0.
+- [Bulma Checkradio](https://wikiki.github.io/form/checkradio/) v1.1.1
 - [Font Awesome](https://fontawesome.com/) v5.13.0
 
 ## Contributing

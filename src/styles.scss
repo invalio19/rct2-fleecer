@@ -1,7 +1,8 @@
 $primary: #09f;
 $danger: #f33;
 
-@import "../node_modules/bulma/bulma.sass";
+@import "bulma";
+@import 'bulma-checkradio/src/sass/index'; // https://github.com/Wikiki/bulma-checkradio/issues/51
 
 .inv-container {
   display: flex;
