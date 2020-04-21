@@ -76,9 +76,9 @@ export class RideComponent implements OnInit {
     this.isRideDataModalActive = false;
   }
 
-  getRideType(): RideType {
+  getRideTypeName(): string {
     if (this.ride.typeId !== undefined) {
-      return this.rideTypeRepositoryService.get(this.ride.typeId);
+      return this.rideTypeRepositoryService.get(this.ride.typeId).name;
     }
   }
 
@@ -116,6 +116,29 @@ export class RideComponent implements OnInit {
       return value.toString();
     }
     return undefined;
+  }
+
+  isIgnoredByInversions(property: string): boolean {
+    const rideGroup = this.getRideGroup();
+    return rideGroup?.statRequirements[property]?.ignoredByInversions;
+  }
+
+  isInversionRequirementMessageRequired(): boolean {
+    const rideGroup = this.getRideGroup();
+    if (rideGroup === undefined) {
+      return false;
+    }
+
+    if (rideGroup.statRequirements?.highestDropHeight?.ignoredByInversions ||
+        rideGroup.statRequirements?.maxSpeed?.ignoredByInversions ||
+        rideGroup.statRequirements?.maxNegativeGs?.ignoredByInversions ||
+        rideGroup.statRequirements?.maxLateralGs?.ignoredByInversions ||
+        rideGroup.statRequirements?.firstLength?.ignoredByInversions ||
+        rideGroup.statRequirements?.numberOfDrops?.ignoredByInversions) {
+      return true;
+    }
+
+    return false;
   }
 
   getStandardPenaltyMessage() {

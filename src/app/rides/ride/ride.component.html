@@ -93,7 +93,7 @@
   <div class="modal-background" (click)="onClickCloseRideDataModal()"></div>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title is-size-5">{{getRideType().name}}</p>
+      <p class="modal-card-title is-size-5">{{getRideTypeName()}}</p>
       <button
         class="delete"
         aria-label="close"
@@ -117,7 +117,7 @@
                 <td>{{getStatRequirement('firstLength')}}</td>
               </tr>
               <tr *ngIf="hasStatRequirement('maxNegativeGs')">
-                <td>Max. negative vertical G's</td>
+                <td>Max. negative vertical G's<span *ngIf="isIgnoredByInversions('maxNegativeGs')">*</span></td>
                 <td>{{getStatRequirement('maxNegativeGs')}}</td>
               </tr>
               <tr *ngIf="hasStatRequirement('maxLateralGs')">
@@ -125,12 +125,15 @@
                 <td>{{getStatRequirement('maxLateralGs')}}</td>
               </tr>
               <tr *ngIf="hasStatRequirement('numberOfDrops')">
-                <td>Drops</td>
+                <td>Drops<span *ngIf="isIgnoredByInversions('numberOfDrops')">*</span></td>
                 <td>{{getStatRequirement('numberOfDrops')}}</td>
               </tr>
               <tr *ngIf="hasStatRequirement('highestDropHeight')">
-                <td>Highest drop height</td>
+                <td>Highest drop height<span *ngIf="isIgnoredByInversions('highestDropHeight')">*</span></td>
                 <td>{{getStatRequirement('highestDropHeight')}}</td>
+              </tr>
+              <tr *ngIf="isInversionRequirementMessageRequired()">
+                <td colspan="2" class="is-size-7">*Requirement need not be met if ride has any inversions</td>
               </tr>
               <tr *ngIf="getStandardPenaltyMessage()">
                 <td colspan="2" class="is-size-7 has-text-danger">{{getStandardPenaltyMessage()}}</td>

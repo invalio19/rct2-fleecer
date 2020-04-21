@@ -200,9 +200,59 @@ describe('RideComponent', () => {
     expect(requiredValue).toBe('3');
   });
 
-  it('#getStandardPenaltyMessage should show the correct error message if only excitement is divided by 2', () => {
+  it('#isIgnoredByInversions should display if the stat requirement is negated by inversions', () => {
+    // Arrange
+    rideGroup.statRequirements.highestDropHeight = { value: 8, ignoredByInversions: true };
+    rideGroup.statRequirements.maxNegativeGs = { value: 0.10, ignoredByInversions: true };
+    rideGroup.statRequirements.numberOfDrops = { value: 3, ignoredByInversions: true };
+
+    // Act
+    const highestDropHeight = component.isIgnoredByInversions('highestDropHeight');
+    const maxNegativeGs = component.isIgnoredByInversions('maxNegativeGs');
+    const numberOfDrops = component.isIgnoredByInversions('numberOfDrops');
+
     // Assert
+    expect(highestDropHeight).toBeTrue();
+    expect(maxNegativeGs).toBeTrue();
+    expect(numberOfDrops).toBeTrue();
+  });
+
+  it('#isIgnoredByInversions should not display if the stat requirement is not negated by inversions', () => {
+    // Act
+    const highestDropHeight = component.isIgnoredByInversions('highestDropHeight');
+    const maxNegativeGs = component.isIgnoredByInversions('maxNegativeGs');
+    const numberOfDrops = component.isIgnoredByInversions('numberOfDrops');
+
+    // Assert
+    expect(highestDropHeight).toBeFalsy();
+    expect(maxNegativeGs).toBeFalsy();
+    expect(numberOfDrops).toBeFalsy();
+  });
+
+  it('#isInversionRequirementMessageRequired should display if any stat requirement is not needed if the ride has any inversions', () => {
+    // Arrange
+    rideGroup.statRequirements.highestDropHeight = { value: 8, ignoredByInversions: true };
+
+    // Act
+    const required = component.isInversionRequirementMessageRequired();
+
+    // Assert
+    expect(required).toBeTrue();
+  });
+
+  it('#isInversionRequirementMessageRequired should not display if all stat requirements aren\'t ignored by inversions', () => {
+    // Act
+    const required = component.isInversionRequirementMessageRequired();
+
+    // Assert
+    expect(required).toBeFalse();
+  });
+
+  it('#getStandardPenaltyMessage should show the correct error message if only excitement is divided by 2', () => {
+    // Act
     const message = component.getStandardPenaltyMessage();
+
+    // Assert
     expect(message).toBe('Excitement is divided by 2 for each unmet requirement');
   });
 
