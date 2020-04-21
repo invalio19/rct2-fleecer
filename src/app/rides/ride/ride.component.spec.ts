@@ -49,44 +49,18 @@ describe('RideComponent', () => {
       excitement: 0,
       intensity: 0,
       nausea: 0,
+      unreliability: 14,
+      baseRatings: [{ excitement: 2.90, intensity: 2.90, nausea: 2.10 }],
+      synchronisationBonus: { excitement: 0.40, intensity: 0.8 },
       statRequirements: {
-        highestDropHeight: {
-          value: 34,
-          excitement: 2,
-          intensity: 1,
-          nausea: 1
-        },
-        maxSpeed: {
-          value: 0xC0000,
-          excitement: 1,
-          intensity: 2,
-          nausea: 1
-        },
-        maxNegativeGs: {
-          value: 0.1,
-          excitement: 1,
-          intensity: 1,
-          nausea: 2
-        },
-        maxLateralGs: {
-          value: 1.5,
-          excitement: 2,
-          intensity: 2,
-          nausea: 1
-        },
-        firstLength: {
-          value: 0xAA0000,
-          excitement: 2,
-          intensity: 2,
-          nausea: 2
-        },
-        numberOfDrops: {
-          value: 3,
-          excitement: 1,
-          intensity: 2,
-          nausea: 2
-        },
-      }
+        highestDropHeight: { value: 8 },
+        maxSpeed: { value: 0x70000 },
+        maxNegativeGs: { value: 0.10 },
+        maxLateralGs: { value: 1.50 },
+        firstLength: { value: 0xAA0000 },
+        numberOfDrops: { value: 3 },
+      },
+      standardPenalty: { excitement: 2, intensity: 1, nausea: 1 }
     };
     rideGroupRepositoryServiceSpy.get.and.returnValue(rideGroup);
 
@@ -226,28 +200,20 @@ describe('RideComponent', () => {
     expect(requiredValue).toBe('3');
   });
 
-  it('#getPenaltyMessage should show the correct error message if only excitement is divided by 2 for highest drop height', () => {
+  it('#getStandardPenaltyMessage should show the correct error message if only excitement is divided by 2', () => {
     // Assert
-    const message = component.getPenaltyMessage('highestDropHeight');
-    expect(message).toBe('Penalty: Excitement divided by 2');
+    const message = component.getStandardPenaltyMessage();
+    expect(message).toBe('Excitement is divided by 2 for each unmet requirement');
   });
 
-  it('#getPenaltyMessage should show the correct error message if all ratings are divided by 4 for highest drop height', () => {
+  it('#getStandardPenaltyMessage should show the correct error message if all ratings are divided by 4', () => {
     // Arrange
-    rideGroup.statRequirements.highestDropHeight.excitement = 4;
-    rideGroup.statRequirements.highestDropHeight.intensity = 4;
-    rideGroup.statRequirements.highestDropHeight.nausea = 4;
+    rideGroup.standardPenalty = { excitement: 4, intensity: 4, nausea: 4 };
     fixture.detectChanges();
 
     // Assert
-    const message = component.getPenaltyMessage('highestDropHeight');
-    expect(message).toBe('Penalty: All ratings divided by 4');
-  });
-
-  it('#getPenaltyMessage should show the correct error message if only intensity is divided by 2 for max speed', () => {
-    // Assert
-    const message = component.getPenaltyMessage('maxSpeed');
-    expect(message).toBe('Penalty: Intensity divided by 2');
+    const message = component.getStandardPenaltyMessage();
+    expect(message).toBe('All ratings are divided by 4 for each unmet requirement');
   });
 
   it('#onClickAttemptDelete should show \'delete ride\' modal', () => {

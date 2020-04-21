@@ -64,16 +64,22 @@ export class RideComponent implements OnInit {
     this.rideUpdated.emit();
   }
 
-  onChangeRideRating() {
+  onChangeRideRating(): void {
     this.rideUpdated.emit();
   }
 
-  onClickShowRideData() {
+  onClickShowRideData(): void {
     this.isRideDataModalActive = true;
   }
 
-  onClickCloseRideDataModal() {
+  onClickCloseRideDataModal(): void {
     this.isRideDataModalActive = false;
+  }
+
+  getRideType(): RideType {
+    if (this.ride.typeId !== undefined) {
+      return this.rideTypeRepositoryService.get(this.ride.typeId);
+    }
   }
 
   hasAnyStatRequirements(): boolean {
@@ -112,22 +118,24 @@ export class RideComponent implements OnInit {
     return undefined;
   }
 
-  getPenaltyMessage(property: string) {
+  getStandardPenaltyMessage() {
     const rideGroup = this.getRideGroup();
-    const excitement = rideGroup.statRequirements[property].excitement;
-    const intensity = rideGroup.statRequirements[property].intensity;
-    const nausea = rideGroup.statRequirements[property].nausea;
+    if (rideGroup === undefined) {
+      return '';
+    }
+
+    const excitement = rideGroup.standardPenalty.excitement;
+    const intensity = rideGroup.standardPenalty.intensity;
+    const nausea = rideGroup.standardPenalty.nausea;
 
     if ((excitement === intensity) &&
         (excitement === nausea)) {
-          return 'Penalty: All ratings divided by ' + excitement;
+          return 'All ratings are divided by ' + excitement + ' for each unmet requirement';
     }
-    if (excitement > 1) {
-      return 'Penalty: Excitement divided by ' + excitement;
+    else if (excitement > 1) {
+      return 'Excitement is divided by ' + excitement + ' for each unmet requirement';
     }
-    if (intensity > 1) {
-      return 'Penalty: Intensity divided by ' + intensity;
-    }
+    // Don't need to cover intensity and nausea, they either equal excitement or are 1
   }
 
   onClickAttemptDelete() {

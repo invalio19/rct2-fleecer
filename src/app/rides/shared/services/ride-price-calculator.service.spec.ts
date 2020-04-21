@@ -24,7 +24,9 @@ describe('RidePriceCalculatorService', () => {
     name: 'Wooden Roller Coaster',
     excitement: 52,
     intensity: 33,
-    nausea: 8
+    nausea: 8,
+    unreliability: 0,
+    baseRatings: []
   };
 
   const woodenRollerCoasterTestType: RideType = {
@@ -38,7 +40,9 @@ describe('RidePriceCalculatorService', () => {
     name: 'Junior Roller Coaster',
     excitement: 50,
     intensity: 30,
-    nausea: 10
+    nausea: 10,
+    unreliability: 0,
+    baseRatings: []
   };
 
   const juniorRollerCoasterTestType: RideType = {
@@ -52,7 +56,9 @@ describe('RidePriceCalculatorService', () => {
     name: 'Log Flume',
     excitement: 80,
     intensity: 34,
-    nausea: 6
+    nausea: 6,
+    unreliability: 0,
+    baseRatings: []
   };
 
   const logFlumeTestType: RideType = {
@@ -66,7 +72,9 @@ describe('RidePriceCalculatorService', () => {
     name: 'Mine Train Coaster',
     excitement: 50,
     intensity: 30,
-    nausea: 10
+    nausea: 10,
+    unreliability: 0,
+    baseRatings: []
   };
 
   const mineTrainCoasterTestType: RideType = {
