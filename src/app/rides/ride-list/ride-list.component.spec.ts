@@ -17,6 +17,8 @@ describe('RideListComponent', () => {
   let component: RideListComponent;
   let fixture: ComponentFixture<RideListComponent>;
 
+  let saveData: SaveData;
+
   const persistenceServiceSpy = jasmine.createSpyObj('PersistenceService', ['save', 'load']);
   const ridePriceCalculatorServiceSpy = jasmine.createSpyObj('RidePriceCalculatorService', ['max', 'min', 'recommendedParkEntranceFee']);
   const rideDuplicateFlaggerServiceSpy = jasmine.createSpyObj('RideDuplicateFlaggerService', ['flag']);
@@ -46,7 +48,8 @@ describe('RideListComponent', () => {
   }));
 
   beforeEach(() => {
-    const saveData: SaveData = {
+    saveData = {
+      appVersion: '1.2.0',
       options: {
         gameVersion: GameVersion.VanillaRct2
       },
@@ -90,12 +93,15 @@ describe('RideListComponent', () => {
     persistenceServiceSpy.load.and.returnValue(saveData);
     persistenceServiceSpy.save.calls.reset();
 
+    rideDuplicateFlaggerServiceSpy.flag.calls.reset();
+
     fixture = TestBed.createComponent(RideListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   afterAll(() => {
+    component.isWhatsNewModalActive = false;
     component.isRecommendedParkEntranceFeeModalActive = false;
     component.isDeleteAllRidesModalActive = false;
     fixture.detectChanges();
@@ -103,6 +109,64 @@ describe('RideListComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('#ngOnInit should not load up the what\'s new modal for first-time visitors', () => {
+    // Arrange
+    saveData = undefined;
+
+    // Act
+    component.ngOnInit();
+
+    // Assert
+    expect(component.isWhatsNewModalActive).toBeFalse();
+  });
+
+  it('#ngOnInit should load up the what\'s new modal for visitors who\'ve seen versions <= 1.1.0', () => {
+    // Arrange
+    saveData.appVersion = undefined;
+
+    // Act
+    component.ngOnInit();
+
+    // Assert
+    expect(component.isWhatsNewModalActive).toBeTrue();
+  });
+
+  it('#ngOnInit should not load up the what\'s new modal for visitors who\'ve seen version 1.2.0', () => {
+    // Arrange
+    saveData.appVersion = '1.2.0';
+
+    // Act
+    component.ngOnInit();
+
+    // Assert
+    expect(component.isWhatsNewModalActive).toBeFalse();
+  });
+
+  it('#ngOnInit should update the save data appVersion to 1.2.0', () => {
+    // Arrange
+    saveData.appVersion = undefined;
+
+    // Act
+    component.ngOnInit();
+
+    // Assert
+    expect(component.saveData.appVersion).toBe('1.2.0');
+  });
+
+  it('#onClickCloseWhatsNewModal should close the what\'s new modal', () => {
+    // Arrange
+    component.isWhatsNewModalActive = true;
+    fixture.detectChanges();
+
+    // Act
+    component.onClickCloseWhatsNewModal();
+    fixture.detectChanges();
+
+    // Assert
+    const onClickRecommendedParkEntranceFeeModal = fixture.debugElement.query(By.css('div[data-test-id="whats-new-modal"]')).nativeElement;
+    expect(onClickRecommendedParkEntranceFeeModal.getAttribute('class')).not.toContain('is-active');
   });
 
   it('#getMaxPriceString should show currency symbol and be to 2dp', () => {
@@ -220,6 +284,9 @@ describe('RideListComponent', () => {
   });
 
   it('#onChangeRideName should call rideDuplicateFlaggerService and trigger auto-save', () => {
+    // Arrange
+    saveData = persistenceServiceSpy
+
     // Act
     component.onChangeRideName();
 

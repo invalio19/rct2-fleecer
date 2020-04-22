@@ -1,3 +1,40 @@
+<div
+  class="modal"
+  [class.is-active]="isWhatsNewModalActive"
+  data-test-id="whats-new-modal">
+  <div class="modal-background" (click)="onClickCloseWhatsNewModal()"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title is-size-5">What's new?</p>
+      <button
+        class="delete"
+        aria-label="close"
+        (click)="onClickCloseWhatsNewModal()">
+      </button>
+    </header>
+    <section class="modal-card-body">
+      <div class="content">
+        <h2 class="is-size-6">v1.2.0</h2>
+        <ul>
+          <li>You can now view minimum stat requirements and corresponding rating penalties for rides that have them by clicking on the 'View ride data' button.</li>
+          <li>The 'upgrade ride age' button has been replaced with a 'refurbish' button which resets a ride's age.</li>
+          <li>When the park has an entrance fee, the 'show good value prices' checkbox is hidden rather than disabled.</li>
+        </ul>
+        <h2 class="is-size-6">v1.1.0</h2>
+        <ul>
+          <li>You can now see a calculated recommended park entrance fee, based on the value of all the open rides in your park.</li>
+        </ul>
+      </div>
+    </section>
+    <footer class="modal-card-foot inv-flex-end">
+      <button        
+        class="button is-primary"
+        (click)="onClickCloseWhatsNewModal()">
+        OK
+      </button>
+    </footer>
+  </div>
+</div>
 <div class="container inv-container">
   <section class="hero is-dark is-bold">
     <div class="hero-body">

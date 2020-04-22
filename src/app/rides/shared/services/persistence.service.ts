@@ -20,17 +20,6 @@ export class PersistenceService {
       return loadedData;
     }
 
-    const newData: SaveData = {
-      options: { gameVersion: GameVersion.VanillaRct2 },
-      parks: [
-        {
-          name: '',
-          hasEntranceFee: false,
-          showGoodValuePrice: false,
-          rides: []
-        }
-      ]
-    };
-    return newData;
+    return undefined;
   }
 }

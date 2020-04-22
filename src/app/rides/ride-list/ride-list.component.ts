@@ -21,21 +21,45 @@ export class RideListComponent implements OnInit {
   rides: Ride[];
 
   expandedIndex: number;
-
-  isDeleteAllRidesModalActive = false;
+  isWhatsNewModalActive = false;
   isRecommendedParkEntranceFeeModalActive = false;
+  isDeleteAllRidesModalActive = false;
+
+  private appVersion = '1.2.0'; // TODO pass into footer app too
 
   constructor(
     private persistenceService: PersistenceService,
     private rideDuplicateFlaggerService: RideDuplicateFlaggerService,
     private ridePriceCalculatorService: RidePriceCalculatorService) {
       this.saveData = this.persistenceService.load();
-      this.park = this.saveData.parks[0];
-      this.rides = this.park.rides;
-      this.rideDuplicateFlaggerService.flag(this.rides);
+    }
+
+  ngOnInit(): void {
+    // TODO this should all be moved out into a home component or something
+    if (this.saveData === undefined) {
+      // Never visited page before
+      this.saveData = this.getDefaultSaveData();
+      this.saveAll();
+    }
+    else if (this.saveData.appVersion === undefined) {
+      // Visited when app version was <= 1.1.0
+      this.isWhatsNewModalActive = true;
+      this.saveData.appVersion = this.appVersion;
+      this.saveAll();
+    }
+
+    // For manually testing as though user last viewed version <= 1.1.0
+    // this.saveData.appVersion = undefined;
+    // this.saveAll();
+
+    this.park = this.saveData.parks[0];
+    this.rides = this.park.rides;
+    this.rideDuplicateFlaggerService.flag(this.rides);
   }
 
-  ngOnInit(): void {}
+  onClickCloseWhatsNewModal(): void {
+    this.isWhatsNewModalActive = false;
+  }
 
   getMaxPriceString(ride: Ride): string {
     const rideCalculationParameters: RideCalculationParameters = {
@@ -197,11 +221,27 @@ export class RideListComponent implements OnInit {
     this.saveAll();
   }
 
+  private getDefaultSaveData(): SaveData {
+    const saveData: SaveData = {
+      appVersion: this.appVersion,
+      options: { gameVersion: GameVersion.VanillaRct2 },
+      parks: [
+        {
+          name: '',
+          hasEntranceFee: false,
+          showGoodValuePrice: false,
+          rides: []
+        }
+      ]
+    };
+
+    return saveData;
+  }
+
   private saveAll() {
     this.persistenceService.save(this.saveData);
   }
 
-  // Private methods
   private convertToCurrencyString(val: number): string {
     if (val !== undefined) {
       if (val === 0) {

@@ -12,6 +12,7 @@ describe('PersistenceService', () => {
   const saveDataKey = 'saveData';
 
   const saveData: SaveData = {
+    appVersion: '1.2.0',
     options: {
       gameVersion: GameVersion.OpenRct2
     },
@@ -65,25 +66,11 @@ describe('PersistenceService', () => {
     expect(saveDataFromLocalStorage).toEqual(saveData);
   });
 
-  it('#load should return default saveData object if nothing exists in LocalStorage', () => {
+  it('#load should return undefined if nothing exists in LocalStorage', () => {
     // Act
     const saveDataFromLocalStorage = service.load();
 
     // Assert
-    const defaultSaveData: SaveData = {
-      options: {
-        gameVersion: GameVersion.VanillaRct2
-      },
-      parks: [
-        {
-          name: '',
-          hasEntranceFee: false,
-          showGoodValuePrice: false,
-          rides: []
-        }
-      ]
-    };
-
-    expect(saveDataFromLocalStorage).toEqual(defaultSaveData);
+    expect(saveDataFromLocalStorage).toBeUndefined();
   });
 });
