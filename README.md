@@ -10,7 +10,7 @@ RCT2 Fleecer is a small web app to help manage the ride ticket prices in pay-per
 - See the recommended park entrance fee for pay-for-entry scenarios to attract as many guests and make as much money as possible.
 - Automatic duplicate ride type detection (having more than one ride of the same type decreases its value by about 25%).
 - Data is auto-saved to the browser whenever any details are changed, and persists even when the page is closed.
-- View a ride's minimum stat requirements to avoid getting any rating penalties.
+- View a ride's minimum stat requirements, so you can build rides without rating penalties.
 - Compatible with RCT2, RCT Classic and OpenRCT2.
 - Manually sort the order of rides.
 - Designed to work well on mobile.

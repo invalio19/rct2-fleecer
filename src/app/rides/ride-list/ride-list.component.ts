@@ -85,13 +85,11 @@ export class RideListComponent implements OnInit {
 
   getRecommendedParkEntranceFeeString(): string {
     const recommendedPrice = this.ridePriceCalculatorService.recommendedParkEntranceFee(this.saveData.options.gameVersion, this.park.rides);
-
     return this.convertToCurrencyString(recommendedPrice);
   }
 
   onClickGameVersion(gameVersion: GameVersion) {
     this.saveData.options.gameVersion = gameVersion;
-
     this.saveAll();
   }
 
