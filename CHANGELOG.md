@@ -1,10 +1,10 @@
 # Changelog
 
-## [1.2.0](https://github.com/invalio19/rct2-fleecer/compare/v1.1.0...v1.2.0) - 2019-04-21 TODO
+## [1.2.0](https://github.com/invalio19/rct2-fleecer/compare/v1.1.0...v1.2.0) - 2019-04-TODO
 
 ### Added
 
-- Minimum stat requirements for rides can now be viewed for rides that have them.
+- Minimum stat requirements and corresponding rating penalties can now be viewed for rides that have them.
 
 ### Changed
 

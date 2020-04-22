@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 
-import { RidePenaltyConverterService } from './ride-penalty-converter.service';
+import { StatRequirementConverterService } from './stat-requirement-converter.service';
 
 import { UnitConverterService } from './unit-converter.service';
 
 describe('RidePenaltyConverterService', () => {
-  let service: RidePenaltyConverterService;
+  let service: StatRequirementConverterService;
 
   const unitConverterServiceSpy = jasmine.createSpyObj('UnitConverterService', ['mphToKmph']);
   unitConverterServiceSpy.mphToKmph.withArgs(27).and.returnValue(43);
@@ -17,11 +17,11 @@ describe('RidePenaltyConverterService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        RidePenaltyConverterService,
+        StatRequirementConverterService,
         { provide: UnitConverterService, useValue: unitConverterServiceSpy }
       ]
     });
-    service = TestBed.inject(RidePenaltyConverterService);
+    service = TestBed.inject(StatRequirementConverterService);
   });
 
   it('should be created', () => {

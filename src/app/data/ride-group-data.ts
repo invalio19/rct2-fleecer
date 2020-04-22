@@ -24,10 +24,12 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 28,
     baseRatings: [{ excitement: 4.13, intensity: 2.50, nausea: 2.80 }],
     synchronisationBonus: { excitement: 0.60, intensity: 0.05 },
-    statRequirements: {
-      highestDropHeight: { value: 34 },
-    },
-    standardPenalty: { excitement: 2, intensity: 1, nausea: 1 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 34 },
+        penalty: { excitement: 2, intensity: 1, nausea: 1 }
+      }
+    ]
   },
   boatHire: {
     id: 'boatHire',
@@ -48,12 +50,14 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 16,
     baseRatings: [{ excitement: 2.80, intensity: 3.20, nausea: 2.50 }],
     synchronisationBonus: { excitement: 0.20, intensity: 0.00 },
-    statRequirements: {
-      maxSpeed: { value: 0xC0000 },
-      maxLateralGs: { value: 1.20 },
-      firstLength: { value: 0x1720000 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        maxSpeed: { value: 0xC0000 },
+        maxLateralGs: { value: 1.20 },
+        firstLength: { value: 0x1720000 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   carRide: {
     id: 'carRide',
@@ -64,10 +68,12 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 12,
     baseRatings: [{ excitement: 2.00, intensity: 0.50, nausea: 0.00 }],
     synchronisationBonus: { excitement: 0.15, intensity: 0.00 },
-    statRequirements: {
-      firstLength: { value: 0xC80000 },
-    },
-    standardPenalty: { excitement: 8, intensity: 2, nausea: 2 } // todo
+    statRequirements: [
+      {
+        firstLength: { value: 0xC80000 },
+        penalty: { excitement: 8, intensity: 2, nausea: 2 } // todo
+      }
+    ]
   },
   chairlift: {
     id: 'chairlift',
@@ -77,13 +83,16 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     nausea: 0,
     unreliability: 14, // TODO plus ride speed
     baseRatings: [{ excitement: 1.60, intensity: 0.40, nausea: 0.50 }],
-    statRequirements: {
-      firstLength: { value: 0x960000 },
-    }, // TODO num of stations
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 },
-    specialStatRequirements: {
-      shelteredEighths: { value: 4, excitement: 4, intensity: 1, nausea: 1 },
-    },
+    statRequirements: [
+      {
+        firstLength: { value: 0x960000 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 },
+      },
+      {
+        shelteredEighths: { value: 4 },
+        penalty: { excitement: 4, intensity: 1, nausea: 1 }
+      }
+    ]
   },
   circus: {
     id: 'circus',
@@ -104,12 +113,14 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 21, // TODO 31 in reverse incline launched shuttle mode
     baseRatings: [{ excitement: 3.15, intensity: 2.80, nausea: 3.20 }],
     synchronisationBonus: { excitement: 0.42, intensity: 0.05 },
-    statRequirements: {
-      highestDropHeight: { value: 12, ignoredByInversions: true },
-      maxSpeed: { value: 0xA0000 },
-      maxNegativeGs: { value: 0.30, ignoredByInversions: true },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 12, ignoredByInversions: true },
+        maxSpeed: { value: 0xA0000 },
+        maxNegativeGs: { value: 0.30, ignoredByInversions: true },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   corkscrewRollerCoaster: {
     id: 'corkscrewRollerCoaster',
@@ -120,13 +131,15 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 16,
     baseRatings: [{ excitement: 3.00, intensity: 0.50, nausea: 0.20 }],
     synchronisationBonus: { excitement: 0.40, intensity: 0.05 },
-    statRequirements: {
-      highestDropHeight: { value: 12, ignoredByInversions: true },
-      maxSpeed: { value: 0xA0000 },
-      maxNegativeGs: { value: 0.40, ignoredByInversions: true },
-      numberOfDrops: { value: 2, ignoredByInversions: true },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 12, ignoredByInversions: true },
+        maxSpeed: { value: 0xA0000 },
+        maxNegativeGs: { value: 0.40, ignoredByInversions: true },
+        numberOfDrops: { value: 2, ignoredByInversions: true },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   crookedHouse: {
     id: 'crookedHouse',
@@ -147,12 +160,14 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 13,
     baseRatings: [{ excitement: 2.70, intensity: 2.00, nausea: 1.50 }],
     synchronisationBonus: { excitement: 0.50, intensity: 0.05 },
-    statRequirements: {
-      highestDropHeight: { value: 12 },
-      maxSpeed: { value: 0x70000 },
-      firstLength: { value: 0x8C0000 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 12 },
+        maxSpeed: { value: 0x70000 },
+        firstLength: { value: 0x8C0000 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   dodgems: {
     id: 'dodgems',
@@ -194,15 +209,18 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 17,
     baseRatings: [{ excitement: 4.35, intensity: 1.85, nausea: 4.33 }],
     synchronisationBonus: { excitement: 0.40, intensity: 0.05 },
-    statRequirements: {
-      maxSpeed: { value: 0xA0000 },
-      maxNegativeGs: { value: 0.40, ignoredByInversions: true },
-      numberOfDrops: { value: 2 },
-    },
-    standardPenalty: { excitement: 2, intensity: 1, nausea: 1 },
-    specialStatRequirements: {
-      numberOfInversions: { value: 1, excitement: 2, intensity: 1, nausea: 1 },
-    }
+    statRequirements: [
+      {
+        maxSpeed: { value: 0xA0000 },
+        maxNegativeGs: { value: 0.40, ignoredByInversions: true },
+        numberOfDrops: { value: 2 },
+        penalty: { excitement: 2, intensity: 1, nausea: 1 }
+      },
+      {
+        numberOfInversions: { value: 1 },
+        penalty: { excitement: 2, intensity: 1, nausea: 1 }
+      }
+    ]
   },
   flyingSaucers: {
     id: 'flyingSaucers',
@@ -223,10 +241,12 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 12,
     baseRatings: [{ excitement: 2.00, intensity: 0.20, nausea: 0.03 }],
     synchronisationBonus: { excitement: 0.15, intensity: 0.00 },
-    statRequirements: {
-      firstLength: { value: 0xB40000 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        firstLength: { value: 0xB40000 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   gigaCoaster: {
     id: 'gigaCoaster',
@@ -237,13 +257,15 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 14,
     baseRatings: [{ excitement: 3.85, intensity: 0.40, nausea: 0.35 }],
     synchronisationBonus: { excitement: 0.40, intensity: 0.05 },
-    statRequirements: {
-      highestDropHeight: { value: 16, ignoredByInversions: true },
-      maxSpeed: { value: 0xA0000 },
-      maxNegativeGs: { value: 0.40, ignoredByInversions: true },
-      numberOfDrops: { value: 2, ignoredByInversions: true },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 16, ignoredByInversions: true },
+        maxSpeed: { value: 0xA0000 },
+        maxNegativeGs: { value: 0.40, ignoredByInversions: true },
+        numberOfDrops: { value: 2, ignoredByInversions: true },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   goKarts: {
     id: 'goKarts',
@@ -253,9 +275,12 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     nausea: 0,
     unreliability: 16,
     baseRatings: [{ excitement: 1.42, intensity: 1.73, nausea: 0.40 }], // todo plus laps etc.
-    specialStatRequirements: {
-      shelteredEighths: { value: 6, excitement: 2, intensity: 1, nausea: 1 },
-    }
+    statRequirements: [
+      {
+        shelteredEighths: { value: 6 },
+        penalty: { excitement: 2, intensity: 1, nausea: 1 },
+      }
+    ]
   },
   hauntedHouse: {
     id: 'hauntedHouse',
@@ -276,13 +301,13 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 18,
     baseRatings: [{ excitement: 1.40, intensity: 1.70, nausea: 1.65 }],
     synchronisationBonus: { excitement: 0.20, intensity: 0.04 },
-    statRequirements: {
-      numberOfDrops: { value: 1 },
-    },
-    standardPenalty: { excitement: 4, intensity: 1, nausea: 1 },
-    specialStatRequirements: {
-      numberOfInversions: { value: 1, excitement: 4, intensity: 1, nausea: 1 },
-    }
+    statRequirements: [
+      {
+        numberOfDrops: { value: 1 },
+        numberOfInversions: { value: 1 },
+        penalty: { excitement: 4, intensity: 1, nausea: 1 }
+      }
+    ]
   },
   invertedHairpinCoaster: {
     id: 'invertedHairpinCoaster',
@@ -293,15 +318,17 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 14,
     baseRatings: [{ excitement: 3.00, intensity: 2.65, nausea: 2.25 }],
     synchronisationBonus: { excitement: 0.40, intensity: 0.8 },
-    statRequirements: {
-      highestDropHeight: { value: 8 },
-      maxSpeed: { value: 0x70000 },
-      maxNegativeGs: { value: 0.10 },
-      maxLateralGs: { value: 1.50 },
-      firstLength: { value: 0xAA0000 },
-      numberOfDrops: { value: 3 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 8 },
+        maxSpeed: { value: 0x70000 },
+        maxNegativeGs: { value: 0.10 },
+        maxLateralGs: { value: 1.50 },
+        firstLength: { value: 0xAA0000 },
+        numberOfDrops: { value: 3 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   invertedImpulseCoaster: {
     id: 'invertedImpulseCoaster',
@@ -312,11 +339,13 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 20,
     baseRatings: [{ excitement: 4.00, intensity: 3.00, nausea: 3.20 }],
     synchronisationBonus: { excitement: 0.42, intensity: 0.05 },
-    statRequirements: {
-      highestDropHeight: { value: 20 },
-      maxSpeed: { value: 0xA0000 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 20 },
+        maxSpeed: { value: 0xA0000 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   invertedRollerCoaster: {
     id: 'invertedRollerCoaster',
@@ -327,12 +356,14 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 17,
     baseRatings: [{ excitement: 3.60, intensity: 2.80, nausea: 3.20 }],
     synchronisationBonus: { excitement: 0.42, intensity: 0.05 },
-    statRequirements: {
-      highestDropHeight: { value: 12, ignoredByInversions: true },
-      maxSpeed: { value: 0xA0000 },
-      maxNegativeGs: { value: 0.30, ignoredByInversions: true },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 12, ignoredByInversions: true },
+        maxSpeed: { value: 0xA0000 },
+        maxNegativeGs: { value: 0.30, ignoredByInversions: true },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   juniorRollerCoaster: {
     id: 'juniorRollerCoaster',
@@ -343,12 +374,14 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 13,
     baseRatings: [{ excitement: 2.40, intensity: 2.50, nausea: 1.80 }],
     synchronisationBonus: { excitement: 0.40, intensity: 0.05 },
-    statRequirements: {
-      highestDropHeight: { value: 6 },
-      maxSpeed: { value: 0x70000 },
-      numberOfDrops: { value: 1 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 6 },
+        maxSpeed: { value: 0x70000 },
+        numberOfDrops: { value: 1 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   launchedFreefall: {
     id: 'launchedFreefall',
@@ -368,15 +401,18 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 18,
     baseRatings: [{ excitement: 3.85, intensity: 1.15, nausea: 2.75 }],
     synchronisationBonus: { excitement: 0.40, intensity: 0.05 },
-    statRequirements: {
-      maxSpeed: { value: 0xA0000 },
-      maxNegativeGs: { value: 0.40, ignoredByInversions: true },
-      numberOfDrops: { value: 2, ignoredByInversions: true },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 },
-    specialStatRequirements: {
-      numberOfInversions: { value: 1, excitement: 4, intensity: 2, nausea: 2 }
-    }
+    statRequirements: [
+      {
+        maxSpeed: { value: 0xA0000 },
+        maxNegativeGs: { value: 0.40, ignoredByInversions: true },
+        numberOfDrops: { value: 2, ignoredByInversions: true },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      },
+      {
+        numberOfInversions: { value: 1 },
+        penalty: { excitement: 4, intensity: 2, nausea: 2 } // TODO check
+      }
+    ]
   },
   lift: {
     id: 'lift',
@@ -387,9 +423,12 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 15,
     baseRatings: [{ excitement: 1.11, intensity: 0.35, nausea: 0.30 }],
     shelteredEighths: 7,
-    specialStatRequirements: {
-      shelteredEighths: { value: 5, excitement: 4, intensity: 1, nausea: 1 }
-    }
+    statRequirements: [
+      {
+        shelteredEighths: { value: 5 },
+        penalty: { excitement: 4, intensity: 1, nausea: 1 }
+      }
+    ]
   },
   limLaunchedRollerCoaster: {
     id: 'limLaunchedRollerCoaster',
@@ -400,13 +439,15 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 25,
     baseRatings: [{ excitement: 2.90, intensity: 1.50, nausea: 2.20 }],
     synchronisationBonus: { excitement: 0.40, intensity: 0.05 },
-    statRequirements: {
-      highestDropHeight: { value: 10, ignoredByInversions: true },
-      maxSpeed: { value: 0xA0000 },
-      maxNegativeGs: { value: 10, ignoredByInversions: true },
-      numberOfDrops: { value: 2, ignoredByInversions: true },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 10, ignoredByInversions: true },
+        maxSpeed: { value: 0xA0000 },
+        maxNegativeGs: { value: 10, ignoredByInversions: true },
+        numberOfDrops: { value: 2, ignoredByInversions: true },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   logFlume: {
     id: 'logFlume',
@@ -417,10 +458,12 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 15,
     baseRatings: [{ excitement: 1.50, intensity: 0.55, nausea: 0.30 }],
     synchronisationBonus: { excitement: 0.40, intensity: 0.05 },
-    statRequirements: {
-      highestDropHeight: { value: 2 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 2 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   loopingRollerCoaster: {
     id: 'loopingRollerCoaster',
@@ -431,13 +474,15 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 15, // todo powered launch = 20
     baseRatings: [{ excitement: 3.00, intensity: 0.50, nausea: 0.20 }],
     synchronisationBonus: { excitement: 0.40, intensity: 0.05 },
-    statRequirements: {
-      highestDropHeight: { value: 14, ignoredByInversions: true },
-      maxSpeed: { value: 0xA0000 },
-      maxNegativeGs: { value: 0.10, ignoredByInversions: true },
-      numberOfDrops: { value: 2, ignoredByInversions: true },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 14, ignoredByInversions: true },
+        maxSpeed: { value: 0xA0000 },
+        maxNegativeGs: { value: 0.10, ignoredByInversions: true },
+        numberOfDrops: { value: 2, ignoredByInversions: true },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   magicCarpet: {
     id: 'magicCarpet',
@@ -478,10 +523,12 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 16,
     baseRatings: [{ excitement: 2.75, intensity: 1.00, nausea: 1.80 }],
     synchronisationBonus: { excitement: 0.40, intensity: 0.05 },
-    statRequirements: {
-      firstLength: { value: 0x10E0000 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        firstLength: { value: 0x10E0000 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   mineTrainCoaster: {
     id: 'mineTrainCoaster',
@@ -492,14 +539,16 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 16,
     baseRatings: [{ excitement: 2.90, intensity: 2.30, nausea: 2.10 }],
     synchronisationBonus: { excitement: 0.40, intensity: 0.05 },
-    statRequirements: {
-      highestDropHeight: { value: 8 },
-      maxSpeed: { value: 0xA0000 },
-      maxNegativeGs: { value: 0.10 },
-      firstLength: { value: 0x1720000 },
-      numberOfDrops: { value: 2 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 8 },
+        maxSpeed: { value: 0xA0000 },
+        maxNegativeGs: { value: 0.10 },
+        firstLength: { value: 0x1720000 },
+        numberOfDrops: { value: 2 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   miniGolf: {
     id: 'miniGolf',
@@ -509,9 +558,12 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     nausea: 10,
     unreliability: 0,
     baseRatings: [{ excitement: 1.50, intensity: 0.90, nausea: 0.00 }], // todo plus
-    specialStatRequirements: {
-      numberOfHoles: { value: 1, excitement: 8, intensity: 2, nausea: 2 }, // todo
-    }
+    statRequirements: [
+      {
+        numberOfHoles: { value: 1 },
+        penalty: { excitement: 8, intensity: 2, nausea: 2 } // todo
+      }
+    ]
   },
   miniHelicopters: {
     id: 'miniHelicopters',
@@ -523,10 +575,12 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     baseRatings: [{ excitement: 1.60, intensity: 0.40, nausea: 0.00 }],
     synchronisationBonus: { excitement: 0.15, intensity: 0.00 },
     shelteredEighths: 6,
-    statRequirements: {
-      firstLength: { value: 0xA00000 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        firstLength: { value: 0xA00000 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   miniRollerCoaster: {
     id: 'miniRollerCoaster',
@@ -537,13 +591,15 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 13,
     baseRatings: [{ excitement: 2.55, intensity: 2.40, nausea: 1.85 }],
     synchronisationBonus: { excitement: 0.40, intensity: 0.05 },
-    statRequirements: {
-      highestDropHeight: { value: 12 },
-      maxSpeed: { value: 0x70000 },
-      maxNegativeGs: { value: 0.50 },
-      numberOfDrops: { value: 2 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 12 },
+        maxSpeed: { value: 0x70000 },
+        maxNegativeGs: { value: 0.50 },
+        numberOfDrops: { value: 2 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   miniSuspendedCoaster: {
     id: 'miniSuspendedCoaster',
@@ -554,13 +610,15 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 15,
     baseRatings: [{ excitement: 2.80, intensity: 2.50, nausea: 2.70 }],
     synchronisationBonus: { excitement: 0.45, intensity: 0.15 },
-    statRequirements: {
-      highestDropHeight: { value: 6 },
-      maxSpeed: { value: 0x80000 },
-      maxLateralGs: { value: 1.30 },
-      firstLength: { value: 0xC80000 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 6 },
+        maxSpeed: { value: 0x80000 },
+        maxLateralGs: { value: 1.30 },
+        firstLength: { value: 0xC80000 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   miniatureRailway: {
     id: 'miniatureRailway',
@@ -570,13 +628,16 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     nausea: -10,
     unreliability: 11,
     baseRatings: [{ excitement: 2.50, intensity: 0.00, nausea: 0.00 }],
-    statRequirements: {
-      firstLength: { value: 0xC80000 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 },
-    specialStatRequirements: {
-      shelteredEighths: { value: 4, excitement: 4, intensity: 1, nausea: 1 },
-    }
+    statRequirements: [
+      {
+        firstLength: { value: 0xC80000 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      },
+      {
+        shelteredEighths: { value: 4 },
+        penalty: { excitement: 4, intensity: 1, nausea: 1 }
+      }
+    ]
   },
   monorail: {
     id: 'monorail',
@@ -586,13 +647,16 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     nausea: -10,
     unreliability: 14,
     baseRatings: [{ excitement: 2.00, intensity: 0.00, nausea: 0.00 }],
-    statRequirements: {
-      firstLength: { value: 0xAA0000 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 },
-    specialStatRequirements: {
-      shelteredEighths: { value: 4, excitement: 4, intensity: 1, nausea: 1 },
-    }
+    statRequirements: [
+      {
+        firstLength: { value: 0xAA0000 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      },
+      {
+        shelteredEighths: { value: 4 },
+        penalty: { excitement: 4, intensity: 1, nausea: 1 }
+      }
+    ]
   },
   monorailCycles: {
     id: 'monorailCycles',
@@ -603,10 +667,12 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 4,
     baseRatings: [{ excitement: 1.40, intensity: 0.20, nausea: 0.00 }],
     synchronisationBonus: { excitement: 0.15, intensity: 0.00 },
-    statRequirements: {
-      firstLength: { value: 0x8C0000 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        firstLength: { value: 0x8C0000 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   motionSimulator: {
     id: 'motionSimulator',
@@ -630,15 +696,18 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 18,
     baseRatings: [{ excitement: 3.75, intensity: 1.95, nausea: 4.79 }],
     synchronisationBonus: { excitement: 0.40, intensity: 0.05 },
-    statRequirements: {
-      maxSpeed: { value: 0xA0000 },
-      maxNegativeGs: { value: 0.40, ignoredByInversions: true },
-      numberOfDrops: { value: 2, ignoredByInversions: true },
-    },
-    standardPenalty: { excitement: 2, intensity: 1, nausea: 1 },
-    specialStatRequirements: {
-      numberOfInversions: { value: 1, excitement: 4, intensity: 1, nausea: 1 },
-    }
+    statRequirements: [
+      {
+        maxSpeed: { value: 0xA0000 },
+        maxNegativeGs: { value: 0.40, ignoredByInversions: true },
+        numberOfDrops: { value: 2, ignoredByInversions: true },
+        penalty: { excitement: 2, intensity: 1, nausea: 1 }
+      },
+      {
+        numberOfInversions: { value: 1 },
+        penalty: { excitement: 4, intensity: 1, nausea: 1 }
+      }
+    ]
   },
   observationTower: {
     id: 'observationTower',
@@ -659,10 +728,12 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 25,
     baseRatings: [{ excitement: 2.00, intensity: 3.20, nausea: 2.80 }],
     synchronisationBonus: { excitement: 0.60, intensity: 0.15 },
-    statRequirements: {
-      highestDropHeight: { value: 34 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 34 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   reverserRollerCoaster: {
     id: 'reverserRollerCoaster',
@@ -673,14 +744,17 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 19,
     baseRatings: [{ excitement: 2.40, intensity: 1.80, nausea: 1.70 }],
     synchronisationBonus: { excitement: 0.40, intensity: 0.05 },
-    statRequirements: {
-      firstLength: { value: 0xC80000 },
-      numberOfDrops: { value: 2 },
-    },
-    standardPenalty: { excitement: 2, intensity: 1, nausea: 1 },
-    specialStatRequirements: {
-      numberOfReversers: { value: 1, excitement: 8, intensity: 1, nausea: 1 },
-    }
+    statRequirements: [
+      {
+        firstLength: { value: 0xC80000 },
+        numberOfDrops: { value: 2 },
+        penalty: { excitement: 2, intensity: 1, nausea: 1 }
+      },
+      {
+        numberOfReverserElements: { value: 1 },
+        penalty: { excitement: 8, intensity: 1, nausea: 1 }
+      }
+    ]
   },
   riverRafts: {
     id: 'riverRafts',
@@ -701,11 +775,13 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 16,
     baseRatings: [{ excitement: 1.20, intensity: 0.70, nausea: 0.50 }],
     synchronisationBonus: { excitement: 0.30, intensity: 0.05 },
-    statRequirements: {
-      highestDropHeight: { value: 2 },
-      firstLength: { value: 0xC80000 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 2 },
+        firstLength: { value: 0xC80000 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   rotoDrop: {
     id: 'rotoDrop',
@@ -725,13 +801,15 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 19,
     baseRatings: [{ excitement: 2.50, intensity: 2.00, nausea: 1.50 }],
     synchronisationBonus: { excitement: 0.40, intensity: 0.05 },
-    statRequirements: {
-      highestDropHeight: { value: 6 },
-      maxSpeed: { value: 0x50000 },
-      firstLength: { value: 0xFA0000 },
-      numberOfDrops: { value: 2 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 6 },
+        maxSpeed: { value: 0x50000 },
+        firstLength: { value: 0xFA0000 },
+        numberOfDrops: { value: 2 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   spaceRings: {
     id: 'spaceRings',
@@ -752,13 +830,15 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 14,
     baseRatings: [{ excitement: 3.30, intensity: 0.30, nausea: 0.30 }],
     synchronisationBonus: { excitement: 0.40, intensity: 0.05 },
-    statRequirements: {
-      highestDropHeight: { value: 12, ignoredByInversions: true },
-      maxSpeed: { value: 0xA0000 },
-      maxNegativeGs: { value: 0.40, ignoredByInversions: true },
-      numberOfDrops: { value: 2, ignoredByInversions: true },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 12, ignoredByInversions: true },
+        maxSpeed: { value: 0xA0000 },
+        maxNegativeGs: { value: 0.40, ignoredByInversions: true },
+        numberOfDrops: { value: 2, ignoredByInversions: true },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   spiralSlide: {
     id: 'spiralSlide',
@@ -779,10 +859,12 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 15,
     baseRatings: [{ excitement: 1.46, intensity: 0.35, nausea: 0.30 }],
     synchronisationBonus: { excitement: 0.40, intensity: 0.05 },
-    statRequirements: {
-      highestDropHeight: { value: 6 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 6 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   standUpRollerCoaster: {
     id: 'standUpRollerCoaster',
@@ -793,12 +875,14 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 17,
     baseRatings: [{ excitement: 2.50, intensity: 3.00, nausea: 3.00 }],
     synchronisationBonus: { excitement: 0.40, intensity: 0.10 },
-    statRequirements: {
-      highestDropHeight: { value: 12 },
-      maxSpeed: { value: 0xA0000 },
-      maxNegativeGs: { value: 0.50 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 12 },
+        maxSpeed: { value: 0xA0000 },
+        maxNegativeGs: { value: 0.50 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   steelWildMouse: {
     id: 'steelWildMouse',
@@ -809,14 +893,16 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 14,
     baseRatings: [{ excitement: 2.80, intensity: 2.50, nausea: 2.10 }],
     synchronisationBonus: { excitement: 0.40, intensity: 0.8 },
-    statRequirements: {
-      highestDropHeight: { value: 6 },
-      maxSpeed: { value: 0x70000 },
-      maxLateralGs: { value: 1.50 },
-      firstLength: { value: 0xAA0000 },
-      numberOfDrops: { value: 2 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 6 },
+        maxSpeed: { value: 0x70000 },
+        maxLateralGs: { value: 1.50 },
+        firstLength: { value: 0xAA0000 },
+        numberOfDrops: { value: 2 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   steeplechase: {
     id: 'steeplechase',
@@ -827,14 +913,16 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 14,
     baseRatings: [{ excitement: 2.70, intensity: 2.40, nausea: 1.80 }],
     synchronisationBonus: { excitement: 0.75, intensity: 0.9 },
-    statRequirements: {
-      highestDropHeight: { value: 4 },
-      maxSpeed: { value: 0x80000 },
-      maxNegativeGs: { value: 0.50 },
-      firstLength: { value: 0xF00000 },
-      numberOfDrops: { value: 2 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 4 },
+        maxSpeed: { value: 0x80000 },
+        maxNegativeGs: { value: 0.50 },
+        firstLength: { value: 0xF00000 },
+        numberOfDrops: { value: 2 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   submarineRide: {
     id: 'submarineRide',
@@ -853,13 +941,16 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     nausea: -10,
     unreliability: 14,
     baseRatings: [{ excitement: 2.15, intensity: 0.23, nausea: 0.8 }],
-    statRequirements: {
-      firstLength: { value: 0xAA0000 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 },
-    specialStatRequirements: {
-      shelteredEighths: { value: 4, excitement: 4, intensity: 1, nausea: 1 },
-    }
+    statRequirements: [
+      {
+        firstLength: { value: 0xAA0000 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      },
+      {
+        shelteredEighths: { value: 4 },
+        penalty: { excitement: 4, intensity: 1, nausea: 1 }
+      }
+    ]
   },
   suspendedSwingingCoaster: {
     id: 'suspendedSwingingCoaster',
@@ -870,14 +961,16 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 18,
     baseRatings: [{ excitement: 3.30, intensity: 2.90, nausea: 3.50 }],
     synchronisationBonus: { excitement: 0.40, intensity: 0.10 },
-    statRequirements: {
-      highestDropHeight: { value: 8 },
-      maxSpeed: { value: 0xC0000 },
-      maxNegativeGs: { value: 0.60 },
-      maxLateralGs: { value: 1.50 },
-      firstLength: { value: 0x1720000 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 8 },
+        maxSpeed: { value: 0xC0000 },
+        maxNegativeGs: { value: 0.60 },
+        maxLateralGs: { value: 1.50 },
+        firstLength: { value: 0x1720000 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   swingingInverterShip: {
     id: 'swingingInverterShip',
@@ -932,13 +1025,15 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 15,
     baseRatings: [{ excitement: 3.50, intensity: 0.40, nausea: 0.30 }],
     synchronisationBonus: { excitement: 0.40, intensity: 0.05 },
-    statRequirements: {
-      highestDropHeight: { value: 12, ignoredByInversions: true },
-      maxSpeed: { value: 0xA0000 },
-      maxNegativeGs: { value: 0.40, ignoredByInversions: true },
-      numberOfDrops: { value: 2, ignoredByInversions: true },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 12, ignoredByInversions: true },
+        maxSpeed: { value: 0xA0000 },
+        maxNegativeGs: { value: 0.40, ignoredByInversions: true },
+        numberOfDrops: { value: 2, ignoredByInversions: true },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   verticalDropRollerCoaster: {
     id: 'verticalDropRollerCoaster',
@@ -949,13 +1044,15 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 16,
     baseRatings: [{ excitement: 3.20, intensity: 0.80, nausea: 0.30 }],
     synchronisationBonus: { excitement: 0.40, intensity: 0.05 },
-    statRequirements: {
-      highestDropHeight: { value: 20 },
-      maxSpeed: { value: 0xA0000 },
-      maxNegativeGs: { value: 0.10 },
-      numberOfDrops: { value: 1 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 20 },
+        maxSpeed: { value: 0xA0000 },
+        maxNegativeGs: { value: 0.10 },
+        numberOfDrops: { value: 1 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   virginiaReel: {
     id: 'virginiaReel',
@@ -966,11 +1063,13 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 19,
     baseRatings: [{ excitement: 2.10, intensity: 1.90, nausea: 3.70 }],
     synchronisationBonus: { excitement: 0.40, intensity: 0.05 },
-    statRequirements: {
-      firstLength: { value: 0xD20000 },
-      numberOfDrops: { value: 2 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        firstLength: { value: 0xD20000 },
+        numberOfDrops: { value: 2 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   waterCoaster: {
     id: 'waterCoaster',
@@ -981,15 +1080,18 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 14,
     baseRatings: [{ excitement: 2.70, intensity: 2.80, nausea: 2.10 }],
     synchronisationBonus: { excitement: 0.40, intensity: 0.05 },
-    statRequirements: {
-      highestDropHeight: { value: 8 },
-      maxSpeed: { value: 0x70000 },
-      numberOfDrops: { value: 1 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 },
-    specialStatRequirements: {
-      numberOfWaterElements: { value: 1, excitement: 8, intensity: 1, nausea: 1 },
-    }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 8 },
+        maxSpeed: { value: 0x70000 },
+        numberOfDrops: { value: 1 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 },
+      },
+      {
+        numberOfWaterElements: { value: 1 },
+        penalty: { excitement: 8, intensity: 1, nausea: 1 },
+      }
+    ]
   },
   woodenRollerCoaster: {
     id: 'woodenRollerCoaster',
@@ -1000,14 +1102,16 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 19,
     baseRatings: [{ excitement: 3.20, intensity: 2.60, nausea: 2.00 }],
     synchronisationBonus: { excitement: 0.40, intensity: 0.05 },
-    statRequirements: {
-      highestDropHeight: { value: 12 },
-      maxSpeed: { value: 0xA0000 },
-      maxNegativeGs: { value: 0.10 },
-      firstLength: { value: 0x1720000 },
-      numberOfDrops: { value: 2 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 12 },
+        maxSpeed: { value: 0xA0000 },
+        maxNegativeGs: { value: 0.10 },
+        firstLength: { value: 0x1720000 },
+        numberOfDrops: { value: 2 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   },
   woodenWildMouse: {
     id: 'woodenWildMouse',
@@ -1018,14 +1122,16 @@ export const RideGroupData: { [key: string]: RideGroup } = {
     unreliability: 14,
     baseRatings: [{ excitement: 2.90, intensity: 2.90, nausea: 2.10 }],
     synchronisationBonus: { excitement: 0.40, intensity: 0.8 },
-    statRequirements: {
-      highestDropHeight: { value: 8 },
-      maxSpeed: { value: 0x70000 },
-      maxNegativeGs: { value: 0.10 },
-      maxLateralGs: { value: 1.50 },
-      firstLength: { value: 0xAA0000 },
-      numberOfDrops: { value: 3 },
-    },
-    standardPenalty: { excitement: 2, intensity: 2, nausea: 2 }
+    statRequirements: [
+      {
+        highestDropHeight: { value: 8 },
+        maxSpeed: { value: 0x70000 },
+        maxNegativeGs: { value: 0.10 },
+        maxLateralGs: { value: 1.50 },
+        firstLength: { value: 0xAA0000 },
+        numberOfDrops: { value: 3 },
+        penalty: { excitement: 2, intensity: 2, nausea: 2 }
+      }
+    ]
   }
 };

@@ -5,7 +5,7 @@ import { UnitConverterService } from './unit-converter.service';
 @Injectable({
   providedIn: 'root'
 })
-export class RidePenaltyConverterService {
+export class StatRequirementConverterService {
   constructor(private unitConverterService: UnitConverterService) {}
 
   highestDropHeight(value: number): number {
@@ -24,5 +24,9 @@ export class RidePenaltyConverterService {
     // To metres
     // tslint:disable-next-line: no-bitwise
     return value >> 16;
+  }
+
+  shelteredEighths(value: number) {
+    return value * 12.5;
   }
 }

@@ -1,3 +1,4 @@
+import { RideRatings } from './../shared/models/ride-ratings.model';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { Ride } from '../shared/models/ride.model';
@@ -5,9 +6,10 @@ import { RideAge } from '../shared/enums/ride-age';
 import { RideAgeRepositoryService } from './../shared/services/ride-age-repository.service';
 import { RideGroup } from '../shared/models/ride-group.model';
 import { RideGroupRepositoryService } from '../shared/services/ride-group-repository.service';
-import { RidePenaltyConverterService } from './../shared/services/ride-penalty-converter.service';
 import { RideType } from '../shared/models/ride-type.model';
 import { RideTypeRepositoryService } from '../shared/services/ride-type-repository.service';
+import { StatRequirement } from '../shared/models/stat-requirement.modal';
+import { StatRequirementConverterService } from './../shared/services/stat-requirement-converter.service';
 
 @Component({
   selector: 'app-ride',
@@ -30,7 +32,7 @@ export class RideComponent implements OnInit {
   constructor(
     private rideAgeRepositoryService: RideAgeRepositoryService,
     private rideGroupRepositoryService: RideGroupRepositoryService,
-    private ridePenaltyConverterService: RidePenaltyConverterService,
+    private statRequirementConverterService: StatRequirementConverterService,
     private rideTypeRepositoryService: RideTypeRepositoryService) {
       this.rideTypeOptions = this.rideTypeRepositoryService.getAll();
       this.initialiseRideAgeOptions();
@@ -82,81 +84,90 @@ export class RideComponent implements OnInit {
     }
   }
 
+  getRideGroupStatRequirements(): StatRequirement[] {
+    const rideGroup = this.getRideGroup();
+    return rideGroup?.statRequirements;
+  }
+
   hasAnyStatRequirements(): boolean {
     const rideGroup = this.getRideGroup();
     return rideGroup?.statRequirements !== undefined;
   }
 
-  hasStatRequirement(property: string): boolean {
-    const rideGroup = this.getRideGroup();
-    return rideGroup?.statRequirements[property] !== undefined;
-  }
-
-  getStatRequirement(property: string): string {
-    const showInGs = ['maxNegativeGs', 'maxLateralGs'].includes(property);
-    const showInMetres = ['highestDropHeight', 'firstLength'].includes(property);
-    const showInKmph = ['maxSpeed'].includes(property);
-
-    const rideGroup = this.getRideGroup();
-    const baseValue = rideGroup?.statRequirements[property]?.value;
-    if (baseValue !== undefined) {
-      let value: number;
-
-      if (showInMetres || showInKmph) {
-        value = this.ridePenaltyConverterService[property](baseValue);
-      }
-      else {
-        value = baseValue;
-      }
-
-      // TODO This is smelly
-      if (showInMetres) return value + 'm';
-      if (showInKmph) return value + 'km/h';
-      if (showInGs) return value.toFixed(2) + 'g';
-      return value.toString();
-    }
-    return undefined;
-  }
-
-  isIgnoredByInversions(property: string): boolean {
-    const rideGroup = this.getRideGroup();
-    return rideGroup?.statRequirements[property]?.ignoredByInversions;
-  }
-
-  isInversionRequirementMessageRequired(): boolean {
-    const rideGroup = this.getRideGroup();
-    if (rideGroup === undefined) {
-      return false;
+  getHighestDropHeightString(sr: StatRequirement): string {
+    if (sr?.highestDropHeight?.value === undefined) {
+      return undefined;
     }
 
-    if (rideGroup.statRequirements?.highestDropHeight?.ignoredByInversions ||
-        rideGroup.statRequirements?.maxSpeed?.ignoredByInversions ||
-        rideGroup.statRequirements?.maxNegativeGs?.ignoredByInversions ||
-        rideGroup.statRequirements?.maxLateralGs?.ignoredByInversions ||
-        rideGroup.statRequirements?.firstLength?.ignoredByInversions ||
-        rideGroup.statRequirements?.numberOfDrops?.ignoredByInversions) {
-      return true;
-    }
-
-    return false;
+    const highestDropHeight = this.statRequirementConverterService.highestDropHeight(sr.highestDropHeight.value);
+    return highestDropHeight + 'm';
   }
 
-  getStandardPenaltyMessage() {
+  getMaxSpeedString(sr: StatRequirement): string {
+    if (sr?.maxSpeed?.value === undefined) {
+      return undefined;
+    }
+
+    const maxSpeed = this.statRequirementConverterService.maxSpeed(sr.maxSpeed.value);
+    return maxSpeed + 'km/h';
+  }
+
+  getMaxNegativeGsString(sr: StatRequirement): string {
+    if (sr?.maxNegativeGs?.value === undefined) {
+      return undefined;
+    }
+
+    return sr.maxNegativeGs.value.toFixed(2) + 'g';
+  }
+
+  getMaxLateralGsString(sr: StatRequirement): string {
+    if (sr?.maxLateralGs?.value === undefined) {
+      return undefined;
+    }
+
+    return sr.maxLateralGs.value.toFixed(2) + 'g';
+  }
+
+  getFirstLengthString(sr: StatRequirement): string {
+    if (sr?.firstLength?.value === undefined) {
+      return undefined;
+    }
+
+    const firstLength = this.statRequirementConverterService.firstLength(sr.firstLength.value);
+    return firstLength + 'm';
+  }
+
+  getShelteredEighthsString(sr: StatRequirement): string {
+    if (sr?.shelteredEighths?.value === undefined) {
+      return undefined;
+    }
+
+    const shelteredEighths = this.statRequirementConverterService.shelteredEighths(sr.shelteredEighths.value);
+    return '<' + shelteredEighths + '%';
+  }
+
+  showInversionRequirementMessage(sr: StatRequirement): boolean {
+    return sr?.highestDropHeight?.ignoredByInversions ||
+      sr?.maxNegativeGs?.ignoredByInversions ||
+      sr?.numberOfDrops?.ignoredByInversions;
+  }
+
+  getPenaltyMessage(penalty: RideRatings): string {
     const rideGroup = this.getRideGroup();
     if (rideGroup === undefined) {
       return '';
     }
 
-    const excitement = rideGroup.standardPenalty.excitement;
-    const intensity = rideGroup.standardPenalty.intensity;
-    const nausea = rideGroup.standardPenalty.nausea;
+    const e = penalty.excitement;
+    const i = penalty.intensity;
+    const n = penalty.nausea;
 
-    if ((excitement === intensity) &&
-        (excitement === nausea)) {
-          return 'All ratings are divided by ' + excitement + ' for each unmet requirement';
+    if ((e === i) &&
+        (e === n)) {
+          return 'All ratings are divided by ' + e + ' for each unmet requirement';
     }
-    else if (excitement > 1) {
-      return 'Excitement is divided by ' + excitement + ' for each unmet requirement';
+    else if (e > 1) {
+      return 'Excitement is divided by ' + e + ' for each unmet requirement';
     }
     // Don't need to cover intensity and nausea, they either equal excitement or are 1
   }

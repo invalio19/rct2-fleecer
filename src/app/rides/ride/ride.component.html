@@ -108,36 +108,58 @@
           <h3 class="is-size-6">Minimum stat requirements</h3>
           <table class="table">
             <tbody>
-              <tr *ngIf="hasStatRequirement('maxSpeed')">
-                <td>Max. speed</td>
-                <td>{{getStatRequirement('maxSpeed')}}</td>
-              </tr>
-              <tr *ngIf="hasStatRequirement('firstLength')">
-                <td>Ride length</td>
-                <td>{{getStatRequirement('firstLength')}}</td>
-              </tr>
-              <tr *ngIf="hasStatRequirement('maxNegativeGs')">
-                <td>Max. negative vertical G's<span *ngIf="isIgnoredByInversions('maxNegativeGs')">*</span></td>
-                <td>{{getStatRequirement('maxNegativeGs')}}</td>
-              </tr>
-              <tr *ngIf="hasStatRequirement('maxLateralGs')">
-                <td>Max. lateral G's</td>
-                <td>{{getStatRequirement('maxLateralGs')}}</td>
-              </tr>
-              <tr *ngIf="hasStatRequirement('numberOfDrops')">
-                <td>Drops<span *ngIf="isIgnoredByInversions('numberOfDrops')">*</span></td>
-                <td>{{getStatRequirement('numberOfDrops')}}</td>
-              </tr>
-              <tr *ngIf="hasStatRequirement('highestDropHeight')">
-                <td>Highest drop height<span *ngIf="isIgnoredByInversions('highestDropHeight')">*</span></td>
-                <td>{{getStatRequirement('highestDropHeight')}}</td>
-              </tr>
-              <tr *ngIf="isInversionRequirementMessageRequired()">
-                <td colspan="2" class="is-size-7">*Requirement need not be met if ride has any inversions</td>
-              </tr>
-              <tr *ngIf="getStandardPenaltyMessage()">
-                <td colspan="2" class="is-size-7 has-text-danger">{{getStandardPenaltyMessage()}}</td>
-              </tr>
+              <ng-container *ngFor="let sr of getRideGroupStatRequirements()">
+                <tr *ngIf="sr.numberOfHoles?.value">
+                  <td>Holes</td>
+                  <td>{{sr.numberOfHoles.value}}</td>
+                </tr>
+                <tr *ngIf="sr.maxSpeed?.value">
+                  <td>Max. speed</td>
+                  <td>{{getMaxSpeedString(sr)}}</td>
+                </tr>
+                <tr *ngIf="sr.firstLength?.value">
+                  <td>Ride length</td>
+                  <td>{{getFirstLengthString(sr)}}</td>
+                </tr>
+                <tr *ngIf="sr.maxNegativeGs?.value">
+                  <td>Max. negative vertical G's<span *ngIf="sr.maxNegativeGs?.ignoredByInversions">*</span></td>
+                  <td>{{getMaxNegativeGsString(sr)}}</td>
+                </tr>
+                <tr *ngIf="sr.maxLateralGs?.value">
+                  <td>Max. lateral G's</td>
+                  <td>{{getMaxLateralGsString(sr)}}</td>
+                </tr>
+                <tr *ngIf="sr.numberOfDrops?.value">
+                  <td>Drops<span *ngIf="sr.numberOfDrops?.ignoredByInversions">*</span></td>
+                  <td>{{sr.numberOfDrops.value}}</td>
+                </tr>
+                <tr *ngIf="sr.highestDropHeight?.value">
+                  <td>Highest drop height<span *ngIf="sr.highestDropHeight?.ignoredByInversions">*</span></td>
+                  <td>{{getHighestDropHeightString(sr)}}</td>
+                </tr>
+                <tr *ngIf="sr.numberOfInversions?.value">
+                  <td>Inversions</td>
+                  <td>{{sr.numberOfInversions.value}}</td>
+                </tr>
+                <tr *ngIf="sr.shelteredEighths?.value">
+                  <td>Underground</td>
+                  <td>{{getShelteredEighthsString(sr)}}</td>
+                </tr>
+                <tr *ngIf="sr.numberOfReverserElements?.value">
+                  <td>Reverser elements</td>
+                  <td>{{sr.numberOfReverserElements.value}}</td>
+                </tr>
+                <tr *ngIf="sr.numberOfWaterElements?.value">
+                  <td>Water elements</td>
+                  <td>{{sr.numberOfWaterElements.value}}</td>
+                </tr>
+                <tr *ngIf="showInversionRequirementMessage(sr)">
+                  <td colspan="2" class="is-size-7">*Requirement need not be met if ride has any inversions</td>
+                </tr>
+                <tr>
+                  <td colspan="2" class="is-size-7 has-text-danger">{{getPenaltyMessage(sr.penalty)}}</td>
+                </tr>
+              </ng-container>
             </tbody>
           </table>
         </div>
@@ -175,9 +197,7 @@
       class="button is-primary"
       (click)="onClickShowRideData()"      
       data-test-id="ride-data-button">
-      <span class="icon">
-        <strong class="is-family-monospace">i</strong>
-      </span>
+      View ride data
     </button>
   </div>
   <div class="level-right">

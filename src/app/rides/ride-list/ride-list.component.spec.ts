@@ -1,5 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { RideListComponent } from './ride-list.component';
 
@@ -31,7 +33,9 @@ describe('RideListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [ FormsModule ],
       declarations: [ RideListComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: PersistenceService, useValue: persistenceServiceSpy },
         { provide: RideDuplicateFlaggerService, useValue: rideDuplicateFlaggerServiceSpy },

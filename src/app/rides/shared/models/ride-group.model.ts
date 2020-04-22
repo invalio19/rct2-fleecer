@@ -1,3 +1,5 @@
+import { StatRequirement } from './stat-requirement.modal';
+
 export interface RideGroup {
   id: string;
   name: string;
@@ -8,9 +10,7 @@ export interface RideGroup {
   baseRatings: BaseRatings[];
   synchronisationBonus?: SynchronisationBonus;
   shelteredEighths?: number;
-  statRequirements?: StatRequirements;
-  standardPenalty?: StandardPenalty;
-  specialStatRequirements?: SpecialStatRequirements;
+  statRequirements?: StatRequirement[];
 }
 
 interface BaseRatings {
@@ -23,39 +23,4 @@ interface BaseRatings {
 interface SynchronisationBonus {
   excitement: number;
   intensity: number;
-}
-
-interface StatRequirements {
-  highestDropHeight?: StatRequirementValue;
-  maxSpeed?: StatRequirementValue;
-  maxNegativeGs?: StatRequirementValue;
-  maxLateralGs?: StatRequirementValue;
-  firstLength?: StatRequirementValue;
-  numberOfDrops?: StatRequirementValue;
-}
-
-interface StatRequirementValue {
-  value: number;
-  ignoredByInversions?: boolean;
-}
-
-interface StandardPenalty {
-  excitement: number;
-  intensity: number;
-  nausea: number;
-}
-
-interface SpecialStatRequirements {
-  shelteredEighths?: SpecialStatRequirementValue;
-  numberOfInversions?: SpecialStatRequirementValue;
-  numberOfHoles?: SpecialStatRequirementValue;
-  numberOfReversers?: SpecialStatRequirementValue;
-  numberOfWaterElements?: SpecialStatRequirementValue;
-}
-
-interface SpecialStatRequirementValue {
-  value: number
-  excitement: number;
-  intensity: number;
-  nausea: number;
 }

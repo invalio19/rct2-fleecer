@@ -1,8 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RideListComponent } from './ride-list.component';
+import { FooterComponent } from './../../shared/layout/footer/footer.component';
 
 import { RideAge } from '../shared/enums/ride-age';
+import { FormsModule } from '@angular/forms';
 
 describe('RideListComponent integration', () => {
   let component: RideListComponent;
@@ -10,7 +12,8 @@ describe('RideListComponent integration', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RideListComponent ],
+      imports: [ FormsModule ],
+      declarations: [ RideListComponent, FooterComponent ],
     })
     .compileComponents();
   }));
