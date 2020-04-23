@@ -1,11 +1,10 @@
-import { RideRatings } from './../shared/models/ride-ratings.model';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { Ride } from '../shared/models/ride.model';
 import { RideAge } from '../shared/enums/ride-age';
 import { RideAgeRepositoryService } from './../shared/services/ride-age-repository.service';
-import { RideGroup } from '../shared/models/ride-group.model';
-import { RideGroupRepositoryService } from '../shared/services/ride-group-repository.service';
+import { RideRatings } from './../shared/models/ride-ratings.model';
+import { RideService } from './../shared/services/ride.service';
 import { RideType } from '../shared/models/ride-type.model';
 import { RideTypeRepositoryService } from '../shared/services/ride-type-repository.service';
 import { StatRequirement } from '../shared/models/stat-requirement.modal';
@@ -30,10 +29,10 @@ export class RideComponent implements OnInit {
   maxRideRatingValue = 327.67;
 
   constructor(
+    private rideService: RideService,
     private rideAgeRepositoryService: RideAgeRepositoryService,
-    private rideGroupRepositoryService: RideGroupRepositoryService,
-    private statRequirementConverterService: StatRequirementConverterService,
-    private rideTypeRepositoryService: RideTypeRepositoryService) {
+    private rideTypeRepositoryService: RideTypeRepositoryService,
+    private statRequirementConverterService: StatRequirementConverterService) {
       this.rideTypeOptions = this.rideTypeRepositoryService.getAll();
       this.initialiseRideAgeOptions();
   }
@@ -85,12 +84,12 @@ export class RideComponent implements OnInit {
   }
 
   getRideGroupStatRequirements(): StatRequirement[] {
-    const rideGroup = this.getRideGroup();
+    const rideGroup = this.rideService.getGroup(this.ride);
     return rideGroup?.statRequirements;
   }
 
   hasAnyStatRequirements(): boolean {
-    const rideGroup = this.getRideGroup();
+    const rideGroup = this.rideService.getGroup(this.ride);
     return rideGroup?.statRequirements !== undefined;
   }
 
@@ -153,7 +152,7 @@ export class RideComponent implements OnInit {
   }
 
   getPenaltyMessage(penalty: RideRatings): string {
-    const rideGroup = this.getRideGroup();
+    const rideGroup = this.rideService.getGroup(this.ride);
     if (rideGroup === undefined) {
       return '';
     }
@@ -183,17 +182,6 @@ export class RideComponent implements OnInit {
   onDelete() {
     this.onClickCloseDeleteModal();
     this.rideIndexDeleted.emit(this.index);
-  }
-
-  private getRideGroup(): RideGroup {
-    if (this.ride.typeId !== undefined) {
-      const rideType = this.rideTypeRepositoryService.get(this.ride.typeId);
-      if (rideType !== undefined) {
-        const rideGroup = this.rideGroupRepositoryService.get(rideType.groupId);
-        return rideGroup;
-      }
-    }
-    return undefined;
   }
 
   private initialiseRideAgeOptions(): void {

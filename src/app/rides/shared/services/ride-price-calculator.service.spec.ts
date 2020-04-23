@@ -7,104 +7,68 @@ import { Ride } from '../models/ride.model';
 import { RideAge } from './../enums/ride-age';
 import { RideAgeRepositoryService } from './ride-age-repository.service';
 import { RideCalculationParameters } from '../models/ride-calculation-parameters.model';
-import { RideGroup } from '../models/ride-group.model';
-import { RideGroupRepositoryService } from './ride-group-repository.service';
-import { RideType } from './../models/ride-type.model';
-import { RideTypeRepositoryService } from './ride-type-repository.service';
+import { RideService } from './ride.service';
 
 describe('RidePriceCalculatorService', () => {
   let service: RidePriceCalculatorService;
 
   const rideAgeRepositoryServiceSpy = jasmine.createSpyObj('RideAgeRepositoryService', ['get']);
-  const rideGroupRepositoryServiceSpy = jasmine.createSpyObj('RideGroupRepositoryService', ['get']);
-  const rideTypeRepositoryServiceSpy = jasmine.createSpyObj('RideTypeRepositoryService', ['get']);
-
-  const woodenRollerCoasterTestGroup: RideGroup = {
-    id: 'woodenRollerCoasterTestGroup',
-    name: 'Wooden Roller Coaster',
-    excitement: 52,
-    intensity: 33,
-    nausea: 8,
-    unreliability: 0,
-    baseRatings: []
-  };
-
-  const woodenRollerCoasterTestType: RideType = {
-    id: 'woodenRollerCoasterTestType',
-    name: 'Wooden Roller Coaster',
-    groupId: 'woodenRollerCoasterTestGroup'
-  };
-
-  const juniorRollerCoasterTestGroup: RideGroup = {
-    id: 'juniorRollerCoasterTestGroup',
-    name: 'Junior Roller Coaster',
-    excitement: 50,
-    intensity: 30,
-    nausea: 10,
-    unreliability: 0,
-    baseRatings: []
-  };
-
-  const juniorRollerCoasterTestType: RideType = {
-    id: 'juniorRollerCoasterTestType',
-    name: 'Junior Roller Coaster',
-    groupId: 'juniorRollerCoasterTestGroup'
-  };
-
-  const logFlumeTestGroup: RideGroup = {
-    id: 'logFlumeTestGroup',
-    name: 'Log Flume',
-    excitement: 80,
-    intensity: 34,
-    nausea: 6,
-    unreliability: 0,
-    baseRatings: []
-  };
-
-  const logFlumeTestType: RideType = {
-    id: 'logFlumeTestType',
-    name: 'Log Flume',
-    groupId: 'logFlumeTestGroup'
-  };
-
-  const mineTrainCoasterTestGroup: RideGroup = {
-    id: 'mineTrainCoasterTestGroup',
-    name: 'Mine Train Coaster',
-    excitement: 50,
-    intensity: 30,
-    nausea: 10,
-    unreliability: 0,
-    baseRatings: []
-  };
-
-  const mineTrainCoasterTestType: RideType = {
-    id: 'mineTrainCoasterTestType',
-    name: 'Mine Train Coaster',
-    groupId: 'mineTrainCoasterTestGroup'
-  };
+  const rideServiceSpy = jasmine.createSpyObj('RideService', ['getGroup']);
 
   rideAgeRepositoryServiceSpy.get.withArgs(RideAge.LessThan5Months, GameVersion.OpenRct2).and.returnValue([5, 3, 2, 0]);
   rideAgeRepositoryServiceSpy.get.withArgs(RideAge.LessThan13Months, GameVersion.OpenRct2).and.returnValue([5, 6, 5, 0]);
 
-  rideGroupRepositoryServiceSpy.get.withArgs('woodenRollerCoasterTestGroup').and.returnValue(woodenRollerCoasterTestGroup);
-  rideTypeRepositoryServiceSpy.get.withArgs('woodenRollerCoasterTestType').and.returnValue(woodenRollerCoasterTestType);
-
-  rideGroupRepositoryServiceSpy.get.withArgs('juniorRollerCoasterTestGroup').and.returnValue(juniorRollerCoasterTestGroup);
-  rideTypeRepositoryServiceSpy.get.withArgs('juniorRollerCoasterTestType').and.returnValue(juniorRollerCoasterTestType);
-
-  rideGroupRepositoryServiceSpy.get.withArgs('logFlumeTestGroup').and.returnValue(logFlumeTestGroup);
-  rideTypeRepositoryServiceSpy.get.withArgs('logFlumeTestType').and.returnValue(logFlumeTestType);
-
-  rideGroupRepositoryServiceSpy.get.withArgs('mineTrainCoasterTestGroup').and.returnValue(mineTrainCoasterTestGroup);
-  rideTypeRepositoryServiceSpy.get.withArgs('mineTrainCoasterTestType').and.returnValue(mineTrainCoasterTestType);
+  rideServiceSpy.getGroup.and.callFake((ride: Ride) => {
+    switch (ride.typeId) {
+      case 'woodenRollerCoasterTestType':
+        return {
+          id: 'woodenRollerCoasterTestGroup',
+          name: 'Wooden Roller Coaster',
+          excitement: 52,
+          intensity: 33,
+          nausea: 8,
+          unreliability: 0,
+          baseRatings: []
+        };
+      case 'juniorRollerCoasterTestType':
+        return {
+          id: 'juniorRollerCoasterTestGroup',
+          name: 'Junior Roller Coaster',
+          excitement: 50,
+          intensity: 30,
+          nausea: 10,
+          unreliability: 0,
+          baseRatings: []
+        };
+      case 'logFlumeTestType':
+        return {
+          id: 'logFlumeTestGroup',
+          name: 'Log Flume',
+          excitement: 80,
+          intensity: 34,
+          nausea: 6,
+          unreliability: 0,
+          baseRatings: []
+        };
+      case 'mineTrainCoasterTestType':
+        return {
+          id: 'mineTrainCoasterTestGroup',
+          name: 'Mine Train Coaster',
+          excitement: 50,
+          intensity: 30,
+          nausea: 10,
+          unreliability: 0,
+          baseRatings: []
+        };
+    }
+  });
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         RidePriceCalculatorService,
         { provide: RideAgeRepositoryService, useValue: rideAgeRepositoryServiceSpy },
-        { provide: RideGroupRepositoryService, useValue: rideGroupRepositoryServiceSpy },
-        { provide: RideTypeRepositoryService, useValue: rideTypeRepositoryServiceSpy }
+        { provide: RideService, useValue: rideServiceSpy },
       ]
     });
     service = TestBed.inject(RidePriceCalculatorService);

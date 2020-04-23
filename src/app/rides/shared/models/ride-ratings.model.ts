@@ -1,5 +1,5 @@
 export interface RideRatings {
-    excitement: number;
-    intensity: number;
-    nausea: number;
+  excitement: number;
+  intensity: number;
+  nausea: number;
 }

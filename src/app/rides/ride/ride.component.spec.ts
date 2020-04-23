@@ -8,7 +8,7 @@ import { RideComponent } from './ride.component';
 import { RideAge } from '../shared/enums/ride-age';
 import { RideAgeRepositoryService } from './../shared/services/ride-age-repository.service';
 import { RideGroup } from './../shared/models/ride-group.model';
-import { RideGroupRepositoryService } from '../shared/services/ride-group-repository.service';
+import { RideService } from './../shared/services/ride.service';
 import { RideType } from './../shared/models/ride-type.model';
 import { RideTypeRepositoryService } from '../shared/services/ride-type-repository.service';
 import { StatRequirementConverterService } from '../shared/services/stat-requirement-converter.service';
@@ -20,8 +20,8 @@ describe('RideComponent', () => {
   let rideType: RideType;
   let rideGroup: RideGroup;
 
+  const rideServiceSpy = jasmine.createSpyObj('RideService', ['getGroup']);
   const rideAgeRepositoryServiceSpy = jasmine.createSpyObj('RideAgeRepositoryService', ['getAll']);
-  const rideGroupRepositoryServiceSpy = jasmine.createSpyObj('RideGroupRepositoryService', ['get']);
   const rideTypeRepositoryServiceSpy = jasmine.createSpyObj('RideTypeRepositoryService', ['get', 'getAll']);
   const statRequirementConverterServiceSpy = jasmine.createSpyObj('StatRequirementConverterService', ['highestDropHeight', 'maxSpeed', 'firstLength', 'shelteredEighths']);
 
@@ -39,7 +39,7 @@ describe('RideComponent', () => {
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: RideAgeRepositoryService, useValue: rideAgeRepositoryServiceSpy },
-        { provide: RideGroupRepositoryService, useValue: rideGroupRepositoryServiceSpy },
+        { provide: RideService, useValue: rideServiceSpy },
         { provide: RideTypeRepositoryService, useValue: rideTypeRepositoryServiceSpy },
         { provide: StatRequirementConverterService, useValue: statRequirementConverterServiceSpy },
       ]
@@ -77,7 +77,7 @@ describe('RideComponent', () => {
         }
       ]
     };
-    rideGroupRepositoryServiceSpy.get.and.returnValue(rideGroup);
+    rideServiceSpy.getGroup.and.returnValue(rideGroup);
 
     fixture = TestBed.createComponent(RideComponent);
     component = fixture.componentInstance;

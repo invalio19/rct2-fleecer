@@ -4,8 +4,7 @@ import { GameVersion } from './../enums/game-version';
 import { Ride } from '../models/ride.model';
 import { RideAgeRepositoryService } from './ride-age-repository.service';
 import { RideCalculationParameters } from './../models/ride-calculation-parameters.model';
-import { RideGroupRepositoryService } from './ride-group-repository.service';
-import { RideTypeRepositoryService } from './ride-type-repository.service';
+import { RideService } from './ride.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +12,7 @@ import { RideTypeRepositoryService } from './ride-type-repository.service';
 export class RidePriceCalculatorService {
   constructor (
     private rideAgeRepositoryService: RideAgeRepositoryService,
-    private rideGroupRepositoryService: RideGroupRepositoryService,
-    private rideTypeRepositoryService: RideTypeRepositoryService) {}
+    private rideService: RideService) {}
 
   max(rideCalculationParameters: RideCalculationParameters): number {
     let ridePrice = this.calculateRideValue(rideCalculationParameters.gameVersion, rideCalculationParameters.ride);
@@ -63,8 +61,7 @@ export class RidePriceCalculatorService {
       return undefined;
     }
 
-    const rideType = this.rideTypeRepositoryService.get(ride.typeId);
-    const rideGroup = this.rideGroupRepositoryService.get(rideType.groupId);
+    const rideGroup = this.rideService.getGroup(ride);
 
     // tslint:disable:no-bitwise
     let ridePrice =

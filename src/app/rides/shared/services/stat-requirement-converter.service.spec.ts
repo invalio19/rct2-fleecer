@@ -82,4 +82,20 @@ describe('RidePenaltyConverterService', () => {
       expect(calculatedValue).toBe(expected as number);
     });
   });
+
+  it('#shelteredEighths should convert the sheltered eighths correctly', () => {
+    [
+      [0, 0],
+      [4, 50],
+      [5, 62.5],
+      [6, 75],
+      [7, 87.5],
+    ].forEach(([input, expected]) => {
+      // Act
+      const calculatedValue = service.shelteredEighths(input);
+
+      // Assert
+      expect(calculatedValue).toBe(expected as number);
+    });
+  });
 });
