@@ -16,7 +16,7 @@ describe('RideService', () => {
 
   const rideType: RideType = {
     id: 'testTypeId',
-    name: 'Test Ride Type',
+    name: 'Test Name',
     groupId: 'testGroupId'
   };
 
@@ -88,5 +88,85 @@ describe('RideService', () => {
 
     // Assert
     expect(result).toBeUndefined();
+  });
+
+  it('#getInitialName should return the ride type name followed by a \'1\' if no ride by that name already exists', () => {
+    // Arrange
+    ride = {
+      name: '',
+      typeId: 'testTypeId',
+      age: RideAge.LessThan5Months,
+      excitement: 0,
+      intensity: 0,
+      nausea: 0,
+      duplicates: []
+    };
+
+    const rides: Ride[] = [
+      {
+        name: 'A different name',
+        typeId: 'testTypeId',
+        age: RideAge.LessThan5Months,
+        excitement: 0,
+        intensity: 0,
+        nausea: 0,
+        duplicates: []
+      }
+    ];
+
+    // Act
+    const name = service.getInitialName(ride, rides);
+
+    // Assert
+    expect(name).toBe('Test Name 1');
+  });
+
+  it('#getInitialName should return the ride type name followed by the correct number if rides by that name already exist', () => {
+    // Arrange
+    ride = {
+      name: '',
+      typeId: 'testTypeId',
+      age: RideAge.LessThan5Months,
+      excitement: 0,
+      intensity: 0,
+      nausea: 0,
+      duplicates: []
+    };
+
+    const rides: Ride[] = [
+      {
+        name: 'Test Name 1',
+        typeId: 'testTypeId',
+        age: RideAge.LessThan5Months,
+        excitement: 0,
+        intensity: 0,
+        nausea: 0,
+        duplicates: []
+      },
+      {
+        name: 'Test Name 4',
+        typeId: 'testTypeId',
+        age: RideAge.LessThan5Months,
+        excitement: 0,
+        intensity: 0,
+        nausea: 0,
+        duplicates: []
+      },
+      {
+        name: 'Test Name 2',
+        typeId: 'testTypeId',
+        age: RideAge.LessThan5Months,
+        excitement: 0,
+        intensity: 0,
+        nausea: 0,
+        duplicates: []
+      }
+    ];
+
+    // Act
+    const name = service.getInitialName(ride, rides);
+
+    // Assert
+    expect(name).toBe('Test Name 3');
   });
 });

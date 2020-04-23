@@ -1,13 +1,16 @@
-import { RideCalculationParameters } from './../shared/models/ride-calculation-parameters.model';
 import { Component, OnInit } from '@angular/core';
 
 import { GameVersion } from '../shared/enums/game-version';
+import { Park } from '../shared/models/park.model';
 import { PersistenceService } from './../shared/services/persistence.service';
 import { Ride } from '../shared/models/ride.model';
 import { RideAge } from '../shared/enums/ride-age';
+import { RideCalculationParameters } from './../shared/models/ride-calculation-parameters.model';
 import { RideDuplicateFlaggerService } from './../shared/services/ride-duplicate-flagger.service';
 import { RidePriceCalculatorService } from './../shared/services/ride-price-calculator.service';
-import { Park } from '../shared/models/park.model';
+import { RideService } from './../shared/services/ride.service';
+import { RideTypeRepositoryService } from './../shared/services/ride-type-repository.service';
+import { RideType } from '../shared/models/ride-type.model';
 import { SaveData } from '../shared/models/save-data.model';
 
 @Component({
@@ -23,6 +26,7 @@ export class RideListComponent implements OnInit {
   expandedIndex: number;
   isWhatsNewModalActive = false;
   isRecommendedParkEntranceFeeModalActive = false;
+  rideTypeOptions: RideType[];
   isDeleteAllRidesModalActive = false;
 
   private appVersion = '1.2.0'; // TODO pass into footer app too
@@ -30,8 +34,11 @@ export class RideListComponent implements OnInit {
   constructor(
     private persistenceService: PersistenceService,
     private rideDuplicateFlaggerService: RideDuplicateFlaggerService,
-    private ridePriceCalculatorService: RidePriceCalculatorService) {
+    private ridePriceCalculatorService: RidePriceCalculatorService,
+    private rideService: RideService,
+    private rideTypeRepositoryService: RideTypeRepositoryService) {
       this.saveData = this.persistenceService.load();
+      this.rideTypeOptions = this.rideTypeRepositoryService.getAll();
     }
 
   ngOnInit(): void {
@@ -160,7 +167,7 @@ export class RideListComponent implements OnInit {
     }
   }
 
-  onExpandCollapseRide(index: number) {
+  onClickExpandCollapseRide(index: number) {
     if (this.expandedIndex === index) { // collapse
       this.expandedIndex = undefined;
     } else {
@@ -168,10 +175,10 @@ export class RideListComponent implements OnInit {
     }
   }
 
-  onClickAddNewRide(): void {
+  onChangeRideTypeToAdd(rideTypeId: string): void {
     const ride: Ride = {
       name: '',
-      typeId: undefined,
+      typeId: rideTypeId,
       age: RideAge.LessThan5Months,
       excitement: undefined,
       intensity: undefined,
@@ -179,11 +186,13 @@ export class RideListComponent implements OnInit {
       duplicates: []
     };
 
+    ride.name = this.rideService.getInitialName(ride, this.rides);
     this.rides.push(ride);
+    this.rideDuplicateFlaggerService.flag(this.rides);
 
     this.saveAll();
 
-    this.onExpandCollapseRide(this.rides.length - 1);
+    this.onClickExpandCollapseRide(this.rides.length - 1);
   }
 
   onClickAttemptDeleteAllRides() {

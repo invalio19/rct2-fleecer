@@ -24,4 +24,37 @@ export class RideService {
       return this.rideGroupRepositoryService.get(rideType.groupId);
     }
   }
+
+  getInitialName(ride: Ride, rides: Ride[]) {
+    const rideType = this.getType(ride);
+    if (rideType === undefined) {
+      return '';
+    }
+
+    const name = rideType.name;
+
+    const existingSuffixNumbers: number[] = [];
+    for (const r of rides) {
+      const regex = new RegExp('^' + name + ' (\\d+)$');
+      const match = regex.exec(r.name);
+      if (match) {
+        const suffixNumber = match[1];
+        existingSuffixNumbers.push(+suffixNumber);
+      }
+    }
+
+    // Sort numerically instead of by string
+    existingSuffixNumbers.sort((a, b) => {
+      return a - b;
+    });
+
+    let numberToSuffix = 1;
+    for (let i = 1; i <= existingSuffixNumbers.length; i++) {
+      if (i === existingSuffixNumbers[i - 1]) {
+        numberToSuffix++;
+      }
+    }
+
+    return name + ' ' + numberToSuffix;
+  }
 }

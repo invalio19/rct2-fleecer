@@ -2,7 +2,7 @@
   <div class="select is-primary is-fullwidth">
     <select
       data-test-id="ride-type"
-      (change)="onSelectRideType($event.target.value)">
+      (change)="onChangeRideType($event.target.value)">
       <option
         [selected]="ride.typeId === undefined"
         disabled hidden>Ride type</option>
@@ -17,7 +17,7 @@
 </div>
 <div class="field">
   <div class="select is-primary is-fullwidth">
-    <select (change)="onSelectRideAge($event.target.value)">
+    <select (change)="onChangeRideAge($event.target.value)">
       <option
         *ngFor="let rideAgeOption of rideAgeOptions"
         [selected]="ride.age === rideAgeOption.id"

@@ -17,6 +17,7 @@ import { StatRequirementConverterService } from './../shared/services/stat-requi
 export class RideComponent implements OnInit {
   @Input() ride: Ride;
   @Input() index: number;
+  @Input() rides: Ride[];
   @Output() rideIndexDeleted = new EventEmitter<number>();
   @Output() rideTypeChanged = new EventEmitter();
   @Output() rideUpdated = new EventEmitter();
@@ -39,27 +40,15 @@ export class RideComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  getRideDuplicatesString(): string {
-    return this.ride.duplicates.join(', ');
-  }
-
-  onSelectRideType(id: string): void {
-    const oldName = this.ride.name;
-    let oldTypeName: string;
-    if (this.ride.typeId !== undefined) {
-      const oldRideType = this.rideTypeRepositoryService.get(this.ride.typeId);
-      oldTypeName = oldRideType.name;
-    }
-
+  onChangeRideType(id: string): void {
     this.ride.typeId = id;
-
-    this.updateRideName(oldName, oldTypeName);
+    this.updateRideName();
 
     this.rideTypeChanged.emit();
     this.rideUpdated.emit();
   }
 
-  onSelectRideAge(rideAge: RideAge): void {
+  onChangeRideAge(rideAge: RideAge): void {
     this.ride.age = +rideAge; // always comes through as string
 
     this.rideUpdated.emit();
@@ -78,9 +67,7 @@ export class RideComponent implements OnInit {
   }
 
   getRideTypeName(): string {
-    if (this.ride.typeId !== undefined) {
-      return this.rideTypeRepositoryService.get(this.ride.typeId).name;
-    }
+    return this.rideService.getType(this.ride)?.name;
   }
 
   getRideGroupStatRequirements(): StatRequirement[] {
@@ -198,13 +185,14 @@ export class RideComponent implements OnInit {
     }
   }
 
-  private updateRideName(oldName: string, oldTypeName: string) {
+  private updateRideName() {
     // TODO: number increments based on other rides
-    const regex = new RegExp('^' + oldTypeName + ' \\d+$');
-    const rideType = this.rideTypeRepositoryService.get(this.ride.typeId);
-    const defaultRideName = rideType.name + ' 1';
-    if (this.ride.name === undefined || this.ride.name === '' || regex.test(oldName)) {
-      this.ride.name = defaultRideName;
+    const name = this.ride.name;
+    const typeName = this.rideService.getType(this.ride)?.name;
+
+    const regex = new RegExp('^' + typeName + ' \\d+$');
+    if (this.ride.name === undefined || this.ride.name === '' || regex.test(name)) {
+      this.ride.name = this.rideService.getInitialName(this.ride, this.rides);
     }
   }
 }

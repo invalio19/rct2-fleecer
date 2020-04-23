@@ -20,12 +20,12 @@ describe('RideComponent', () => {
   let rideType: RideType;
   let rideGroup: RideGroup;
 
-  const rideServiceSpy = jasmine.createSpyObj('RideService', ['getGroup']);
   const rideAgeRepositoryServiceSpy = jasmine.createSpyObj('RideAgeRepositoryService', ['getAll']);
-  const rideTypeRepositoryServiceSpy = jasmine.createSpyObj('RideTypeRepositoryService', ['get', 'getAll']);
-  const statRequirementConverterServiceSpy = jasmine.createSpyObj('StatRequirementConverterService', ['highestDropHeight', 'maxSpeed', 'firstLength', 'shelteredEighths']);
-
   rideAgeRepositoryServiceSpy.getAll.and.returnValue([]);
+
+  const rideServiceSpy = jasmine.createSpyObj('RideService', ['getType', 'getGroup', 'getInitialName']);
+  const rideTypeRepositoryServiceSpy = jasmine.createSpyObj('RideTypeRepositoryService', ['getAll']);
+  const statRequirementConverterServiceSpy = jasmine.createSpyObj('StatRequirementConverterService', ['highestDropHeight', 'maxSpeed', 'firstLength', 'shelteredEighths']);
 
   statRequirementConverterServiceSpy.highestDropHeight.and.returnValue(25);
   statRequirementConverterServiceSpy.maxSpeed.and.returnValue(27);
@@ -53,7 +53,6 @@ describe('RideComponent', () => {
       name: 'Test Type',
       groupId: 'testGroup'
     };
-    rideTypeRepositoryServiceSpy.get.and.returnValue(rideType);
 
     rideGroup = {
       id: 'testGroup',
@@ -77,6 +76,8 @@ describe('RideComponent', () => {
         }
       ]
     };
+
+    rideServiceSpy.getType.and.returnValue(rideType);
     rideServiceSpy.getGroup.and.returnValue(rideGroup);
 
     fixture = TestBed.createComponent(RideComponent);
@@ -114,6 +115,48 @@ describe('RideComponent', () => {
     // Assert
     const rideDataButton = fixture.debugElement.query(By.css('button[data-test-id="ride-data-button"]'));
     expect(rideDataButton).toBeFalsy();
+  });
+
+  it('#onChangeRideType should change the name if it was the ride type default', () => {
+    // Arrange
+    component.rides = [
+      {
+        name: 'Type A 1',
+        age: RideAge.LessThan5Months,
+        typeId: 'typeAId',
+        excitement: 0,
+        intensity: 0,
+        nausea: 0,
+        duplicates: []
+      },
+      {
+        name: 'Type B 1',
+        age: RideAge.LessThan5Months,
+        typeId: 'typeBId',
+        excitement: 0,
+        intensity: 0,
+        nausea: 0,
+        duplicates: []
+      }
+    ];
+
+    component.ride = component.rides[1];
+    fixture.detectChanges();
+
+    rideServiceSpy.getType.withArgs(component.ride).and.returnValue({
+      id: 'typeBId',
+      name: 'Type B',
+      groupId: 'testGroup'
+    });
+
+    rideServiceSpy.getInitialName.withArgs(component.ride, component.rides).and.returnValue('Type A 2');
+
+    // Act
+    component.onChangeRideType('typeAId');
+    fixture.detectChanges();
+
+    // Assert
+    expect(component.ride.name).toBe('Type A 2');
   });
 
   it('#onClickShowRideData should display a ride data modal', () => {

@@ -11,6 +11,7 @@ import { Ride } from './../shared/models/ride.model';
 import { RideAge } from '../shared/enums/ride-age';
 import { RideDuplicateFlaggerService } from './../shared/services/ride-duplicate-flagger.service';
 import { RidePriceCalculatorService } from './../shared/services/ride-price-calculator.service';
+import { RideService } from './../shared/services/ride.service';
 import { SaveData } from './../shared/models/save-data.model';
 
 describe('RideListComponent', () => {
@@ -20,8 +21,11 @@ describe('RideListComponent', () => {
   let saveData: SaveData;
 
   const persistenceServiceSpy = jasmine.createSpyObj('PersistenceService', ['save', 'load']);
-  const ridePriceCalculatorServiceSpy = jasmine.createSpyObj('RidePriceCalculatorService', ['max', 'min', 'recommendedParkEntranceFee']);
   const rideDuplicateFlaggerServiceSpy = jasmine.createSpyObj('RideDuplicateFlaggerService', ['flag']);
+  const ridePriceCalculatorServiceSpy = jasmine.createSpyObj('RidePriceCalculatorService', ['max', 'min', 'recommendedParkEntranceFee']);
+
+  const rideServiceSpy = jasmine.createSpyObj('RideService', ['getInitialName']);
+  rideServiceSpy.getInitialName.and.returnValue('Test Name 1');
 
   const dummyRide: Ride = {
     name: '',
@@ -41,7 +45,8 @@ describe('RideListComponent', () => {
       providers: [
         { provide: PersistenceService, useValue: persistenceServiceSpy },
         { provide: RideDuplicateFlaggerService, useValue: rideDuplicateFlaggerServiceSpy },
-        { provide: RidePriceCalculatorService, useValue: ridePriceCalculatorServiceSpy }
+        { provide: RidePriceCalculatorService, useValue: ridePriceCalculatorServiceSpy },
+        { provide: RideService, useValue: rideServiceSpy },
       ]
     })
     .compileComponents();
@@ -481,12 +486,12 @@ describe('RideListComponent', () => {
     expect(persistenceServiceSpy.save).not.toHaveBeenCalled();
   });
 
-  it('#onExpandCollapseRide should set expandedIndex for ride component if ride isn\'t already expanded', () => {
+  it('#onClickExpandCollapseRide should set expandedIndex for ride component if ride isn\'t already expanded', () => {
     // Arrange
     component.expandedIndex = 1;
 
     // Act
-    component.onExpandCollapseRide(2);
+    component.onClickExpandCollapseRide(2);
 
     // TODO DOM check
 
@@ -494,25 +499,25 @@ describe('RideListComponent', () => {
     expect(component.expandedIndex).toBe(2);
   });
 
-  it('#onExpandCollapseRide should set expandedIndex to undefined if ride is already expanded', () => {
+  it('#onClickExpandCollapseRide should set expandedIndex to undefined if ride is already expanded', () => {
     // Arrange
     component.expandedIndex = 2;
 
     // Act
-    component.onExpandCollapseRide(2);
+    component.onClickExpandCollapseRide(2);
 
     // Assert
     expect(component.expandedIndex).toBeUndefined();
   });
 
-  it('#onClickAddNewRide should add new default ride to list, trigger auto-save and expand the new ride', () => {
+  it('#onChangeRideTypeToAdd should add ride of chosen type to list with default name, trigger auto-save and expand the new ride', () => {
     // Act
-    component.onClickAddNewRide();
+    component.onChangeRideTypeToAdd('testTypeId');
 
     // Assert
     const newDefaultRide: Ride = {
-      name: '',
-      typeId: undefined,
+      name: 'Test Name 1',
+      typeId: 'testTypeId',
       age: RideAge.LessThan5Months,
       excitement: undefined,
       intensity: undefined,
