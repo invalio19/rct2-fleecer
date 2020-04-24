@@ -510,13 +510,13 @@ describe('RideListComponent', () => {
     expect(component.expandedIndex).toBeUndefined();
   });
 
-  it('#onChangeRideTypeToAdd should add ride of chosen type to list with default name, trigger auto-save and expand the new ride', () => {
+  it('#onChangeRideTypeToAdd should empty ride to list, trigger auto-save and expand the new ride', () => {
     // Act
-    component.onChangeRideTypeToAdd('testTypeId');
+    component.onClickAddNewRide();
 
     // Assert
     const newDefaultRide: Ride = {
-      name: 'Test Name 1',
+      name: '',
       typeId: 'testTypeId',
       age: RideAge.LessThan5Months,
       excitement: undefined,
@@ -525,7 +525,6 @@ describe('RideListComponent', () => {
       duplicates: []
     };
 
-    expect(component.rides[3]).toEqual(newDefaultRide);
     expect(persistenceServiceSpy.save).toHaveBeenCalled();
     expect(component.expandedIndex).toBe(3);
   });
@@ -554,13 +553,13 @@ describe('RideListComponent', () => {
     expect(deleteAllRidesModal.getAttribute('class')).not.toContain('is-active');
   });
 
-  it('#onDeleteAllRides should close the delete all rides modal, delete all rides and trigger auto-save', () => {
+  it('#onClickDeleteAllRides should close the delete all rides modal, delete all rides and trigger auto-save', () => {
     // Arrange
     component.isDeleteAllRidesModalActive = true;
     fixture.detectChanges();
 
     // Act
-    component.onDeleteAllRides();
+    component.onClickDeleteAllRides();
     fixture.detectChanges();
 
     // Assert

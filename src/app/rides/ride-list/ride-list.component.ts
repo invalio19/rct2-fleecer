@@ -8,7 +8,6 @@ import { RideAge } from '../shared/enums/ride-age';
 import { RideCalculationParameters } from './../shared/models/ride-calculation-parameters.model';
 import { RideDuplicateFlaggerService } from './../shared/services/ride-duplicate-flagger.service';
 import { RidePriceCalculatorService } from './../shared/services/ride-price-calculator.service';
-import { RideService } from './../shared/services/ride.service';
 import { RideTypeRepositoryService } from './../shared/services/ride-type-repository.service';
 import { RideType } from '../shared/models/ride-type.model';
 import { SaveData } from '../shared/models/save-data.model';
@@ -35,7 +34,6 @@ export class RideListComponent implements OnInit {
     private persistenceService: PersistenceService,
     private rideDuplicateFlaggerService: RideDuplicateFlaggerService,
     private ridePriceCalculatorService: RidePriceCalculatorService,
-    private rideService: RideService,
     private rideTypeRepositoryService: RideTypeRepositoryService) {
       this.saveData = this.persistenceService.load();
       this.rideTypeOptions = this.rideTypeRepositoryService.getAll();
@@ -175,10 +173,10 @@ export class RideListComponent implements OnInit {
     }
   }
 
-  onChangeRideTypeToAdd(rideTypeId: string): void {
+  onClickAddNewRide(): void {
     const ride: Ride = {
       name: '',
-      typeId: rideTypeId,
+      typeId: undefined,
       age: RideAge.LessThan5Months,
       excitement: undefined,
       intensity: undefined,
@@ -186,7 +184,6 @@ export class RideListComponent implements OnInit {
       duplicates: []
     };
 
-    ride.name = this.rideService.getInitialName(ride, this.rides);
     this.rides.push(ride);
     this.rideDuplicateFlaggerService.flag(this.rides);
 
@@ -203,7 +200,7 @@ export class RideListComponent implements OnInit {
     this.isDeleteAllRidesModalActive = false;
   }
 
-  onDeleteAllRides() {
+  onClickDeleteAllRides() {
     this.onCloseDeleteAllRidesModal();
     this.rides.length = 0;
     this.saveAll();

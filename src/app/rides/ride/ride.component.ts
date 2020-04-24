@@ -166,7 +166,7 @@ export class RideComponent implements OnInit {
     this.isDeleteModalActive = false;
   }
 
-  onDelete() {
+  onClickDelete() {
     this.onClickCloseDeleteModal();
     this.rideIndexDeleted.emit(this.index);
   }
