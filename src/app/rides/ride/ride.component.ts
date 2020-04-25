@@ -1,12 +1,18 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
+import { Park } from '../shared/models/park.model';
+import { PersistenceService } from './../shared/services/persistence.service';
 import { Ride } from '../shared/models/ride.model';
 import { RideAge } from '../shared/enums/ride-age';
 import { RideAgeRepositoryService } from './../shared/services/ride-age-repository.service';
+import { RideCalculationParameters } from '../shared/models/ride-calculation-parameters.model';
+import { RideDuplicateFlaggerService } from './../shared/services/ride-duplicate-flagger.service';
+import { RidePriceCalculatorService } from './../shared/services/ride-price-calculator.service';
 import { RideRatings } from './../shared/models/ride-ratings.model';
 import { RideService } from './../shared/services/ride.service';
 import { RideType } from '../shared/models/ride-type.model';
 import { RideTypeRepositoryService } from '../shared/services/ride-type-repository.service';
+import { SaveData } from './../shared/models/save-data.model';
 import { StatRequirement } from '../shared/models/stat-requirement.modal';
 import { StatRequirementConverterService } from './../shared/services/stat-requirement-converter.service';
 
@@ -17,45 +23,127 @@ import { StatRequirementConverterService } from './../shared/services/stat-requi
 export class RideComponent implements OnInit {
   @Input() ride: Ride;
   @Input() index: number;
-  @Input() rides: Ride[];
-  @Output() rideIndexDeleted = new EventEmitter<number>();
-  @Output() rideTypeChanged = new EventEmitter();
-  @Output() rideUpdated = new EventEmitter();
+  @Input() saveData: SaveData;
+  @Input() isExpanded: boolean;
+  @Output() rideExpandToggled = new EventEmitter<number>();
 
   rideTypeOptions: RideType[];
   rideAgeOptions: { id: number, name: string }[] = [];
 
+  park: Park;
+  rides: Ride[];
   isRideDataModalActive = false;
   isDeleteModalActive = false;
   maxRideRatingValue = 327.67;
 
   constructor(
-    private rideService: RideService,
+    private persistenceService: PersistenceService,
     private rideAgeRepositoryService: RideAgeRepositoryService,
+    private ridePriceCalculatorService: RidePriceCalculatorService,
+    private rideDuplicateFlaggerService: RideDuplicateFlaggerService,
+    private rideService: RideService,
     private rideTypeRepositoryService: RideTypeRepositoryService,
     private statRequirementConverterService: StatRequirementConverterService) {
       this.rideTypeOptions = this.rideTypeRepositoryService.getAll();
       this.initialiseRideAgeOptions();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.park = this.saveData.parks[0];
+    this.rides = this.park.rides;
+  }
+
+  onChangeRideName() {
+    this.rideDuplicateFlaggerService.flag(this.rides); // TODO: overkill
+    this.saveAll();
+  }
+
+  getMaxPriceString(ride: Ride): string {
+    const rideCalculationParameters: RideCalculationParameters = {
+      gameVersion: this.saveData.options.gameVersion,
+      parkHasEntranceFee: this.park.hasEntranceFee,
+      ride
+    };
+
+    const maxPrice = this.ridePriceCalculatorService.max(rideCalculationParameters);
+    return this.convertToCurrencyString(maxPrice);
+  }
+
+  getMinPriceString(ride: Ride): string {
+    const rideCalculationParameters: RideCalculationParameters = {
+      gameVersion: this.saveData.options.gameVersion,
+      parkHasEntranceFee: this.park.hasEntranceFee,
+      ride
+    };
+
+    const minPrice = this.ridePriceCalculatorService.min(rideCalculationParameters);
+    return this.convertToCurrencyString(minPrice);
+  }
+
+  onMoveRideUp(index: number) {
+    if (index === 0) {
+      return;
+    }
+
+    this.arraySwap(this.rides, index, index -1);
+
+    this.saveAll();
+  }
+
+  onMoveRideDown(index: number) {
+    if (index === this.rides.length - 1) {
+      return;
+    }
+
+    this.arraySwap(this.rides, index, index + 1);
+
+    this.saveAll();
+  }
+
+  canRefurbishRide(ride: Ride) {
+    return ride.age !== RideAge.LessThan5Months;
+  }
+
+  onClickRefurbishRide(ride: Ride) {
+    if (this.canRefurbishRide(ride)) {
+      ride.age = RideAge.LessThan5Months;
+      this.saveAll();
+    }
+  }
+
+  canDegradeRideAge(ride: Ride) {
+    return ride.age !== RideAge.MoreThan200Months;
+  }
+
+  onClickDegradeRideAge(ride: Ride) {
+    if (this.canDegradeRideAge(ride)) {
+      ride.age++;
+      this.saveAll();
+    }
+  }
+
+  onClickExpandCollapseRide() {
+    this.rideExpandToggled.emit(this.index);
+  }
 
   onChangeRideType(id: string): void {
+    const oldTypeName = this.rideService.getType(this.ride)?.name;
     this.ride.typeId = id;
-    this.updateRideName();
 
-    this.rideTypeChanged.emit();
-    this.rideUpdated.emit();
+    this.updateRideName(oldTypeName);
+    this.rideDuplicateFlaggerService.flag(this.rides);
+
+    this.saveAll();
   }
 
   onChangeRideAge(rideAge: RideAge): void {
     this.ride.age = +rideAge; // always comes through as string
 
-    this.rideUpdated.emit();
+    this.saveAll();
   }
 
   onChangeRideRating(): void {
-    this.rideUpdated.emit();
+    this.saveAll();
   }
 
   onClickShowRideData(): void {
@@ -168,7 +256,13 @@ export class RideComponent implements OnInit {
 
   onClickDelete() {
     this.onClickCloseDeleteModal();
-    this.rideIndexDeleted.emit(this.index);
+    this.rides.splice(this.index, 1);
+    this.rideDuplicateFlaggerService.flag(this.rides);
+    this.saveAll();
+  }
+
+  private saveAll() {
+    this.persistenceService.save(this.saveData);
   }
 
   private initialiseRideAgeOptions(): void {
@@ -185,14 +279,27 @@ export class RideComponent implements OnInit {
     }
   }
 
-  private updateRideName() {
-    // TODO: number increments based on other rides
+  private updateRideName(oldTypeName: string) {
     const name = this.ride.name;
-    const typeName = this.rideService.getType(this.ride)?.name;
-
-    const regex = new RegExp('^' + typeName + ' \\d+$');
-    if (this.ride.name === undefined || this.ride.name === '' || regex.test(name)) {
+    const regex = new RegExp('^' + oldTypeName + ' \\d+$');
+    if (name === undefined || name === '' || regex.test(name)) {
       this.ride.name = this.rideService.getInitialName(this.ride, this.rides);
     }
+  }
+
+  private convertToCurrencyString(val: number): string {
+    if (val !== undefined) {
+      if (val === 0) {
+        return 'Free';
+      }
+      return '£' + val.toFixed(2);
+    }
+    return '';
+  }
+
+  private arraySwap(arr: any[], fromIndex: number, toIndex: number): void {
+    const element = arr[fromIndex];
+    arr.splice(fromIndex, 1);
+    arr.splice(toIndex, 0, element);
   }
 }

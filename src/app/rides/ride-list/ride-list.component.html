@@ -137,87 +137,12 @@
       class="has-background-light inv-ride"
       [attr.data-test-id]="'ride-' + i"
       *ngFor="let ride of rides; let i = index">
-      <div class="field has-addons">
-        <p class="control is-expanded">
-          <input
-            class="input is-primary"
-            placeholder="New ride"
-            (change)="onChangeRideName()"
-            [(ngModel)]="ride.name">
-        </p>
-        <p class="control">
-          <a class="button is-primary inv-disabled" disabled>
-            <strong *ngIf="!park.showGoodValuePrice">{{getMaxPriceString(ride)}}</strong>
-            <strong *ngIf="park.showGoodValuePrice">{{getMinPriceString(ride)}}</strong>
-          </a>
-        </p>
-      </div>
-      <div class="level is-mobile">
-        <div class="level-left">
-          <div class="field has-addons">
-            <p class="control">
-              <button 
-                class="button"
-                [disabled]="i === 0"
-                (click)="onMoveRideUp(i)">      
-                <span class="icon">
-                  <i class="fa fa-arrow-up"></i>
-                </span>      
-              </button>
-            </p>
-            <p class="control">
-              <button
-                class="button"
-                [disabled]="i === rides.length - 1"
-                (click)="onMoveRideDown(i)">      
-                <span class="icon">
-                  <i class="fa fa-arrow-down"></i>
-                </span>
-              </button>
-            </p>
-          </div>
-        </div>
-        <div class="level-right">
-          <div class="buttons">
-            <button
-              class="button is-primary"
-              [disabled]="!canRefurbishRide(ride)"
-              (click)="onClickRefurbishRide(ride)">
-              <span class="icon">
-                <i class="fa fa-tools"></i>
-              </span>
-            </button>
-            <button
-              class="button is-primary"
-              [disabled]="!canDegradeRideAge(ride)"
-              (click)="onClickDegradeRideAge(ride)">
-              <span><strong>–</strong></span>
-              <span class="icon">
-                <i class="fa fa-coins"></i>
-              </span>
-            </button>
-            <button
-              class="button"
-              data-test-id="expand-ride"
-              (click)="onClickExpandCollapseRide(i)">
-              <span class="icon">
-                <i
-                  class="fa"
-                  [class.fa-chevron-up]="expandedIndex === i"
-                  [class.fa-chevron-down]="expandedIndex !== i">
-                </i>
-              </span>
-            </button>
-          </div>
-        </div>
-      </div>
-      <app-ride *ngIf="expandedIndex === i"
+      <app-ride
         [ride]="ride"
         [index]="i"
-        [rides]="rides"
-        (rideIndexDeleted)="onRideDeleted($event)"
-        (rideTypeChanged)="onRideTypeChanged()"
-        (rideUpdated)="onRideUpdated()">
+        [saveData]="saveData"
+        [isExpanded]="expandedRideIndex === i"
+        (rideExpandToggled)="onRideExpandToggled($event)">
       </app-ride>
     </div>
     <div class="modal"

@@ -5,11 +5,10 @@ import { Park } from '../shared/models/park.model';
 import { PersistenceService } from './../shared/services/persistence.service';
 import { Ride } from '../shared/models/ride.model';
 import { RideAge } from '../shared/enums/ride-age';
-import { RideCalculationParameters } from './../shared/models/ride-calculation-parameters.model';
 import { RideDuplicateFlaggerService } from './../shared/services/ride-duplicate-flagger.service';
 import { RidePriceCalculatorService } from './../shared/services/ride-price-calculator.service';
-import { RideTypeRepositoryService } from './../shared/services/ride-type-repository.service';
 import { RideType } from '../shared/models/ride-type.model';
+import { RideTypeRepositoryService } from './../shared/services/ride-type-repository.service';
 import { SaveData } from '../shared/models/save-data.model';
 
 @Component({
@@ -22,7 +21,7 @@ export class RideListComponent implements OnInit {
   park: Park;
   rides: Ride[];
 
-  expandedIndex: number;
+  expandedRideIndex: number;
   isWhatsNewModalActive = false;
   isRecommendedParkEntranceFeeModalActive = false;
   rideTypeOptions: RideType[];
@@ -37,7 +36,7 @@ export class RideListComponent implements OnInit {
     private rideTypeRepositoryService: RideTypeRepositoryService) {
       this.saveData = this.persistenceService.load();
       this.rideTypeOptions = this.rideTypeRepositoryService.getAll();
-    }
+  }
 
   ngOnInit(): void {
     // TODO this should all be moved out into a home component or something
@@ -64,28 +63,6 @@ export class RideListComponent implements OnInit {
 
   onClickCloseWhatsNewModal(): void {
     this.isWhatsNewModalActive = false;
-  }
-
-  getMaxPriceString(ride: Ride): string {
-    const rideCalculationParameters: RideCalculationParameters = {
-      gameVersion: this.saveData.options.gameVersion,
-      parkHasEntranceFee: this.park.hasEntranceFee,
-      ride
-    };
-
-    const maxPrice = this.ridePriceCalculatorService.max(rideCalculationParameters);
-    return this.convertToCurrencyString(maxPrice);
-  }
-
-  getMinPriceString(ride: Ride): string {
-    const rideCalculationParameters: RideCalculationParameters = {
-      gameVersion: this.saveData.options.gameVersion,
-      parkHasEntranceFee: this.park.hasEntranceFee,
-      ride
-    };
-
-    const minPrice = this.ridePriceCalculatorService.min(rideCalculationParameters);
-    return this.convertToCurrencyString(minPrice);
   }
 
   getRecommendedParkEntranceFeeString(): string {
@@ -118,61 +95,6 @@ export class RideListComponent implements OnInit {
     this.isRecommendedParkEntranceFeeModalActive = false;
   }
 
-  onChangeRideName() {
-    this.rideDuplicateFlaggerService.flag(this.rides); // TODO: overkill
-    this.saveAll();
-  }
-
-  onMoveRideUp(index: number) {
-    if (index === 0) {
-      return;
-    }
-
-    this.arraySwap(this.rides, index, index -1);
-
-    this.saveAll();
-  }
-
-  onMoveRideDown(index: number) {
-    if (index === this.rides.length - 1) {
-      return;
-    }
-
-    this.arraySwap(this.rides, index, index + 1);
-
-    this.saveAll();
-  }
-
-  canRefurbishRide(ride: Ride) {
-    return ride.age !== RideAge.LessThan5Months;
-  }
-
-  onClickRefurbishRide(ride: Ride) {
-    if (this.canRefurbishRide(ride)) {
-      ride.age = RideAge.LessThan5Months;
-      this.saveAll();
-    }
-  }
-
-  canDegradeRideAge(ride: Ride) {
-    return ride.age !== RideAge.MoreThan200Months;
-  }
-
-  onClickDegradeRideAge(ride: Ride) {
-    if (this.canDegradeRideAge(ride)) {
-      ride.age++;
-      this.saveAll();
-    }
-  }
-
-  onClickExpandCollapseRide(index: number) {
-    if (this.expandedIndex === index) { // collapse
-      this.expandedIndex = undefined;
-    } else {
-      this.expandedIndex = index; // expand
-    }
-  }
-
   onClickAddNewRide(): void {
     const ride: Ride = {
       name: '',
@@ -189,7 +111,7 @@ export class RideListComponent implements OnInit {
 
     this.saveAll();
 
-    this.onClickExpandCollapseRide(this.rides.length - 1);
+    this.expandedRideIndex = this.rides.length - 1;
   }
 
   onClickAttemptDeleteAllRides() {
@@ -211,18 +133,13 @@ export class RideListComponent implements OnInit {
   }
 
   // @Outputs
-  onRideDeleted(index: number) { // triggered from child component
-    this.rides.splice(index, 1);
-    this.rideDuplicateFlaggerService.flag(this.rides);
-    this.saveAll();
-  }
-
-  onRideTypeChanged() {
-    this.rideDuplicateFlaggerService.flag(this.rides);
-  }
-
-  onRideUpdated() {
-    this.saveAll();
+  onRideExpandToggled(index: number) {
+    if (this.expandedRideIndex !== index) {
+      this.expandedRideIndex = index;
+    }
+    else {
+      this.expandedRideIndex = undefined;
+    }
   }
 
   private getDefaultSaveData(): SaveData {
@@ -246,7 +163,7 @@ export class RideListComponent implements OnInit {
     this.persistenceService.save(this.saveData);
   }
 
-  private convertToCurrencyString(val: number): string {
+  private convertToCurrencyString(val: number): string { // TODO copy paste
     if (val !== undefined) {
       if (val === 0) {
         return 'Free';
@@ -254,11 +171,5 @@ export class RideListComponent implements OnInit {
       return '£' + val.toFixed(2);
     }
     return '';
-  }
-
-  private arraySwap(arr: any[], fromIndex: number, toIndex: number): void {
-    const element = arr[fromIndex];
-    arr.splice(fromIndex, 1);
-    arr.splice(toIndex, 0, element);
   }
 }

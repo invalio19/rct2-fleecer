@@ -35,14 +35,11 @@ export class RideAgeRepositoryService {
   ];
 
   getAll(gameVersion: GameVersion): number[][] {
-    switch (gameVersion) {
-      case GameVersion.VanillaRct2:
-        return this.vanillaRct2RideAgeTable;
-      case GameVersion.OpenRct2:
-        return this.openRct2RideAgeTable;
-      default:
-        console.log('RideAgeRepository.GetAll called with an invalid argument of "' + gameVersion + '".');
-        break;
+    if (gameVersion === GameVersion.OpenRct2) {
+      return this.openRct2RideAgeTable;
+    }
+    else {
+      return this.vanillaRct2RideAgeTable;
     }
   }
 

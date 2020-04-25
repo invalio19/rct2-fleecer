@@ -1,210 +1,286 @@
-<div class="field">
-  <div class="select is-primary is-fullwidth">
-    <select
-      data-test-id="ride-type"
-      (change)="onChangeRideType($event.target.value)">
-      <option
-        [selected]="ride.typeId === undefined"
-        disabled hidden>Ride type</option>
-      <option
-        *ngFor="let rideTypeOption of rideTypeOptions"
-        [selected]="ride.typeId === rideTypeOption.id"
-        [value]="rideTypeOption.id">
-        {{rideTypeOption.name}}
-      </option>
-    </select>
-  </div>
-</div>
-<div class="field">
-  <div class="select is-primary is-fullwidth">
-    <select (change)="onChangeRideAge($event.target.value)">
-      <option
-        *ngFor="let rideAgeOption of rideAgeOptions"
-        [selected]="ride.age === rideAgeOption.id"
-        [value]="rideAgeOption.id">
-        {{rideAgeOption.name}}
-      </option>
-    </select>
-  </div>
-</div>
 <div class="field has-addons">
-  <p class="control inv-rating">
-    <a class="button is-primary inv-rating-inner inv-disabled" disabled>
-      Excitement
-    </a>
-  </p>
   <p class="control is-expanded">
     <input
       class="input is-primary"
-      type="number"
-      min="0"
-      [max]="this.maxRideRatingValue"
-      step="0.01"
-      (input)="onChangeRideRating()"
-      [(ngModel)]="ride.excitement">
+      placeholder="New ride"
+      (change)="onChangeRideName()"
+      [(ngModel)]="ride.name">
   </p>
-</div>
-<div class="field has-addons">  
-  <p class="control inv-rating">
-    <a class="button is-primary inv-rating-inner inv-disabled" disabled>
-      Intensity
+  <p class="control">
+    <a class="button is-primary inv-disabled" disabled>
+      <strong *ngIf="!park.showGoodValuePrice">{{getMaxPriceString(ride)}}</strong>
+      <strong *ngIf="park.showGoodValuePrice">{{getMinPriceString(ride)}}</strong>
     </a>
   </p>
-  <p class="control is-expanded">
-    <input
-      class="input is-primary"
-      type="number"
-      min="0"
-      [max]="this.maxRideRatingValue"
-      step="0.01"
-      (input)="onChangeRideRating()"
-      [(ngModel)]="ride.intensity">
-  </p>
-</div>
-<div class="field has-addons">  
-  <p class="control inv-rating">
-    <a class="button is-primary inv-rating-inner inv-disabled" disabled>
-      Nausea
-    </a>
-  </p>
-  <p class="control is-expanded">
-    <input
-      class="input is-primary"
-      type="number"
-      min="0"
-      [max]="this.maxRideRatingValue"
-      step="0.01"
-      (input)="onChangeRideRating()"
-      [(ngModel)]="ride.nausea">
-  </p>
-</div>
-<div
-  *ngIf="ride.duplicates !== undefined && ride.duplicates.length > 0"
-  class="box content">
-  <p>This ride is a duplicate of:</p>
-  <ul>
-    <li *ngFor="let duplicate of ride.duplicates">{{duplicate === undefined || duplicate === '' ? 'Unnamed ride' : duplicate}}</li>
-  </ul>
-</div>
-<div
-  class="modal"
-  [class.is-active]="isRideDataModalActive"
-  data-test-id="ride-data-modal">
-  <div class="modal-background" (click)="onClickCloseRideDataModal()"></div>
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title is-size-5">{{getRideTypeName()}}</p>
-      <button
-        class="delete"
-        aria-label="close"
-        (click)="onClickCloseRideDataModal()">
-      </button>
-    </header>
-    <section class="modal-card-body">
-      <div class="content">
-        <div
-          *ngIf="hasAnyStatRequirements()"
-          data-test-id="minimum-stat-requirements">
-          <h3 class="is-size-6">Minimum stat requirements</h3>
-          <table class="table">
-            <tbody>
-              <ng-container *ngFor="let sr of getRideGroupStatRequirements()">
-                <tr *ngIf="sr.numberOfHoles?.value">
-                  <td>Holes</td>
-                  <td>{{sr.numberOfHoles.value}}</td>
-                </tr>
-                <tr *ngIf="sr.maxSpeed?.value">
-                  <td>Max. speed</td>
-                  <td>{{getMaxSpeedString(sr)}}</td>
-                </tr>
-                <tr *ngIf="sr.firstLength?.value">
-                  <td>Ride length</td>
-                  <td>{{getFirstLengthString(sr)}}</td>
-                </tr>
-                <tr *ngIf="sr.maxNegativeGs?.value">
-                  <td>Max. negative vertical G's<span *ngIf="sr.maxNegativeGs?.ignoredByInversions">*</span></td>
-                  <td>{{getMaxNegativeGsString(sr)}}</td>
-                </tr>
-                <tr *ngIf="sr.maxLateralGs?.value">
-                  <td>Max. lateral G's</td>
-                  <td>{{getMaxLateralGsString(sr)}}</td>
-                </tr>
-                <tr *ngIf="sr.numberOfDrops?.value">
-                  <td>Drops<span *ngIf="sr.numberOfDrops?.ignoredByInversions">*</span></td>
-                  <td>{{sr.numberOfDrops.value}}</td>
-                </tr>
-                <tr *ngIf="sr.highestDropHeight?.value">
-                  <td>Highest drop height<span *ngIf="sr.highestDropHeight?.ignoredByInversions">*</span></td>
-                  <td>{{getHighestDropHeightString(sr)}}</td>
-                </tr>
-                <tr *ngIf="sr.numberOfInversions?.value">
-                  <td>Inversions</td>
-                  <td>{{sr.numberOfInversions.value}}</td>
-                </tr>
-                <tr *ngIf="sr.shelteredEighths?.value">
-                  <td>Underground</td>
-                  <td>{{getShelteredEighthsString(sr)}}</td>
-                </tr>
-                <tr *ngIf="sr.numberOfReverserElements?.value">
-                  <td>Reverser elements</td>
-                  <td>{{sr.numberOfReverserElements.value}}</td>
-                </tr>
-                <tr *ngIf="sr.numberOfWaterElements?.value">
-                  <td>Water elements</td>
-                  <td>{{sr.numberOfWaterElements.value}}</td>
-                </tr>
-                <tr *ngIf="showInversionRequirementMessage(sr)">
-                  <td colspan="2" class="is-size-7">*Requirement need not be met if ride has any inversions</td>
-                </tr>
-                <tr>
-                  <td colspan="2" class="is-size-7 has-text-danger">{{getPenaltyMessage(sr.penalty)}}</td>
-                </tr>
-              </ng-container>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-    <footer class="modal-card-foot inv-flex-end">
-      <button
-        class="button is-primary"
-        (click)="onClickCloseRideDataModal()">
-        OK
-      </button>
-    </footer>
-  </div>
-</div>
-<div
-  class="modal"
-  [class.is-active]="isDeleteModalActive"
-  data-test-id="delete-ride-modal">
-  <div class="modal-background" (click)="onClickCloseDeleteModal()"></div>
-  <div class="modal-content">
-    <div class="box">
-      <p class="content">Are you sure you want to delete <strong>{{ride.name ? ride.name : 'Unnamed ride'}}</strong>?</p>
-      <div class="buttons is-right">
-        <button class="button" (click)="onClickCloseDeleteModal()">Cancel</button>
-        <button class="button is-danger" (click)="onClickDelete()">Delete ride</button>
-      </div>
-    </div>
-  </div>
-  <button class="modal-close is-large" aria-label="close" (click)="onClickCloseDeleteModal()"></button>
 </div>
 <div class="level is-mobile">
   <div class="level-left">
-    <button
-      *ngIf="hasAnyStatRequirements()"
-      class="button is-primary"
-      (click)="onClickShowRideData()"      
-      data-test-id="ride-data-button">
-      View ride data
-    </button>
+    <div class="field has-addons">
+      <p class="control">
+        <button 
+          class="button"
+          [disabled]="index === 0"
+          (click)="onMoveRideUp(index)">      
+          <span class="icon">
+            <i class="fa fa-arrow-up"></i>
+          </span>      
+        </button>
+      </p>
+      <p class="control">
+        <button
+          class="button"
+          [disabled]="index === rides.length - 1"
+          (click)="onMoveRideDown(index)">      
+          <span class="icon">
+            <i class="fa fa-arrow-down"></i>
+          </span>
+        </button>
+      </p>
+    </div>
   </div>
   <div class="level-right">
-    <button class="button" (click)="onClickAttemptDelete()">
-      <span class="icon">
-        <i class="fa fa-trash"></i>
-      </span>
-    </button>
+    <div class="buttons">
+      <button
+        class="button is-primary"
+        [disabled]="!canRefurbishRide(ride)"
+        (click)="onClickRefurbishRide(ride)">
+        <span class="icon">
+          <i class="fa fa-tools"></i>
+        </span>
+      </button>
+      <button
+        class="button is-primary"
+        [disabled]="!canDegradeRideAge(ride)"
+        (click)="onClickDegradeRideAge(ride)">
+        <span><strong>–</strong></span>
+        <span class="icon">
+          <i class="fa fa-coins"></i>
+        </span>
+      </button>
+      <button
+        class="button"
+        data-test-id="expand-ride"
+        (click)="onClickExpandCollapseRide()">
+        <span class="icon">
+          <i
+            class="fa"
+            [class.fa-chevron-up]="isExpanded"
+            [class.fa-chevron-down]="!isExpanded">
+          </i>
+        </span>
+      </button>
+    </div>
   </div>
 </div>
+<ng-container *ngIf="isExpanded">
+  <div class="field">
+    <div class="select is-primary is-fullwidth">
+      <select
+        data-test-id="ride-type"
+        (change)="onChangeRideType($event.target.value)">
+        <option
+          [selected]="ride.typeId === undefined"
+          disabled hidden>Ride type</option>
+        <option
+          *ngFor="let rideTypeOption of rideTypeOptions"
+          [selected]="ride.typeId === rideTypeOption.id"
+          [value]="rideTypeOption.id">
+          {{rideTypeOption.name}}
+        </option>
+      </select>
+    </div>
+  </div>
+  <div class="field">
+    <div class="select is-primary is-fullwidth">
+      <select (change)="onChangeRideAge($event.target.value)">
+        <option
+          *ngFor="let rideAgeOption of rideAgeOptions"
+          [selected]="ride.age === rideAgeOption.id"
+          [value]="rideAgeOption.id">
+          {{rideAgeOption.name}}
+        </option>
+      </select>
+    </div>
+  </div>
+  <div class="field has-addons">
+    <p class="control inv-rating">
+      <a class="button is-primary inv-rating-inner inv-disabled" disabled>
+        Excitement
+      </a>
+    </p>
+    <p class="control is-expanded">
+      <input
+        class="input is-primary"
+        type="number"
+        min="0"
+        [max]="this.maxRideRatingValue"
+        step="0.01"
+        (input)="onChangeRideRating()"
+        [(ngModel)]="ride.excitement">
+    </p>
+  </div>
+  <div class="field has-addons">  
+    <p class="control inv-rating">
+      <a class="button is-primary inv-rating-inner inv-disabled" disabled>
+        Intensity
+      </a>
+    </p>
+    <p class="control is-expanded">
+      <input
+        class="input is-primary"
+        type="number"
+        min="0"
+        [max]="this.maxRideRatingValue"
+        step="0.01"
+        (input)="onChangeRideRating()"
+        [(ngModel)]="ride.intensity">
+    </p>
+  </div>
+  <div class="field has-addons">  
+    <p class="control inv-rating">
+      <a class="button is-primary inv-rating-inner inv-disabled" disabled>
+        Nausea
+      </a>
+    </p>
+    <p class="control is-expanded">
+      <input
+        class="input is-primary"
+        type="number"
+        min="0"
+        [max]="this.maxRideRatingValue"
+        step="0.01"
+        (input)="onChangeRideRating()"
+        [(ngModel)]="ride.nausea">
+    </p>
+  </div>
+  <div
+    *ngIf="ride.duplicates !== undefined && ride.duplicates.length > 0"
+    class="box content">
+    <p>This ride is a duplicate of:</p>
+    <ul>
+      <li *ngFor="let duplicate of ride.duplicates">{{duplicate === undefined || duplicate === '' ? 'Unnamed ride' : duplicate}}</li>
+    </ul>
+  </div>
+  <div
+    class="modal"
+    [class.is-active]="isRideDataModalActive"
+    data-test-id="ride-data-modal">
+    <div class="modal-background" (click)="onClickCloseRideDataModal()"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title is-size-5">{{getRideTypeName()}}</p>
+        <button
+          class="delete"
+          aria-label="close"
+          (click)="onClickCloseRideDataModal()">
+        </button>
+      </header>
+      <section class="modal-card-body">
+        <div class="content">
+          <div
+            *ngIf="hasAnyStatRequirements()"
+            data-test-id="minimum-stat-requirements">
+            <h3 class="is-size-6">Minimum stat requirements</h3>
+            <table class="table">
+              <tbody>
+                <ng-container *ngFor="let sr of getRideGroupStatRequirements()">
+                  <tr *ngIf="sr.numberOfHoles?.value">
+                    <td>Holes</td>
+                    <td>{{sr.numberOfHoles.value}}</td>
+                  </tr>
+                  <tr *ngIf="sr.maxSpeed?.value">
+                    <td>Max. speed</td>
+                    <td>{{getMaxSpeedString(sr)}}</td>
+                  </tr>
+                  <tr *ngIf="sr.firstLength?.value">
+                    <td>Ride length</td>
+                    <td>{{getFirstLengthString(sr)}}</td>
+                  </tr>
+                  <tr *ngIf="sr.maxNegativeGs?.value">
+                    <td>Max. negative vertical G's<span *ngIf="sr.maxNegativeGs?.ignoredByInversions">*</span></td>
+                    <td>{{getMaxNegativeGsString(sr)}}</td>
+                  </tr>
+                  <tr *ngIf="sr.maxLateralGs?.value">
+                    <td>Max. lateral G's</td>
+                    <td>{{getMaxLateralGsString(sr)}}</td>
+                  </tr>
+                  <tr *ngIf="sr.numberOfDrops?.value">
+                    <td>Drops<span *ngIf="sr.numberOfDrops?.ignoredByInversions">*</span></td>
+                    <td>{{sr.numberOfDrops.value}}</td>
+                  </tr>
+                  <tr *ngIf="sr.highestDropHeight?.value">
+                    <td>Highest drop height<span *ngIf="sr.highestDropHeight?.ignoredByInversions">*</span></td>
+                    <td>{{getHighestDropHeightString(sr)}}</td>
+                  </tr>
+                  <tr *ngIf="sr.numberOfInversions?.value">
+                    <td>Inversions</td>
+                    <td>{{sr.numberOfInversions.value}}</td>
+                  </tr>
+                  <tr *ngIf="sr.shelteredEighths?.value">
+                    <td>Underground</td>
+                    <td>{{getShelteredEighthsString(sr)}}</td>
+                  </tr>
+                  <tr *ngIf="sr.numberOfReverserElements?.value">
+                    <td>Reverser elements</td>
+                    <td>{{sr.numberOfReverserElements.value}}</td>
+                  </tr>
+                  <tr *ngIf="sr.numberOfWaterElements?.value">
+                    <td>Water elements</td>
+                    <td>{{sr.numberOfWaterElements.value}}</td>
+                  </tr>
+                  <tr *ngIf="showInversionRequirementMessage(sr)">
+                    <td colspan="2" class="is-size-7">*Requirement need not be met if ride has any inversions</td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" class="is-size-7 has-text-danger">{{getPenaltyMessage(sr.penalty)}}</td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      <footer class="modal-card-foot inv-flex-end">
+        <button
+          class="button is-primary"
+          (click)="onClickCloseRideDataModal()">
+          OK
+        </button>
+      </footer>
+    </div>
+  </div>
+  <div
+    class="modal"
+    [class.is-active]="isDeleteModalActive"
+    data-test-id="delete-ride-modal">
+    <div class="modal-background" (click)="onClickCloseDeleteModal()"></div>
+    <div class="modal-content">
+      <div class="box">
+        <p class="content">Are you sure you want to delete <strong>{{ride.name ? ride.name : 'Unnamed ride'}}</strong>?</p>
+        <div class="buttons is-right">
+          <button class="button" (click)="onClickCloseDeleteModal()">Cancel</button>
+          <button class="button is-danger" (click)="onClickDelete()">Delete ride</button>
+        </div>
+      </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close" (click)="onClickCloseDeleteModal()"></button>
+  </div>
+  <div class="level is-mobile">
+    <div class="level-left">
+      <button
+        *ngIf="hasAnyStatRequirements()"
+        class="button is-primary"
+        (click)="onClickShowRideData()"      
+        data-test-id="ride-data-button">
+        View ride data
+      </button>
+    </div>
+    <div class="level-right">
+      <button class="button" (click)="onClickAttemptDelete()">
+        <span class="icon">
+          <i class="fa fa-trash"></i>
+        </span>
+      </button>
+    </div>
+  </div>
+</ng-container>

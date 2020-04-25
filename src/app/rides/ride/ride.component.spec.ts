@@ -5,13 +5,18 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { RideComponent } from './ride.component';
 
+import { PersistenceService } from './../shared/services/persistence.service';
+import { Ride } from '../shared/models/ride.model';
 import { RideAge } from '../shared/enums/ride-age';
 import { RideAgeRepositoryService } from './../shared/services/ride-age-repository.service';
+import { RideDuplicateFlaggerService } from './../shared/services/ride-duplicate-flagger.service';
 import { RideGroup } from './../shared/models/ride-group.model';
+import { RidePriceCalculatorService } from './../shared/services/ride-price-calculator.service';
 import { RideService } from './../shared/services/ride.service';
 import { RideType } from './../shared/models/ride-type.model';
 import { RideTypeRepositoryService } from '../shared/services/ride-type-repository.service';
 import { StatRequirementConverterService } from '../shared/services/stat-requirement-converter.service';
+import { GameVersion } from '../shared/enums/game-version';
 
 describe('RideComponent', () => {
   let component: RideComponent;
@@ -20,13 +25,27 @@ describe('RideComponent', () => {
   let rideType: RideType;
   let rideGroup: RideGroup;
 
+  const dummyRide: Ride = {
+    name: '',
+    age: RideAge.LessThan5Months,
+    typeId: '',
+    excitement: 0,
+    intensity: 0,
+    nausea: 0,
+    duplicates: []
+  };
+
+  const persistenceServiceSpy = jasmine.createSpyObj('PersistenceService', ['save', 'load']);
+
   const rideAgeRepositoryServiceSpy = jasmine.createSpyObj('RideAgeRepositoryService', ['getAll']);
   rideAgeRepositoryServiceSpy.getAll.and.returnValue([]);
 
+  const rideDuplicateFlaggerServiceSpy = jasmine.createSpyObj('RideDuplicateFlaggerService', ['flag']);
+  const ridePriceCalculatorServiceSpy = jasmine.createSpyObj('RidePriceCalculatorService', ['max', 'min']);
   const rideServiceSpy = jasmine.createSpyObj('RideService', ['getType', 'getGroup', 'getInitialName']);
   const rideTypeRepositoryServiceSpy = jasmine.createSpyObj('RideTypeRepositoryService', ['getAll']);
-  const statRequirementConverterServiceSpy = jasmine.createSpyObj('StatRequirementConverterService', ['highestDropHeight', 'maxSpeed', 'firstLength', 'shelteredEighths']);
 
+  const statRequirementConverterServiceSpy = jasmine.createSpyObj('StatRequirementConverterService', ['highestDropHeight', 'maxSpeed', 'firstLength', 'shelteredEighths']);
   statRequirementConverterServiceSpy.highestDropHeight.and.returnValue(25);
   statRequirementConverterServiceSpy.maxSpeed.and.returnValue(27);
   statRequirementConverterServiceSpy.firstLength.and.returnValue(170);
@@ -38,7 +57,10 @@ describe('RideComponent', () => {
       declarations: [ RideComponent ],
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
+        { provide: PersistenceService, useValue: persistenceServiceSpy },
         { provide: RideAgeRepositoryService, useValue: rideAgeRepositoryServiceSpy },
+        { provide: RideDuplicateFlaggerService, useValue: rideDuplicateFlaggerServiceSpy },
+        { provide: RidePriceCalculatorService, useValue: ridePriceCalculatorServiceSpy },
         { provide: RideService, useValue: rideServiceSpy },
         { provide: RideTypeRepositoryService, useValue: rideTypeRepositoryServiceSpy },
         { provide: StatRequirementConverterService, useValue: statRequirementConverterServiceSpy },
@@ -80,19 +102,59 @@ describe('RideComponent', () => {
     rideServiceSpy.getType.and.returnValue(rideType);
     rideServiceSpy.getGroup.and.returnValue(rideGroup);
 
+    rideDuplicateFlaggerServiceSpy.flag.calls.reset();
+
     fixture = TestBed.createComponent(RideComponent);
     component = fixture.componentInstance;
 
-    component.ride = {
-      name: '',
-      age: RideAge.LessThan5Months,
-      typeId: 'dummy',
-      excitement: 0,
-      intensity: 0,
-      nausea: 0,
-      duplicates: []
+    component.saveData = {
+      appVersion: '1.2.0',
+      options: {
+        gameVersion: GameVersion.VanillaRct2
+      },
+      parks: [
+        {
+          name: '',
+          hasEntranceFee: false,
+          showGoodValuePrice: false,
+          rides:  [
+            {
+              name: 'Mango Muncher',
+              age: RideAge.LessThan13Months,
+              typeId: 'juniorRollerCoaster',
+              excitement: 4.33,
+              intensity: 4.01,
+              nausea: 3.75,
+              duplicates: []
+            },
+            {
+              name: 'Chocolate Chasers',
+              age: RideAge.LessThan5Months,
+              typeId: 'woodenWildMouse',
+              excitement: 4.75,
+              intensity: 4.62,
+              nausea: 3.10,
+              duplicates: []
+            },
+            {
+              name: 'Crisp Critters',
+              age: RideAge.LessThan200Months,
+              typeId: 'loopingRollerCoaster',
+              excitement: 5.81,
+              intensity: 6.74,
+              nausea: 5.66,
+              duplicates: []
+            }
+          ]
+        }
+      ]
     };
+
+    component.ride = component.saveData.parks[0].rides[0];
     component.index = 0;
+
+    persistenceServiceSpy.load.and.returnValue(component.saveData);
+    persistenceServiceSpy.save.calls.reset();
 
     fixture.detectChanges();
   });
@@ -115,6 +177,259 @@ describe('RideComponent', () => {
     // Assert
     const rideDataButton = fixture.debugElement.query(By.css('button[data-test-id="ride-data-button"]'));
     expect(rideDataButton).toBeFalsy();
+  });
+
+  it('#getMaxPriceString should show currency symbol and be to 2dp', () => {
+    // Arrange
+    ridePriceCalculatorServiceSpy.max.and.returnValue(10);
+
+    // Act
+    const val = component.getMaxPriceString(dummyRide);
+
+    // Assert
+    expect(val).toBe('£10.00');
+  });
+
+  it('#getMaxPriceString should show \'Free\' if ride has zero value', () => {
+    // Arrange
+    ridePriceCalculatorServiceSpy.max.and.returnValue(0);
+
+    // Act
+    const val = component.getMaxPriceString(dummyRide);
+
+    // Assert
+    expect(val).toBe('Free');
+  });
+
+  it('#getMinPriceString should show currency symbol and be to 2dp', () => {
+    // Arrange
+    ridePriceCalculatorServiceSpy.min.and.returnValue(10);
+
+    // Act
+    const val = component.getMinPriceString(dummyRide);
+
+    // Assert
+    expect(val).toBe('£10.00');
+  });
+
+  it('#getMaxPriceString should show \'Free\' if ride has zero value', () => {
+    // Arrange
+    ridePriceCalculatorServiceSpy.min.and.returnValue(0);
+
+    // Act
+    const val = component.getMinPriceString(dummyRide);
+
+    // Assert
+    expect(val).toBe('Free');
+  });
+
+  it('#onChangeRideName should call rideDuplicateFlaggerService and trigger auto-save', () => {
+    // Act
+    component.onChangeRideName();
+
+    // Assert
+    expect(rideDuplicateFlaggerServiceSpy.flag).toHaveBeenCalled();
+    expect(persistenceServiceSpy.save).toHaveBeenCalled();
+  });
+
+  it('#onMoveRideUp should move the chosen ride up one, the previous ride down one and trigger auto-save', () => {
+    // Act
+    component.onMoveRideUp(1);
+
+    // Assert
+    expect(component.rides[0].name).toBe('Chocolate Chasers');
+    expect(component.rides[1].name).toBe('Mango Muncher');
+    expect(component.rides[2].name).toBe('Crisp Critters');
+    expect(persistenceServiceSpy.save).toHaveBeenCalled();
+  });
+
+  it('#onMoveRideUp should do nothing if chosen ride is already at the top', () => {
+    // Act
+    component.onMoveRideUp(0);
+
+    // Assert
+    expect(component.rides[0].name).toBe('Mango Muncher');
+    expect(component.rides[1].name).toBe('Chocolate Chasers');
+    expect(component.rides[2].name).toBe('Crisp Critters');
+    expect(persistenceServiceSpy.save).not.toHaveBeenCalled();
+  });
+
+  it('#onMoveRideDown should move the chosen ride down one, the next ride up one and trigger auto-save', () => {
+    // Act
+    component.onMoveRideDown(1);
+
+    // Assert
+    expect(component.rides[0].name).toBe('Mango Muncher');
+    expect(component.rides[1].name).toBe('Crisp Critters');
+    expect(component.rides[2].name).toBe('Chocolate Chasers');
+    expect(persistenceServiceSpy.save).toHaveBeenCalled();
+  });
+
+  it('#onMoveRideDown should do nothing if chosen ride is already at the bottom', () => {
+    // Act
+    component.onMoveRideDown(2);
+
+    // Assert
+    expect(component.rides[0].name).toBe('Mango Muncher');
+    expect(component.rides[1].name).toBe('Chocolate Chasers');
+    expect(component.rides[2].name).toBe('Crisp Critters');
+    expect(persistenceServiceSpy.save).not.toHaveBeenCalled();
+  });
+
+  it('#canRefurbishRide should return true if it is more than 5 months old and false otherwise', () => {
+    // Arrange
+    const youngRide: Ride = {
+      name: '',
+      typeId: 'rideTypeId',
+      age: RideAge.LessThan5Months,
+      excitement: 0,
+      intensity: 0,
+      nausea: 0,
+      duplicates: []
+    };
+
+    const oldRide: Ride = {
+      name: '',
+      typeId: 'rideTypeId',
+      age: RideAge.LessThan40Months,
+      excitement: 0,
+      intensity: 0,
+      nausea: 0,
+      duplicates: []
+    };
+
+    // Act
+    const youngResult = component.canRefurbishRide(youngRide);
+    const oldResult = component.canRefurbishRide(oldRide);
+
+    // Assert
+    expect(youngResult).toBe(false);
+    expect(oldResult).toBe(true);
+  });
+
+  it('#onClickRefurbishRide should reset the ride\'s age to less than 5 months old and trigger auto-save', () => {
+    // Arrange
+    const ride: Ride = {
+      name: '',
+      typeId: 'rideTypeId',
+      age: RideAge.LessThan88Months,
+      excitement: 0,
+      intensity: 0,
+      nausea: 0,
+      duplicates: []
+    };
+
+    // Act
+    component.onClickRefurbishRide(ride);
+
+    // Assert
+    expect(ride.age).toBe(RideAge.LessThan5Months);
+    expect(persistenceServiceSpy.save).toHaveBeenCalled();
+  });
+
+  it('#onClickRefurbishRide should do nothing if the ride is already in the youngest age bracket', () => {
+    // Arrange
+    const ride: Ride = {
+      name: '',
+      typeId: 'rideTypeId',
+      age: RideAge.LessThan5Months,
+      excitement: 0,
+      intensity: 0,
+      nausea: 0,
+      duplicates: []
+    };
+
+    // Act
+    component.onClickRefurbishRide(ride);
+
+    // Assert
+    expect(ride.age).toBe(RideAge.LessThan5Months);
+    expect(persistenceServiceSpy.save).not.toHaveBeenCalled();
+  });
+
+  it('#canDegradeRideAge should return true if it is less than 200 months old and false otherwise', () => {
+    // Arrange
+    const youngRide: Ride = {
+      name: '',
+      typeId: 'rideTypeId',
+      age: RideAge.LessThan40Months,
+      excitement: 0,
+      intensity: 0,
+      nausea: 0,
+      duplicates: []
+    };
+
+    const oldRide: Ride = {
+      name: '',
+      typeId: 'rideTypeId',
+      age: RideAge.MoreThan200Months,
+      excitement: 0,
+      intensity: 0,
+      nausea: 0,
+      duplicates: []
+    };
+
+    // Act
+    const youngResult = component.canDegradeRideAge(youngRide);
+    const oldResult = component.canDegradeRideAge(oldRide);
+
+    // Assert
+    expect(youngResult).toBe(true);
+    expect(oldResult).toBe(false);
+  });
+
+  it('#onClickDegradeRideAge should decrease the ride\'s age by one bracket and trigger auto-save', () => {
+    // Arrange
+    const ride: Ride = {
+      name: '',
+      typeId: 'rideTypeId',
+      age: RideAge.LessThan40Months,
+      excitement: 0,
+      intensity: 0,
+      nausea: 0,
+      duplicates: []
+    };
+
+    // Act
+    component.onClickDegradeRideAge(ride);
+
+    // Assert
+    expect(ride.age).toBe(RideAge.LessThan64Months);
+    expect(persistenceServiceSpy.save).toHaveBeenCalled();
+  });
+
+  it('#onClickDegradeRideAge should do nothing if the ride is already in the oldest age bracket', () => {
+    // Arrange
+    const ride: Ride = {
+      name: '',
+      typeId: 'rideTypeId',
+      age: RideAge.MoreThan200Months,
+      excitement: 0,
+      intensity: 0,
+      nausea: 0,
+      duplicates: []
+    };
+
+    // Act
+    component.onClickDegradeRideAge(ride);
+
+    // Assert
+    expect(ride.age).toBe(RideAge.MoreThan200Months);
+    expect(persistenceServiceSpy.save).not.toHaveBeenCalled();
+  });
+
+  it('#onClickExpandCollapseRide should trigger the parent to handle ride expansion toggling', () => {
+    // Arrange
+    component.isExpanded = false;
+    spyOn(component.rideExpandToggled, 'emit');
+
+    // Act
+    component.onClickExpandCollapseRide();
+
+    // TODO DOM check
+
+    // Assert
+    expect(component.rideExpandToggled.emit).toHaveBeenCalledWith(0);
   });
 
   it('#onChangeRideType should change the name if it was the ride type default', () => {
@@ -160,6 +475,9 @@ describe('RideComponent', () => {
   });
 
   it('#onClickShowRideData should display a ride data modal', () => {
+    // Arrange
+    component.isExpanded = true;
+
     // Act
     component.onClickShowRideData();
     fixture.detectChanges();
@@ -170,6 +488,9 @@ describe('RideComponent', () => {
   });
 
   it('#onClickShowRideData should display a ride data modal with a \'minimum stat requirements\' section if ride has any minimum stat requirements', () => {
+    // Arrange
+    component.isExpanded = true;
+
     // Act
     component.onClickShowRideData();
     fixture.detectChanges();
@@ -181,6 +502,7 @@ describe('RideComponent', () => {
 
   it('#onClickShowRideData should display a ride data modal without a \'minimum stat requirements\' section if ride has no minimum stat requirements', () => {
     // Arrange
+    component.isExpanded = true;
     rideGroup.statRequirements = undefined;
 
     // Act
@@ -194,6 +516,7 @@ describe('RideComponent', () => {
 
   it('#onClickCloseRideDataModal should close the ride data modal', () => {
     // Arrange
+    component.isExpanded = true;
     component.isRideDataModalActive = true;
     fixture.detectChanges();
 
@@ -338,6 +661,9 @@ describe('RideComponent', () => {
   });
 
   it('#onClickAttemptDelete should show \'delete ride\' modal', () => {
+    // Arrange
+    component.isExpanded = true;
+
     // Act
     component.onClickAttemptDelete();
     fixture.detectChanges();
