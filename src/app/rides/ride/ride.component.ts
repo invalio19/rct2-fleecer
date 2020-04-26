@@ -1,3 +1,4 @@
+import { AdmissionMode } from './../shared/models/park.model';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { Park } from '../shared/models/park.model';
@@ -63,7 +64,7 @@ export class RideComponent implements OnInit {
   getMaxPriceString(ride: Ride): string {
     const rideCalculationParameters: RideCalculationParameters = {
       gameVersion: this.saveData.options.gameVersion,
-      parkHasEntranceFee: this.park.hasEntranceFee,
+      parkAdmissionMode: this.park.admissionMode,
       ride
     };
 
@@ -74,7 +75,7 @@ export class RideComponent implements OnInit {
   getMinPriceString(ride: Ride): string {
     const rideCalculationParameters: RideCalculationParameters = {
       gameVersion: this.saveData.options.gameVersion,
-      parkHasEntranceFee: this.park.hasEntranceFee,
+      parkAdmissionMode: this.park.admissionMode,
       ride
     };
 

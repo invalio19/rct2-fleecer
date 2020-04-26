@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.3.0](https://github.com/invalio19/rct2-fleecer/compare/v1.2.0...v1.3.0) - 2019-04-26
+
+### Added
+
+- There is now a choice between the three admission modes for a park, with prices calculated accordingly.
+
+### Fixed
+
+- The default ride name now has an incrementing number instead of always being '1'.
+
 ## [1.2.0](https://github.com/invalio19/rct2-fleecer/compare/v1.1.0...v1.2.0) - 2019-04-22
 
 ### Added

@@ -1,11 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { FormsModule } from '@angular/forms';
+
 import { RideComponent } from './ride.component';
 import { FooterComponent } from './../../shared/layout/footer/footer.component';
 
-import { RideAge } from '../shared/enums/ride-age';
-import { FormsModule } from '@angular/forms';
+import { AdmissionMode } from '../shared/models/park.model';
 import { GameVersion } from '../shared/enums/game-version';
+import { RideAge } from '../shared/enums/ride-age';
 
 describe('RideComponent integration', () => {
   let component: RideComponent;
@@ -31,8 +33,7 @@ describe('RideComponent integration', () => {
       parks: [
         {
           name: '',
-          hasEntranceFee: false,
-          isAlsoChargingForRides: false,
+          admissionMode: AdmissionMode.FreeParkEntryPayPerRide,
           showGoodValuePrice: false,
           rides: [
             {

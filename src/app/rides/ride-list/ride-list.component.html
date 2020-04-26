@@ -64,29 +64,41 @@
       </div>
       <div class="field">
         <input
-          id="parkHasEntranceFeeCheckbox"
           class="is-checkradio"
-          type="checkbox"
-          name="parkHasEntranceFeeCheckbox"
-          [(ngModel)]="park.hasEntranceFee"
-          (change)="onChangeHasEntranceFee()">
-        <label for="parkHasEntranceFeeCheckbox">Park has entrance fee</label>
+          id="admissionModeRadio1"
+          type="radio"
+          name="admissionModeRadio"
+          [value]="AdmissionMode.FreeParkEntryPayPerRide"
+          [(ngModel)]="park.admissionMode"
+          (change)="onChangeParkAdmissionMode()">
+        <label for="admissionModeRadio1">Free park entry / Pay per ride</label>
       </div>
-      <div
-        *ngIf="park.hasEntranceFee"
-        class="field">
+      <div class="field">
         <input
-          id="parkAlsoChargeForRidesCheckbox"
           class="is-checkradio"
-          type="checkbox"
-          name="parkAlsoChargeForRidesCheckbox"
-          [(ngModel)]="park.isAlsoChargingForRides"
-          (change)="onChangeIsAlsoChargingForRides()">
-        <label for="parkAlsoChargeForRidesCheckbox">Also charge for rides</label>
+          id="admissionModeRadio2"
+          type="radio"
+          name="admissionModeRadio"
+          [value]="AdmissionMode.PayToEnterParkFreeRides"
+          [(ngModel)]="park.admissionMode"
+          (change)="onChangeParkAdmissionMode()">
+        <label for="admissionModeRadio2">Pay to enter park / Free rides</label>
+      </div>
+      <div class="field">
+        <input
+          class="is-checkradio"
+          id="admissionModeRadio3"
+          type="radio"
+          name="admissionModeRadio"
+          [value]="AdmissionMode.PayToEnterParkPayPerRide"
+          [(ngModel)]="park.admissionMode"
+          (change)="onChangeParkAdmissionMode()">
+        <label for="admissionModeRadio3">Pay to enter park / Pay per ride</label>
       </div>
       <div
-        *ngIf="!park.hasEntranceFee"
+        *ngIf="park.admissionMode === AdmissionMode.FreeParkEntryPayPerRide"
         class="field">
+        <br>
         <input
           id="parkShowGoodValuePriceCheckbox"
           class="is-checkradio"
@@ -97,7 +109,8 @@
         <label for="parkShowGoodValuePriceCheckbox">Show 'good value' prices</label>
       </div>
       <div
-        *ngIf="park.hasEntranceFee"
+        *ngIf="park.admissionMode === AdmissionMode.PayToEnterParkFreeRides ||
+               park.admissionMode === AdmissionMode.PayToEnterParkPayPerRide"
         data-test-id="recommended-park-entrance-fee-section">
         <p>Recommended park entrance fee:</p>
         <p>
@@ -121,11 +134,7 @@
                 <p>This amount is the maximum you can charge for your park without incurring penalties, and is based on the total value of all the operational rides in your park.</p>
                 <p>An entrance fee above this amount will cut your scenario guest generation by 75%, and also makes you eligible to recieve the 'Worst value park' award at the start of the month, which will further cut your guest generation by 25%.</p>
                 <p>Despite all this, you won't actually recieve warning messages about your park entrance fee being too high until is it about 50% higher than this value.</p>
-                <p>This amount is based on a few assumptions:</p>
-                <ul>
-                  <li>None of your rides have a ride entrance fee. (Future updates of this app will consider cases where this isn't necessarily always true.)</li>
-                  <li>Your rides must be open and operational. They don't count towards the park entrance value if they are closed, in testing, broken down or currently experiencing a crash. Rides that have crashed and since re-opened are okay.</li>
-                </ul>
+                <p>Your rides must be open and operational. They don't count towards the park entrance value if they are closed, in testing, broken down or currently experiencing a crash. Rides that have crashed and since re-opened are okay.</p>
                 <p>Also be sure to not charge more money for the park entrance than the lowest amount of money a guest can spawn with, or you will be turning them away at the gate!</p>
               </div>
             </section>          

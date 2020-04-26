@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { RidePriceCalculatorService } from './ride-price-calculator.service';
 
+import { AdmissionMode } from '../models/park.model';
 import { GameVersion } from './../enums/game-version';
 import { Ride } from '../models/ride.model';
 import { RideAge } from './../enums/ride-age';
@@ -80,13 +81,13 @@ describe('RidePriceCalculatorService', () => {
 
   it('#max should calculate the correct value', () => {
     [
-      [GameVersion.OpenRct2, false, 'woodenRollerCoasterTestType', RideAge.LessThan5Months, 6.48, 7.62, 4.48, true, 132],
-      [GameVersion.OpenRct2, false, 'woodenRollerCoasterTestType', RideAge.LessThan13Months, 6.48, 7.62, 4.48, true, 106]
-    ].forEach(([gameVersion, hasEntranceFee, rideTypeId, rideAge, excitement, intensity, nausea, hasDuplicate, expectedValue]) => {
+      [GameVersion.OpenRct2, AdmissionMode.FreeParkEntryPayPerRide, 'woodenRollerCoasterTestType', RideAge.LessThan5Months, 6.48, 7.62, 4.48, true, 132],
+      [GameVersion.OpenRct2, AdmissionMode.FreeParkEntryPayPerRide, 'woodenRollerCoasterTestType', RideAge.LessThan13Months, 6.48, 7.62, 4.48, true, 106]
+    ].forEach(([gameVersion, admissionMode, rideTypeId, rideAge, excitement, intensity, nausea, hasDuplicate, expectedValue]) => {
       // Arrange
       const rideCalculationParameters: RideCalculationParameters = {
         gameVersion: gameVersion as GameVersion,
-        parkHasEntranceFee: hasEntranceFee as boolean,
+        parkAdmissionMode: admissionMode as AdmissionMode,
         ride: {
           name: 'test ride',
           typeId: rideTypeId as string,
@@ -106,14 +107,37 @@ describe('RidePriceCalculatorService', () => {
     });
   });
 
+  it('#max should return \'free\' if only charging for park entrance', () => {
+    // Arrange
+    const rideCalculationParameters: RideCalculationParameters = {
+      gameVersion: GameVersion.OpenRct2,
+      parkAdmissionMode: AdmissionMode.PayToEnterParkFreeRides,
+      ride: {
+        name: 'Junior Roller Coaster 1',
+        typeId: 'juniorRollerCoasterTestType',
+        age: RideAge.LessThan5Months,
+        excitement: 4.67,
+        intensity: 5.31,
+        nausea: 3.48,
+        duplicates: []
+      }
+    };
+
+    // Act
+    const calculatedValue = service.max(rideCalculationParameters);
+
+    // Assert
+    expect(calculatedValue).toBe(0);
+  });
+
   it('#min should calculate the correct value', () => {
     [
-      [GameVersion.OpenRct2, false, 'juniorRollerCoasterTestType', RideAge.LessThan5Months, 4.77, 5.60, 3.62, false, 31],
-    ].forEach(([gameVersion, hasEntranceFee, rideTypeId, rideAge, excitement, intensity, nausea, hasDuplicate, expectedValue]) => {
+      [GameVersion.OpenRct2, AdmissionMode.FreeParkEntryPayPerRide, 'juniorRollerCoasterTestType', RideAge.LessThan5Months, 4.77, 5.60, 3.62, false, 31],
+    ].forEach(([gameVersion, admissionMode, rideTypeId, rideAge, excitement, intensity, nausea, hasDuplicate, expectedValue]) => {
       // Arrange
       const rideCalculationParameters: RideCalculationParameters = {
         gameVersion: gameVersion as GameVersion,
-        parkHasEntranceFee: hasEntranceFee as boolean,
+        parkAdmissionMode: admissionMode as AdmissionMode,
         ride: {
           name: 'test ride',
           typeId: rideTypeId as string,
@@ -165,9 +189,10 @@ describe('RidePriceCalculatorService', () => {
         duplicates: []
       }
     ];
+    const admissionMode = AdmissionMode.PayToEnterParkFreeRides;
 
     // Act
-    const calculatedValue = service.recommendedParkEntranceFee(gameVersion, rides);
+    const calculatedValue = service.recommendedParkEntranceFee(gameVersion, rides, admissionMode);
 
     // Assert
     expect(calculatedValue).toBe(368); // £7.80 + £11 + £18 = £36.80
@@ -196,12 +221,36 @@ describe('RidePriceCalculatorService', () => {
         duplicates: []
       }
     ];
+    const admissionMode = AdmissionMode.PayToEnterParkFreeRides;
 
     // Act
-    const calculatedValue = service.recommendedParkEntranceFee(gameVersion, rides);
+    const calculatedValue = service.recommendedParkEntranceFee(gameVersion, rides, admissionMode);
 
     // Assert
     expect(calculatedValue).toBe(78);
+  });
+
+  it('#recommendedParkEntranceFee should calculate the correct value if charging for park and rides', () => {
+    // Arrange
+    const gameVersion: GameVersion = GameVersion.OpenRct2;
+    const rides: Ride[] = [
+      {
+        name: 'Junior Roller Coaster 1',
+        typeId: 'juniorRollerCoasterTestType',
+        age: RideAge.LessThan5Months,
+        excitement: 4.67,
+        intensity: 5.31,
+        nausea: 3.48,
+        duplicates: []
+      }
+    ];
+    const admissionMode = AdmissionMode.PayToEnterParkPayPerRide;
+
+    // Act
+    const calculatedValue = service.recommendedParkEntranceFee(gameVersion, rides, admissionMode);
+
+    // Assert
+    expect(calculatedValue).toBe(60); // Ride value is 60, minus 30 for its max price, then doubled back to 60 for its total ride value
   });
 });
 

@@ -14,6 +14,7 @@ import { RideDuplicateFlaggerService } from './../shared/services/ride-duplicate
 import { RidePriceCalculatorService } from './../shared/services/ride-price-calculator.service';
 import { RideService } from './../shared/services/ride.service';
 import { SaveData } from './../shared/models/save-data.model';
+import { AdmissionMode } from '../shared/models/park.model';
 
 describe('RideListComponent', () => {
   let component: RideListComponent;
@@ -47,15 +48,14 @@ describe('RideListComponent', () => {
 
   beforeEach(() => {
     saveData = {
-      appVersion: '1.2.0',
+      appVersion: '1.3.0',
       options: {
         gameVersion: GameVersion.VanillaRct2
       },
       parks: [
         {
           name: '',
-          hasEntranceFee: false,
-          isAlsoChargingForRides: false,
+          admissionMode: AdmissionMode.FreeParkEntryPayPerRide,
           showGoodValuePrice: false,
           rides:  [
             {
@@ -143,7 +143,7 @@ describe('RideListComponent', () => {
     expect(component.isWhatsNewModalActive).toBeFalse();
   });
 
-  it('#ngOnInit should update the save data appVersion to 1.2.0', () => {
+  it('#ngOnInit should update the save data appVersion to 1.3.0', () => {
     // Arrange
     saveData.appVersion = undefined;
 
@@ -151,7 +151,30 @@ describe('RideListComponent', () => {
     component.ngOnInit();
 
     // Assert
-    expect(component.saveData.appVersion).toBe('1.2.0');
+    expect(component.saveData.appVersion).toBe('1.3.0');
+  });
+
+  it('#ngOnInit should set park entrance fee / free ride admission mode if legacy hasEntranceFee option was checked', () => {
+    // Arrange
+    saveData.parks[0].hasEntranceFee = true;
+    saveData.parks[0].admissionMode = AdmissionMode.FreeParkEntryPayPerRide;
+
+    // Act
+    component.ngOnInit();
+
+    // Assert
+    expect(component.saveData.parks[0].admissionMode).toBe(AdmissionMode.PayToEnterParkFreeRides);
+  });
+
+  it('#ngOnInit should clear out legacy hasEntranceFee option', () => {
+    // Arrange
+    saveData.parks[0].hasEntranceFee = true;
+
+    // Act
+    component.ngOnInit();
+
+    // Assert
+    expect(component.saveData.parks[0].hasEntranceFee).toBeUndefined();
   });
 
   it('#onClickCloseWhatsNewModal should close the what\'s new modal', () => {
@@ -188,49 +211,41 @@ describe('RideListComponent', () => {
     expect(persistenceServiceSpy.save).toHaveBeenCalled();
   });
 
-  it('#onChangeHasEntranceFee should trigger auto-save', () => {
+  it('#onChangeParkAdmissionMode should trigger auto-save', () => {
     // Act
-    component.onChangeHasEntranceFee();
+    component.onChangeParkAdmissionMode();
 
     // Assert
     expect(persistenceServiceSpy.save).toHaveBeenCalled();
   });
 
-  it('#onChangeHasEntranceFee should set showGoodValuePrice to false if hasEntranceFee is changed to true', () => {
+  it('#onChangeParkAdmissionMode should reset showGoodValuePrice if park is pay for entry / free rides', () => {
     // Arrange
-    component.park.hasEntranceFee = true;
     component.park.showGoodValuePrice = true;
+    component.park.admissionMode = AdmissionMode.PayToEnterParkFreeRides;
 
     // Act
-    component.onChangeHasEntranceFee();
+    component.onChangeParkAdmissionMode();
 
     // Assert
     expect(component.park.showGoodValuePrice).toBeFalse();
   });
 
-  it('#onChangeHasEntranceFee should set isAlsoChargingForRides to false if hasEntranceFee is changed to false', () => {
+  it('#onChangeParkAdmissionMode should hide showGoodValuePrice if park is pay for entry / pay for rides', () => {
     // Arrange
-    component.park.hasEntranceFee = false;
-    component.park.isAlsoChargingForRides = true;
+    component.park.showGoodValuePrice = true;
+    component.park.admissionMode = AdmissionMode.PayToEnterParkPayPerRide;
 
     // Act
-    component.onChangeHasEntranceFee();
+    component.onChangeParkAdmissionMode();
 
     // Assert
-    expect(component.park.isAlsoChargingForRides).toBeFalse();
-  });
-
-  it('#onChangeIsAlsoChargingForRides should trigger auto-save', () => {
-    // Act
-    component.onChangeIsAlsoChargingForRides();
-
-    // Assert
-    expect(persistenceServiceSpy.save).toHaveBeenCalled();
+    expect(component.park.showGoodValuePrice).toBeFalse();
   });
 
   it('#onClickRecommendedParkEntranceFeeWhy should show park entrance fee explanation modal', () => {
     // Arrange
-    component.park.hasEntranceFee = true;
+    component.park.admissionMode = AdmissionMode.PayToEnterParkFreeRides;
     fixture.detectChanges(); // show the park entrance fee section
 
     // Act
@@ -244,7 +259,7 @@ describe('RideListComponent', () => {
 
   it('#onCloseRecommendedParkEntranceFeeModal should close park entrance fee explanation modal', () => {
     // Arrange
-    component.park.hasEntranceFee = true;
+    component.park.admissionMode = AdmissionMode.PayToEnterParkFreeRides;
     component.isRecommendedParkEntranceFeeModalActive = true;
     fixture.detectChanges();
 

@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { PersistenceService } from './persistence.service';
 
+import { AdmissionMode } from '../models/park.model';
 import { GameVersion } from '../enums/game-version';
 import { RideAge } from '../enums/ride-age';
 import { SaveData } from './../models/save-data.model';
@@ -19,8 +20,7 @@ describe('PersistenceService', () => {
     parks: [
       {
         name: '',
-        hasEntranceFee: true,
-        isAlsoChargingForRides: false,
+        admissionMode: AdmissionMode.PayToEnterParkFreeRides,
         showGoodValuePrice: false,
         rides: [
           {

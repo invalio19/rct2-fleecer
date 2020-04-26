@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+import { AdmissionMode } from '../models/park.model';
 import { GameVersion } from './../enums/game-version';
 import { Ride } from '../models/ride.model';
 import { RideAgeRepositoryService } from './ride-age-repository.service';
@@ -15,17 +16,20 @@ export class RidePriceCalculatorService {
     private rideService: RideService) {}
 
   max(rideCalculationParameters: RideCalculationParameters): number {
+    if (rideCalculationParameters.parkAdmissionMode === AdmissionMode.PayToEnterParkFreeRides) {
+      return 0;
+    }
+
     let ridePrice = this.calculateRideValue(rideCalculationParameters.gameVersion, rideCalculationParameters.ride);
     if (ridePrice === undefined) {
       return undefined;
     }
 
-    if (rideCalculationParameters.parkHasEntranceFee) {
+    if (rideCalculationParameters.parkAdmissionMode === AdmissionMode.PayToEnterParkPayPerRide) {
       ridePrice = Math.floor(ridePrice / 4);
     }
 
     ridePrice *= 2;
-    ridePrice = Math.min(200, ridePrice); // Cap at £20
 
     return ridePrice;
   };
@@ -36,18 +40,17 @@ export class RidePriceCalculatorService {
       return undefined;
     }
 
-    if (rideCalculationParameters.parkHasEntranceFee) {
+    if (rideCalculationParameters.parkAdmissionMode === AdmissionMode.PayToEnterParkPayPerRide) {
       ridePrice = Math.floor(ridePrice / 4);
     }
 
     ridePrice = Math.floor(ridePrice / 2);
-    ridePrice = Math.min(200, ridePrice); // Cap at £20
 
     return ridePrice;
   }
 
-  recommendedParkEntranceFee(gameVersion: GameVersion, rides: Ride[]): number {
-    const totalRideValueForMoney = this.calculateTotalRideValueForMoney(gameVersion, rides);
+  recommendedParkEntranceFee(gameVersion: GameVersion, rides: Ride[], parkAdmissionMode: AdmissionMode): number {
+    const totalRideValueForMoney = this.calculateTotalRideValueForMoney(gameVersion, rides, parkAdmissionMode);
     return totalRideValueForMoney;
   }
 
@@ -78,13 +81,13 @@ export class RidePriceCalculatorService {
     return ridePrice;
   }
 
-  private calculateTotalRideValueForMoney(gameVersion: GameVersion, rides: Ride[]): number {
+  private calculateTotalRideValueForMoney(gameVersion: GameVersion, rides: Ride[], parkAdmissionMode: AdmissionMode): number {
     let totalValue = 0;
 
     for (const ride of rides) {
       const params: RideCalculationParameters = {
         gameVersion,
-        parkHasEntranceFee: true,
+        parkAdmissionMode,
         ride
       };
 
@@ -92,7 +95,7 @@ export class RidePriceCalculatorService {
       const ridePrice = this.max(params);
 
       if (ride.typeId !== undefined) {
-        totalValue += (rideValue) * 2;
+        totalValue += (rideValue - ridePrice) * 2;
       }
     };
 

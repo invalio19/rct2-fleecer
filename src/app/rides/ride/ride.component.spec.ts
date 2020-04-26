@@ -5,6 +5,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { RideComponent } from './ride.component';
 
+import { AdmissionMode } from './../shared/models/park.model';
 import { PersistenceService } from './../shared/services/persistence.service';
 import { PriceConverterService } from './../shared/services/price-converter.service';
 import { Ride } from '../shared/models/ride.model';
@@ -118,8 +119,7 @@ describe('RideComponent', () => {
       parks: [
         {
           name: '',
-          hasEntranceFee: false,
-          isAlsoChargingForRides: false,
+          admissionMode: AdmissionMode.FreeParkEntryPayPerRide,
           showGoodValuePrice: false,
           rides:  [
             {
