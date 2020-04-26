@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { Park } from '../shared/models/park.model';
 import { PersistenceService } from './../shared/services/persistence.service';
+import { PriceConverterService } from './../shared/services/price-converter.service';
 import { Ride } from '../shared/models/ride.model';
 import { RideAge } from '../shared/enums/ride-age';
 import { RideAgeRepositoryService } from './../shared/services/ride-age-repository.service';
@@ -40,6 +41,7 @@ export class RideComponent implements OnInit {
     private persistenceService: PersistenceService,
     private rideAgeRepositoryService: RideAgeRepositoryService,
     private ridePriceCalculatorService: RidePriceCalculatorService,
+    private priceConverterService: PriceConverterService,
     private rideDuplicateFlaggerService: RideDuplicateFlaggerService,
     private rideService: RideService,
     private rideTypeRepositoryService: RideTypeRepositoryService,
@@ -66,7 +68,7 @@ export class RideComponent implements OnInit {
     };
 
     const maxPrice = this.ridePriceCalculatorService.max(rideCalculationParameters);
-    return this.convertToCurrencyString(maxPrice);
+    return this.priceConverterService.ridePrice(maxPrice);
   }
 
   getMinPriceString(ride: Ride): string {
@@ -77,7 +79,7 @@ export class RideComponent implements OnInit {
     };
 
     const minPrice = this.ridePriceCalculatorService.min(rideCalculationParameters);
-    return this.convertToCurrencyString(minPrice);
+    return this.priceConverterService.ridePrice(minPrice);
   }
 
   onMoveRideUp(index: number) {
@@ -285,16 +287,6 @@ export class RideComponent implements OnInit {
     if (name === undefined || name === '' || regex.test(name)) {
       this.ride.name = this.rideService.getInitialName(this.ride, this.rides);
     }
-  }
-
-  private convertToCurrencyString(val: number): string {
-    if (val !== undefined) {
-      if (val === 0) {
-        return 'Free';
-      }
-      return '£' + val.toFixed(2);
-    }
-    return '';
   }
 
   private arraySwap(arr: any[], fromIndex: number, toIndex: number): void {

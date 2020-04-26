@@ -7,6 +7,7 @@ import { RideListComponent } from './ride-list.component';
 
 import { GameVersion } from './../shared/enums/game-version';
 import { PersistenceService } from './../shared/services/persistence.service';
+import { PriceConverterService } from './../shared/services/price-converter.service';
 import { Ride } from './../shared/models/ride.model';
 import { RideAge } from '../shared/enums/ride-age';
 import { RideDuplicateFlaggerService } from './../shared/services/ride-duplicate-flagger.service';
@@ -21,6 +22,7 @@ describe('RideListComponent', () => {
   let saveData: SaveData;
 
   const persistenceServiceSpy = jasmine.createSpyObj('PersistenceService', ['save', 'load']);
+  const priceConverterServiceSpy = jasmine.createSpyObj('PriceConverterService', ['parkEntrancePrice']);
   const rideDuplicateFlaggerServiceSpy = jasmine.createSpyObj('RideDuplicateFlaggerService', ['flag']);
   const ridePriceCalculatorServiceSpy = jasmine.createSpyObj('RidePriceCalculatorService', ['recommendedParkEntranceFee']);
 
@@ -34,6 +36,7 @@ describe('RideListComponent', () => {
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: PersistenceService, useValue: persistenceServiceSpy },
+        { provide: PriceConverterService, useValue: priceConverterServiceSpy },
         { provide: RideDuplicateFlaggerService, useValue: rideDuplicateFlaggerServiceSpy },
         { provide: RidePriceCalculatorService, useValue: ridePriceCalculatorServiceSpy },
         { provide: RideService, useValue: rideServiceSpy },
@@ -52,6 +55,7 @@ describe('RideListComponent', () => {
         {
           name: '',
           hasEntranceFee: false,
+          isAlsoChargingForRides: false,
           showGoodValuePrice: false,
           rides:  [
             {
@@ -164,9 +168,9 @@ describe('RideListComponent', () => {
     expect(onClickRecommendedParkEntranceFeeModal.getAttribute('class')).not.toContain('is-active');
   });
 
-  it('#getRecommendedParkEntranceFeeString should show currency symbol and be to 2dp', () => {
+  it('#getRecommendedParkEntranceFeeString should display the correct value', () => {
     // Arrange
-    ridePriceCalculatorServiceSpy.recommendedParkEntranceFee.and.returnValue(35);
+    priceConverterServiceSpy.parkEntrancePrice.and.returnValue('£35.00');
 
     // Act
     const val = component.getRecommendedParkEntranceFeeString();
@@ -184,7 +188,15 @@ describe('RideListComponent', () => {
     expect(persistenceServiceSpy.save).toHaveBeenCalled();
   });
 
-  it('#onChangeHasEntranceFee should set showGoodValuePrice to false if hasEntranceFee is changed to true and trigger auto-save', () => {
+  it('#onChangeHasEntranceFee should trigger auto-save', () => {
+    // Act
+    component.onChangeHasEntranceFee();
+
+    // Assert
+    expect(persistenceServiceSpy.save).toHaveBeenCalled();
+  });
+
+  it('#onChangeHasEntranceFee should set showGoodValuePrice to false if hasEntranceFee is changed to true', () => {
     // Arrange
     component.park.hasEntranceFee = true;
     component.park.showGoodValuePrice = true;
@@ -193,7 +205,26 @@ describe('RideListComponent', () => {
     component.onChangeHasEntranceFee();
 
     // Assert
-    expect(component.park.showGoodValuePrice).toBe(false);
+    expect(component.park.showGoodValuePrice).toBeFalse();
+  });
+
+  it('#onChangeHasEntranceFee should set isAlsoChargingForRides to false if hasEntranceFee is changed to false', () => {
+    // Arrange
+    component.park.hasEntranceFee = false;
+    component.park.isAlsoChargingForRides = true;
+
+    // Act
+    component.onChangeHasEntranceFee();
+
+    // Assert
+    expect(component.park.isAlsoChargingForRides).toBeFalse();
+  });
+
+  it('#onChangeIsAlsoChargingForRides should trigger auto-save', () => {
+    // Act
+    component.onChangeIsAlsoChargingForRides();
+
+    // Assert
     expect(persistenceServiceSpy.save).toHaveBeenCalled();
   });
 

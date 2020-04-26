@@ -20,6 +20,7 @@ describe('PersistenceService', () => {
       {
         name: '',
         hasEntranceFee: true,
+        isAlsoChargingForRides: false,
         showGoodValuePrice: false,
         rides: [
           {

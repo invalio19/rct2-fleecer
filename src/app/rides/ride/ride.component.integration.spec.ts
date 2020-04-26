@@ -32,6 +32,7 @@ describe('RideComponent integration', () => {
         {
           name: '',
           hasEntranceFee: false,
+          isAlsoChargingForRides: false,
           showGoodValuePrice: false,
           rides: [
             {

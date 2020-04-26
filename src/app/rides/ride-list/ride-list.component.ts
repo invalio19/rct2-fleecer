@@ -7,6 +7,7 @@ import { Ride } from '../shared/models/ride.model';
 import { RideAge } from '../shared/enums/ride-age';
 import { RideDuplicateFlaggerService } from './../shared/services/ride-duplicate-flagger.service';
 import { RidePriceCalculatorService } from './../shared/services/ride-price-calculator.service';
+import { PriceConverterService } from './../shared/services/price-converter.service';
 import { RideType } from '../shared/models/ride-type.model';
 import { RideTypeRepositoryService } from './../shared/services/ride-type-repository.service';
 import { SaveData } from '../shared/models/save-data.model';
@@ -33,6 +34,7 @@ export class RideListComponent implements OnInit {
     private persistenceService: PersistenceService,
     private rideDuplicateFlaggerService: RideDuplicateFlaggerService,
     private ridePriceCalculatorService: RidePriceCalculatorService,
+    private ridePriceConverterService: PriceConverterService,
     private rideTypeRepositoryService: RideTypeRepositoryService) {
       this.saveData = this.persistenceService.load();
       this.rideTypeOptions = this.rideTypeRepositoryService.getAll();
@@ -65,11 +67,6 @@ export class RideListComponent implements OnInit {
     this.isWhatsNewModalActive = false;
   }
 
-  getRecommendedParkEntranceFeeString(): string {
-    const recommendedPrice = this.ridePriceCalculatorService.recommendedParkEntranceFee(this.saveData.options.gameVersion, this.park.rides);
-    return this.convertToCurrencyString(recommendedPrice);
-  }
-
   onClickGameVersion(gameVersion: GameVersion) {
     this.saveData.options.gameVersion = gameVersion;
     this.saveAll();
@@ -79,12 +76,24 @@ export class RideListComponent implements OnInit {
     if (this.park.hasEntranceFee) {
       this.park.showGoodValuePrice = false;
     }
+    else {
+      this.park.isAlsoChargingForRides = false;
+    }
 
+    this.saveAll();
+  }
+
+  onChangeIsAlsoChargingForRides() {
     this.saveAll();
   }
 
   onChangeShowGoodValuePrices() {
     this.saveAll();
+  }
+
+  getRecommendedParkEntranceFeeString(): string {
+    const price = this.ridePriceCalculatorService.recommendedParkEntranceFee(this.saveData.options.gameVersion, this.park.rides);
+    return this.ridePriceConverterService.parkEntrancePrice(price);
   }
 
   onClickRecommendedParkEntranceFeeWhy() {
@@ -150,6 +159,7 @@ export class RideListComponent implements OnInit {
         {
           name: '',
           hasEntranceFee: false,
+          isAlsoChargingForRides: false,
           showGoodValuePrice: false,
           rides: []
         }
@@ -161,15 +171,5 @@ export class RideListComponent implements OnInit {
 
   private saveAll() {
     this.persistenceService.save(this.saveData);
-  }
-
-  private convertToCurrencyString(val: number): string { // TODO copy paste
-    if (val !== undefined) {
-      if (val === 0) {
-        return 'Free';
-      }
-      return '£' + val.toFixed(2);
-    }
-    return '';
   }
 }

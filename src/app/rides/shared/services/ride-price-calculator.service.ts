@@ -26,7 +26,6 @@ export class RidePriceCalculatorService {
 
     ridePrice *= 2;
     ridePrice = Math.min(200, ridePrice); // Cap at £20
-    ridePrice /= 10;
 
     return ridePrice;
   };
@@ -43,16 +42,12 @@ export class RidePriceCalculatorService {
 
     ridePrice = Math.floor(ridePrice / 2);
     ridePrice = Math.min(200, ridePrice); // Cap at £20
-    ridePrice /= 10;
 
     return ridePrice;
   }
 
   recommendedParkEntranceFee(gameVersion: GameVersion, rides: Ride[]): number {
-    let totalRideValueForMoney = this.calculateTotalRideValueForMoney(gameVersion, rides);
-
-    totalRideValueForMoney = Math.floor(totalRideValueForMoney / 10);
-
+    const totalRideValueForMoney = this.calculateTotalRideValueForMoney(gameVersion, rides);
     return totalRideValueForMoney;
   }
 
@@ -87,8 +82,17 @@ export class RidePriceCalculatorService {
     let totalValue = 0;
 
     for (const ride of rides) {
+      const params: RideCalculationParameters = {
+        gameVersion,
+        parkHasEntranceFee: true,
+        ride
+      };
+
+      const rideValue = this.calculateRideValue(gameVersion, ride);
+      const ridePrice = this.max(params);
+
       if (ride.typeId !== undefined) {
-        totalValue += this.calculateRideValue(gameVersion, ride) * 2;
+        totalValue += (rideValue) * 2;
       }
     };
 

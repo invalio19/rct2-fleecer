@@ -80,8 +80,8 @@ describe('RidePriceCalculatorService', () => {
 
   it('#max should calculate the correct value', () => {
     [
-      [GameVersion.OpenRct2, false, 'woodenRollerCoasterTestType', RideAge.LessThan5Months, 6.48, 7.62, 4.48, true, 13.20],
-      [GameVersion.OpenRct2, false, 'woodenRollerCoasterTestType', RideAge.LessThan13Months, 6.48, 7.62, 4.48, true, 10.60]
+      [GameVersion.OpenRct2, false, 'woodenRollerCoasterTestType', RideAge.LessThan5Months, 6.48, 7.62, 4.48, true, 132],
+      [GameVersion.OpenRct2, false, 'woodenRollerCoasterTestType', RideAge.LessThan13Months, 6.48, 7.62, 4.48, true, 106]
     ].forEach(([gameVersion, hasEntranceFee, rideTypeId, rideAge, excitement, intensity, nausea, hasDuplicate, expectedValue]) => {
       // Arrange
       const rideCalculationParameters: RideCalculationParameters = {
@@ -108,7 +108,7 @@ describe('RidePriceCalculatorService', () => {
 
   it('#min should calculate the correct value', () => {
     [
-      [GameVersion.OpenRct2, false, 'juniorRollerCoasterTestType', RideAge.LessThan5Months, 4.77, 5.60, 3.62, false, 3.10],
+      [GameVersion.OpenRct2, false, 'juniorRollerCoasterTestType', RideAge.LessThan5Months, 4.77, 5.60, 3.62, false, 31],
     ].forEach(([gameVersion, hasEntranceFee, rideTypeId, rideAge, excitement, intensity, nausea, hasDuplicate, expectedValue]) => {
       // Arrange
       const rideCalculationParameters: RideCalculationParameters = {
@@ -170,7 +170,7 @@ describe('RidePriceCalculatorService', () => {
     const calculatedValue = service.recommendedParkEntranceFee(gameVersion, rides);
 
     // Assert
-    expect(calculatedValue).toBe(36.00); // £7.80 + £11 + £18 = £36.80, rounded down to nearest whole £1
+    expect(calculatedValue).toBe(368); // £7.80 + £11 + £18 = £36.80
   });
 
   it('#recommendedParkEntranceFee should ignore incomplete rides instead of returning NaN', () => {
@@ -201,7 +201,7 @@ describe('RidePriceCalculatorService', () => {
     const calculatedValue = service.recommendedParkEntranceFee(gameVersion, rides);
 
     // Assert
-    expect(calculatedValue).toBe(7.00); // £7.80 + £11 + £18 = £36.80, rounded down to nearest whole £1
+    expect(calculatedValue).toBe(78);
   });
 });
 

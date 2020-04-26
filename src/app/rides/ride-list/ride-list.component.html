@@ -73,6 +73,18 @@
         <label for="parkHasEntranceFeeCheckbox">Park has entrance fee</label>
       </div>
       <div
+        *ngIf="park.hasEntranceFee"
+        class="field">
+        <input
+          id="parkAlsoChargeForRidesCheckbox"
+          class="is-checkradio"
+          type="checkbox"
+          name="parkAlsoChargeForRidesCheckbox"
+          [(ngModel)]="park.isAlsoChargingForRides"
+          (change)="onChangeIsAlsoChargingForRides()">
+        <label for="parkAlsoChargeForRidesCheckbox">Also charge for rides</label>
+      </div>
+      <div
         *ngIf="!park.hasEntranceFee"
         class="field">
         <input

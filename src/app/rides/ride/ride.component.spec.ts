@@ -6,6 +6,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { RideComponent } from './ride.component';
 
 import { PersistenceService } from './../shared/services/persistence.service';
+import { PriceConverterService } from './../shared/services/price-converter.service';
 import { Ride } from '../shared/models/ride.model';
 import { RideAge } from '../shared/enums/ride-age';
 import { RideAgeRepositoryService } from './../shared/services/ride-age-repository.service';
@@ -36,6 +37,7 @@ describe('RideComponent', () => {
   };
 
   const persistenceServiceSpy = jasmine.createSpyObj('PersistenceService', ['save', 'load']);
+  const priceConverterServiceSpy = jasmine.createSpyObj('PriceConverterService', ['ridePrice']);
 
   const rideAgeRepositoryServiceSpy = jasmine.createSpyObj('RideAgeRepositoryService', ['getAll']);
   rideAgeRepositoryServiceSpy.getAll.and.returnValue([]);
@@ -58,6 +60,7 @@ describe('RideComponent', () => {
       schemas: [ NO_ERRORS_SCHEMA ],
       providers: [
         { provide: PersistenceService, useValue: persistenceServiceSpy },
+        { provide: PriceConverterService, useValue: priceConverterServiceSpy },
         { provide: RideAgeRepositoryService, useValue: rideAgeRepositoryServiceSpy },
         { provide: RideDuplicateFlaggerService, useValue: rideDuplicateFlaggerServiceSpy },
         { provide: RidePriceCalculatorService, useValue: ridePriceCalculatorServiceSpy },
@@ -116,6 +119,7 @@ describe('RideComponent', () => {
         {
           name: '',
           hasEntranceFee: false,
+          isAlsoChargingForRides: false,
           showGoodValuePrice: false,
           rides:  [
             {
@@ -179,9 +183,9 @@ describe('RideComponent', () => {
     expect(rideDataButton).toBeFalsy();
   });
 
-  it('#getMaxPriceString should show currency symbol and be to 2dp', () => {
+  it('#getMaxPriceString should return the correct value', () => {
     // Arrange
-    ridePriceCalculatorServiceSpy.max.and.returnValue(10);
+    priceConverterServiceSpy.ridePrice.and.returnValue('£10.00');
 
     // Act
     const val = component.getMaxPriceString(dummyRide);
@@ -190,37 +194,15 @@ describe('RideComponent', () => {
     expect(val).toBe('£10.00');
   });
 
-  it('#getMaxPriceString should show \'Free\' if ride has zero value', () => {
+  it('#getMinPriceString should return the correct value', () => {
     // Arrange
-    ridePriceCalculatorServiceSpy.max.and.returnValue(0);
-
-    // Act
-    const val = component.getMaxPriceString(dummyRide);
-
-    // Assert
-    expect(val).toBe('Free');
-  });
-
-  it('#getMinPriceString should show currency symbol and be to 2dp', () => {
-    // Arrange
-    ridePriceCalculatorServiceSpy.min.and.returnValue(10);
+    priceConverterServiceSpy.ridePrice.and.returnValue('£10.00');
 
     // Act
     const val = component.getMinPriceString(dummyRide);
 
     // Assert
     expect(val).toBe('£10.00');
-  });
-
-  it('#getMaxPriceString should show \'Free\' if ride has zero value', () => {
-    // Arrange
-    ridePriceCalculatorServiceSpy.min.and.returnValue(0);
-
-    // Act
-    const val = component.getMinPriceString(dummyRide);
-
-    // Assert
-    expect(val).toBe('Free');
   });
 
   it('#onChangeRideName should call rideDuplicateFlaggerService and trigger auto-save', () => {
