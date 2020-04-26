@@ -132,9 +132,20 @@ describe('RideListComponent', () => {
     expect(component.isWhatsNewModalActive).toBeTrue();
   });
 
-  it('#ngOnInit should not load up the what\'s new modal for visitors who\'ve seen version 1.2.0', () => {
+  it('#ngOnInit should load up the what\'s new modal for visitors who\'ve seen version 1.2.0', () => {
     // Arrange
     saveData.appVersion = '1.2.0';
+
+    // Act
+    component.ngOnInit();
+
+    // Assert
+    expect(component.isWhatsNewModalActive).toBeTrue();
+  });
+
+  it('#ngOnInit should not load up the what\'s new modal for visitors who\'ve seen version 1.3.0', () => {
+    // Arrange
+    saveData.appVersion = '1.3.0';
 
     // Act
     component.ngOnInit();

@@ -48,7 +48,7 @@ export class RideListComponent implements OnInit {
       this.saveData = this.getDefaultSaveData();
       this.saveAll();
     }
-    else if (this.saveData.appVersion === undefined) {
+    else if (this.saveData.appVersion !== this.appVersion) {
       // Visited when app version was <= 1.1.0
       this.isWhatsNewModalActive = true;
       this.saveData.appVersion = this.appVersion;
@@ -67,7 +67,6 @@ export class RideListComponent implements OnInit {
     }
     this.park.hasEntranceFee = undefined;
     this.saveAll();
-
 
     this.rides = this.park.rides;
     this.rideDuplicateFlaggerService.flag(this.rides);
