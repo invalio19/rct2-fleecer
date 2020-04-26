@@ -112,7 +112,7 @@ describe('RideComponent', () => {
     component = fixture.componentInstance;
 
     component.saveData = {
-      appVersion: '1.3.0',
+      appVersion: '1.3.1',
       options: {
         gameVersion: GameVersion.VanillaRct2
       },

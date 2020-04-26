@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.1](https://github.com/invalio19/rct2-fleecer/compare/v1.3.0...v1.3.1) - 2019-04-26
+
+### Fixed
+
+- Typo fix.
+
 ## [1.3.0](https://github.com/invalio19/rct2-fleecer/compare/v1.2.0...v1.3.0) - 2019-04-26
 
 ### Added
