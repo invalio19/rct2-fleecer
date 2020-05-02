@@ -46,7 +46,7 @@ There could be a few reasons for this.
 
 **2. Why are two of my rides considered duplicates of each other even though they are different ride types?**
 
-Some ride types in RCT2 are considered the same for some game mechanics, including the mechanics used for determining ride price value. These rides are:
+Many rides in RCT2 are considered the same for some game mechanics, including the mechanics used for determining ride price value. These rides are:
 
 - The **Car Ride** and **Monster Trucks**.
 - The **Classic Mini Roller Coaster** (OpenRCT2 only) and **Junior Roller Coaster**.
@@ -54,23 +54,21 @@ Some ride types in RCT2 are considered the same for some game mechanics, includi
 - The **Hyper-Twister** and **Steel Twister**.
 - The **Spinning Wild Mouse** and **Steel Wild Mouse**.
 
-**3. I can't find X ride in the ride type list. Where is it?**
+There are also many more re-skinned versions of rides such as the **Fire Cracker Ride** simply being a copy of the **Enterprise**.
 
-Some rides are just renamed and reskinned versions of another type of ride, but have no difference in stats and would still be considered a duplicate of the original ride type. For example, the **Fire Cracker Ride** is simply a reskinned **Enterprise**. In future updates I plan to include all alternative names for ride types to mitigate this problem.
-
-**4. My ride is six years old but the price calculation for 'less than 88 months old' is wrong. Why is that?**
+**3. My ride is six years old but the price calculation for 'less than 88 months old' is wrong. Why is that?**
 
 A year in RollerCoaster Tycoon is only eight months long, from March to October, presumably to simulate when real-life parks are closed for the winter. You should select the number of months accordingly.
 
-**5. I reduced the age of my coaster, yet its value went up. Why?**
+**4. I reduced the age of my coaster, yet its value went up. Why?**
 
 After 200 months—25 years in RollerCoaster Tycoon time—the value of a ride actually goes up instead of down and will stay at that level forevermore. I would imagine this is to simulate the appeal of retro roller coasters in real life.
 
-**6. How does this app save my data? Can I transfer it to another browser or device?**
+**5. How does this app save my data? Can I transfer it to another browser or device?**
 
 RCT2 Fleecer uses LocalStorage to save data about the current page to your browser. Currently there is no in-app support for transferring this data to another browser or device.
 
-**7. This app doesn't work on my browser. Why not?**
+**6. This app doesn't work on my browser. Why not?**
 
 RCT2 Fleecer was largely built and tested using Google Chrome. Modern browsers like Firefox should also have no issues handling it, but older browsers such as Internet Explorer cannot.
 

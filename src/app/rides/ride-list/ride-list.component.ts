@@ -29,7 +29,7 @@ export class RideListComponent implements OnInit {
   rideTypeOptions: RideType[];
   isDeleteAllRidesModalActive = false;
 
-  private appVersion = '1.3.1'; // TODO pass into footer app too
+  private appVersion = '1.4.0'; // TODO pass into footer app too
 
   constructor(
     private persistenceService: PersistenceService,

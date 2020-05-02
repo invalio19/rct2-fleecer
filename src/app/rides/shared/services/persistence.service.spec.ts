@@ -13,7 +13,7 @@ describe('PersistenceService', () => {
   const saveDataKey = 'saveData';
 
   const saveData: SaveData = {
-    appVersion: '1.3.1',
+    appVersion: '1.4.0',
     options: {
       gameVersion: GameVersion.OpenRct2
     },

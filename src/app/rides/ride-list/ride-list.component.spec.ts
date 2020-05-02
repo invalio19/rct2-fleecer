@@ -48,7 +48,7 @@ describe('RideListComponent', () => {
 
   beforeEach(() => {
     saveData = {
-      appVersion: '1.3.1',
+      appVersion: '1.4.0',
       options: {
         gameVersion: GameVersion.VanillaRct2
       },
@@ -143,9 +143,9 @@ describe('RideListComponent', () => {
     expect(component.isWhatsNewModalActive).toBeTrue();
   });
 
-  it('#ngOnInit should not load up the what\'s new modal for visitors who\'ve seen version 1.3.1', () => {
+  it('#ngOnInit should not load up the what\'s new modal for visitors who\'ve seen the latest version', () => {
     // Arrange
-    saveData.appVersion = '1.3.1';
+    saveData.appVersion = '1.4.0';
 
     // Act
     component.ngOnInit();
@@ -154,7 +154,7 @@ describe('RideListComponent', () => {
     expect(component.isWhatsNewModalActive).toBeFalse();
   });
 
-  it('#ngOnInit should update the save data appVersion to 1.3.1', () => {
+  it('#ngOnInit should update the save data appVersion to the latest version', () => {
     // Arrange
     saveData.appVersion = undefined;
 
@@ -162,7 +162,7 @@ describe('RideListComponent', () => {
     component.ngOnInit();
 
     // Assert
-    expect(component.saveData.appVersion).toBe('1.3.1');
+    expect(component.saveData.appVersion).toBe('1.4.0');
   });
 
   it('#ngOnInit should set park entrance fee / free ride admission mode if legacy hasEntranceFee option was checked', () => {
