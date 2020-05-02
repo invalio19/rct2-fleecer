@@ -44,7 +44,7 @@
     </footer>
   </div>
 </div>
-<div class="container inv-container">
+<div class="inv-container">
   <section class="hero is-dark is-bold">
     <div class="hero-body">
       <div class="container">
@@ -56,124 +56,128 @@
   </section>
   <main class="inv-main">
     <div class="inv-head">
-      <h2 class="subtitle">Park settings</h2>
-      <div class="buttons has-addons">
-        <button
-          class="button"
-          [class.is-primary]="saveData.options.gameVersion === GameVersion.VanillaRct2"
-          (click)="onClickGameVersion(GameVersion.VanillaRct2)">
-          RCT2 / RCT Classic
-        </button>
-        <button
-          class="button"
-          [class.is-primary]="saveData.options.gameVersion === GameVersion.OpenRct2"
-          (click)="onClickGameVersion(GameVersion.OpenRct2)">
-          OpenRCT2
-        </button>
-      </div>
-      <div class="field">
-        <input
-          class="is-checkradio"
-          id="admissionModeRadio1"
-          type="radio"
-          name="admissionModeRadio"
-          [value]="AdmissionMode.FreeParkEntryPayPerRide"
-          [(ngModel)]="park.admissionMode"
-          (change)="onChangeParkAdmissionMode()">
-        <label for="admissionModeRadio1">Free park entry / Pay per ride</label>
-      </div>
-      <div class="field">
-        <input
-          class="is-checkradio"
-          id="admissionModeRadio2"
-          type="radio"
-          name="admissionModeRadio"
-          [value]="AdmissionMode.PayToEnterParkFreeRides"
-          [(ngModel)]="park.admissionMode"
-          (change)="onChangeParkAdmissionMode()">
-        <label for="admissionModeRadio2">Pay to enter park / Free rides</label>
-      </div>
-      <div class="field">
-        <input
-          class="is-checkradio"
-          id="admissionModeRadio3"
-          type="radio"
-          name="admissionModeRadio"
-          [value]="AdmissionMode.PayToEnterParkPayPerRide"
-          [(ngModel)]="park.admissionMode"
-          (change)="onChangeParkAdmissionMode()">
-        <label for="admissionModeRadio3">Pay to enter park / Pay per ride</label>
-      </div>
-      <div
-        *ngIf="park.admissionMode === AdmissionMode.FreeParkEntryPayPerRide"
-        class="field">
-        <br>
-        <input
-          id="parkShowGoodValuePriceCheckbox"
-          class="is-checkradio"
-          type="checkbox"
-          name="parkShowGoodValuePriceCheckbox"
-          [(ngModel)]="park.showGoodValuePrice"
-          (change)="onChangeShowGoodValuePrices()">
-        <label for="parkShowGoodValuePriceCheckbox">Show 'good value' prices</label>
-      </div>
-      <div
-        *ngIf="park.admissionMode === AdmissionMode.PayToEnterParkFreeRides ||
-               park.admissionMode === AdmissionMode.PayToEnterParkPayPerRide"
-        data-test-id="recommended-park-entrance-fee-section">
-        <p>Recommended park entrance fee:</p>
-        <p>
-          <strong class="is-size-4 has-text-primary">{{getRecommendedParkEntranceFeeString()}}</strong>
-        </p>
-        <div class="modal"
-          [class.is-active]="isRecommendedParkEntranceFeeModalActive"
-          data-test-id="recommended-park-entrance-fee-modal">
-          <div class="modal-background" (click)="onCloseRecommendedParkEntranceFeeModal()"></div>
-          <div class="modal-card">
-            <header class="modal-card-head">
-              <p class="modal-card-title is-size-5">Recommended park entrance fee</p>
-              <button
-                class="delete"
-                aria-label="close"
-                (click)="onCloseRecommendedParkEntranceFeeModal()">
-              </button>
-            </header>
-            <section class="modal-card-body">
-              <div class="content">
-                <p>This amount is the maximum you can charge for your park without incurring penalties, and is based on the total value of all the operational rides in your park.</p>
-                <p>An entrance fee above this amount will cut your scenario guest generation by 75%, and also makes you eligible to recieve the 'Worst value park' award at the start of the month, which will further cut your guest generation by 25%.</p>
-                <p>Despite all this, you won't actually recieve warning messages about your park entrance fee being too high until is it about 50% higher than this value.</p>
-                <p>Your rides must be open and operational. They don't count towards the park entrance value if they are closed, in testing, broken down or currently experiencing a crash. Rides that have crashed and since re-opened are okay.</p>
-                <p>Also be sure to not charge more money for the park entrance than the lowest amount of money a guest can spawn with, or you will be turning them away at the gate!</p>
-              </div>
-            </section>          
-            <footer class="modal-card-foot inv-flex-end">
-              <button
-                class="button is-primary"
-                (click)="onCloseRecommendedParkEntranceFeeModal()">
-                OK
-              </button>
-            </footer>
-          </div>
+      <div class="container">
+        <h2 class="subtitle">Park settings</h2>
+        <div class="buttons has-addons">
+          <button
+            class="button"
+            [class.is-primary]="saveData.options.gameVersion === GameVersion.VanillaRct2"
+            (click)="onClickGameVersion(GameVersion.VanillaRct2)">
+            RCT2 / RCT Classic
+          </button>
+          <button
+            class="button"
+            [class.is-primary]="saveData.options.gameVersion === GameVersion.OpenRct2"
+            (click)="onClickGameVersion(GameVersion.OpenRct2)">
+            OpenRCT2
+          </button>
         </div>
-        <button
-          class="button is-primary is-small is-rounded"
-          (click)="onClickRecommendedParkEntranceFeeWhy()">
-          Why?
-        </button>
+        <div class="field">
+          <input
+            class="is-checkradio"
+            id="admissionModeRadio1"
+            type="radio"
+            name="admissionModeRadio"
+            [value]="AdmissionMode.FreeParkEntryPayPerRide"
+            [(ngModel)]="park.admissionMode"
+            (change)="onChangeParkAdmissionMode()">
+          <label for="admissionModeRadio1">Free park entry / Pay per ride</label>
+        </div>
+        <div class="field">
+          <input
+            class="is-checkradio"
+            id="admissionModeRadio2"
+            type="radio"
+            name="admissionModeRadio"
+            [value]="AdmissionMode.PayToEnterParkFreeRides"
+            [(ngModel)]="park.admissionMode"
+            (change)="onChangeParkAdmissionMode()">
+          <label for="admissionModeRadio2">Pay to enter park / Free rides</label>
+        </div>
+        <div class="field">
+          <input
+            class="is-checkradio"
+            id="admissionModeRadio3"
+            type="radio"
+            name="admissionModeRadio"
+            [value]="AdmissionMode.PayToEnterParkPayPerRide"
+            [(ngModel)]="park.admissionMode"
+            (change)="onChangeParkAdmissionMode()">
+          <label for="admissionModeRadio3">Pay to enter park / Pay per ride</label>
+        </div>
+        <div
+          *ngIf="park.admissionMode === AdmissionMode.FreeParkEntryPayPerRide"
+          class="field">
+          <br>
+          <input
+            id="parkShowGoodValuePriceCheckbox"
+            class="is-checkradio"
+            type="checkbox"
+            name="parkShowGoodValuePriceCheckbox"
+            [(ngModel)]="park.showGoodValuePrice"
+            (change)="onChangeShowGoodValuePrices()">
+          <label for="parkShowGoodValuePriceCheckbox">Show 'good value' prices</label>
+        </div>
+        <div
+          *ngIf="park.admissionMode === AdmissionMode.PayToEnterParkFreeRides ||
+                park.admissionMode === AdmissionMode.PayToEnterParkPayPerRide"
+          data-test-id="recommended-park-entrance-fee-section">
+          <p>Recommended park entrance fee:</p>
+          <p>
+            <strong class="is-size-4 has-text-primary">{{getRecommendedParkEntranceFeeString()}}</strong>
+          </p>
+          <div class="modal"
+            [class.is-active]="isRecommendedParkEntranceFeeModalActive"
+            data-test-id="recommended-park-entrance-fee-modal">
+            <div class="modal-background" (click)="onCloseRecommendedParkEntranceFeeModal()"></div>
+            <div class="modal-card">
+              <header class="modal-card-head">
+                <p class="modal-card-title is-size-5">Recommended park entrance fee</p>
+                <button
+                  class="delete"
+                  aria-label="close"
+                  (click)="onCloseRecommendedParkEntranceFeeModal()">
+                </button>
+              </header>
+              <section class="modal-card-body">
+                <div class="content">
+                  <p>This amount is the maximum you can charge for your park without incurring penalties, and is based on the total value of all the operational rides in your park.</p>
+                  <p>An entrance fee above this amount will cut your scenario guest generation by 75%, and also makes you eligible to recieve the 'Worst value park' award at the start of the month, which will further cut your guest generation by 25%.</p>
+                  <p>Despite all this, you won't actually recieve warning messages about your park entrance fee being too high until is it about 50% higher than this value.</p>
+                  <p>Your rides must be open and operational. They don't count towards the park entrance value if they are closed, in testing, broken down or currently experiencing a crash. Rides that have crashed and since re-opened are okay.</p>
+                  <p>Also be sure to not charge more money for the park entrance than the lowest amount of money a guest can spawn with, or you will be turning them away at the gate!</p>
+                </div>
+              </section>          
+              <footer class="modal-card-foot inv-flex-end">
+                <button
+                  class="button is-primary"
+                  (click)="onCloseRecommendedParkEntranceFeeModal()">
+                  OK
+                </button>
+              </footer>
+            </div>
+          </div>
+          <button
+            class="button is-primary is-small is-rounded"
+            (click)="onClickRecommendedParkEntranceFeeWhy()">
+            Why?
+          </button>
+        </div>
       </div>
     </div>
     <div
       class="has-background-light inv-ride"
       [attr.data-test-id]="'ride-' + i"
       *ngFor="let ride of rides; let i = index">
-      <app-ride
-        [ride]="ride"
-        [index]="i"
-        [saveData]="saveData"
-        [isExpanded]="expandedRideIndex === i"
-        (rideExpandToggled)="onRideExpandToggled($event)">
-      </app-ride>
+      <div class="container">
+        <app-ride
+          [ride]="ride"
+          [index]="i"
+          [saveData]="saveData"
+          [isExpanded]="expandedRideIndex === i"
+          (rideExpandToggled)="onRideExpandToggled($event)">
+        </app-ride>
+      </div>
     </div>
     <div class="modal"
       [class.is-active]="isDeleteAllRidesModalActive"
@@ -196,29 +200,31 @@
       <button class="modal-close is-large" aria-label="close" (click)="onCloseDeleteAllRidesModal()"></button>
     </div>
     <div class="inv-actions">
-      <div class="buttons">
-        <button
-          class="button is-primary"
-          data-test-id="add-new-ride"
-          (click)="onClickAddNewRide()">
-          <span class="icon">
-            <i class="fa fa-plus"></i>
-          </span>
-          <span>
-            Add new ride
-          </span>
-        </button>
-        <button
-          class="button"
-          data-test-id="delete-all-rides"
-          (click)="onClickAttemptDeleteAllRides()">
-          <span class="icon">
-            <i class="fa fa-trash"></i>
-          </span>
-          <span>
-            Delete all rides
-          </span>
-        </button>
+      <div class="container">
+        <div class="buttons">
+          <button
+            class="button is-primary"
+            data-test-id="add-new-ride"
+            (click)="onClickAddNewRide()">
+            <span class="icon">
+              <i class="fa fa-plus"></i>
+            </span>
+            <span>
+              Add new ride
+            </span>
+          </button>
+          <button
+            class="button"
+            data-test-id="delete-all-rides"
+            (click)="onClickAttemptDeleteAllRides()">
+            <span class="icon">
+              <i class="fa fa-trash"></i>
+            </span>
+            <span>
+              Delete all rides
+            </span>
+          </button>
+        </div>
       </div>
     </div>
   </main>

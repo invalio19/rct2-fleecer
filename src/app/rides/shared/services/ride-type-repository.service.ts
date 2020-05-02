@@ -16,6 +16,9 @@ export class RideTypeRepositoryService {
         this.rideTypeArray.push(el);
       }
     }
+    this.rideTypeArray.sort((a, b) => {
+      return a.name < b.name ? -1 : 1;
+    });
   }
 
   getAll(): RideType[] {
